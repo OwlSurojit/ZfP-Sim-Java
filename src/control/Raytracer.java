@@ -172,6 +172,7 @@ public class Raytracer {
         Line line = null;
         double angle;
         for (Object obj : cornerObjs){
+            // Line Reflection happens on
             if (Line.class.isInstance(obj)) {
                 line = (Line)obj;
             } else if (Circle.class.isInstance(obj)) {
@@ -181,6 +182,8 @@ public class Raytracer {
             } else if (Oval.class.isInstance(obj)) {
 
             }
+
+            // two lines closest to Ray
             angle = this.ray.r.getDirAngle(line.toVector());
             if (angle < minangle) {
                 minangle = angle;
@@ -191,50 +194,62 @@ public class Raytracer {
                 maxLine = line;
             }
         }
-		Vector minVec, maxVec;
+		Vector Vec1, Vec2;
 		Point S;
+		// Vectors of both Lines starting in their commom Point (S)
 		if (minLine.end.equals(maxLine.end)) { // both lines must start in corner
-			minVec = minLine.reverse().toVector();
-			maxVec = maxLine.reverse().toVector();
+			Vec1 = minLine.reverse().toVector();
+			Vec2 = maxLine.reverse().toVector();
 			S = minLine.end;
 		} else if (minLine.end.equals(maxLine.start)) {
-			minVec = minLine.reverse().toVector();
-			maxVec = maxLine.toVector();
+			Vec1 = minLine.reverse().toVector();
+			Vec2 = maxLine.toVector();
 			S = minLine.end;
 		} else if (minLine.start.equals(maxLine.end)) {
-			minVec = minLine.toVector();
-			maxVec = maxLine.reverse().toVector();
+			Vec1 = minLine.toVector();
+			Vec2 = maxLine.reverse().toVector();
 			S = minLine.start;
 		} else {
-			minVec = minLine.toVector();
-			maxVec = maxLine.toVector();
+			Vec1 = minLine.toVector();
+			Vec2 = maxLine.toVector();
 			S = minLine.start;
 		}
-		if (Tools.equal(this.ray.r.getAngle(minVec), this.ray.r.getAngle(maxVec))) { // center
+		// Ray in center between Lines -> return inverted
+		if (Tools.equal(this.ray.r.getAngle(Vec1), this.ray.r.getAngle(Vec2))) {
 			return new Ray(S, this.ray.r.mul(-1));
 		}
-		if (Tools.equal(this.ray.r.getAngle(minVec) + this.ray.r.getAngle(maxVec), 360 - minVec.getAngle(maxVec))) { // inner corner, 360 because direction
-			if (this.ray.r.getAngle(maxVec) > this.ray.r.getAngle(minVec)) { // minVec <- closest vector
-				Vector temp = maxVec;
-				maxVec = minVec;
-				minVec = temp;
+		// inner corner, 360 because different direction
+		if (Tools.equal(this.ray.r.getAngle(Vec1) + this.ray.r.getAngle(Vec2), 360 - Vec1.getAngle(Vec2))) {
+
+		    // TODO closest vector not needed, why here?
+		    /*if (this.ray.r.getAngle(Vec2) > this.ray.r.getAngle(Vec1)) { // minVec <- closest vector
+				Vector temp = Vec2;
+				Vec2 = Vec1;
+				Vec1 = temp;
+			}*/
+			// Reflection at Point (0|0) -> Ray to this Point + Line from there
+			Vector v1 = getLineReflection(new Ray(this.ray.r.mul(-1).toPoint(), this.ray.r), Vec1.toLine(), new Point(0, 0)).r;
+			Vector v2 = getLineReflection(new Ray(this.ray.r.mul(-1).toPoint(), this.ray.r), Vec2.toLine(), new Point(0, 0)).r;
+			if (Vec1.getDirAngle(v1) > Vec1.getDirAngle(Vec2)) {
+				v1 = getLineReflection(new Ray(v1.mul(-1).toPoint(), v1), Vec2.toLine(), new Point(0, 0)).r;
 			}
-			Vector v1 = getLineReflection(new Ray(this.ray.r.mul(-1).toPoint(), this.ray.r), minVec.toLine(), new Point(0, 0)).r;
-			Vector v2 = getLineReflection(new Ray(this.ray.r.mul(-1).toPoint(), this.ray.r), maxVec.toLine(), new Point(0, 0)).r;
-			if (minVec.getDirAngle(v1) > minVec.getDirAngle(maxVec)) {
-				v1 = getLineReflection(new Ray(v1.mul(-1).toPoint(), v1), maxVec.toLine(), new Point(0, 0)).r;
-			}
-			if (maxVec.getDirAngle(v2) < maxVec.getDirAngle(minVec)) {
-				v2 = getLineReflection(new Ray(v2.mul(-1).toPoint(), v2), minVec.toLine(), new Point(0, 0)).r;
+			if (Vec2.getDirAngle(v2) < Vec2.getDirAngle(Vec1)) {
+				v2 = getLineReflection(new Ray(v2.mul(-1).toPoint(), v2), Vec1.toLine(), new Point(0, 0)).r;
 			}
 			// problem: v1 = -v2
 			return new Ray(S, v1.add(v2).mul(-1)); //TODO: normieren?
-		} else { // outer corner || no corner
-			if (this.ray.r.getAngle(minVec.mul(1/minVec.length()).add(maxVec.mul(1/maxVec.length()))) < 90) { // old: Tools.equal(this.ray.r.getAngle(minVec) + this.ray.r.getAngle(maxVec), minVec.getAngle(maxVec))
-				Ray r = new Ray(S, minVec.mul(1/minVec.length()).add(maxVec.mul(-1/maxVec.length()))); // minVec - maxVec
+
+
+
+
+		} else { // outer corner  or  no corner reflection
+		    // outer corner reflection
+			if (this.ray.r.getAngle(Vec1.mul(1/Vec1.length()).add(Vec2.mul(1/Vec2.length()))) < 90) { // old: Tools.equal(this.ray.r.getAngle(minVec) + this.ray.r.getAngle(maxVec), minVec.getAngle(maxVec))
+				Ray r = new Ray(S, Vec1.mul(1/Vec1.length()).add(Vec2.mul(-1/Vec2.length()))); // minVec - maxVec
 				line = new Line(r.getPoint(-1), r.getPoint(1));
 				return getLineReflection(this.ray, line, S);
-			} else return new Ray(S, this.ray.r); // problem: counts as reflection
+			// just passes corner
+			} else return new Ray(S, this.ray.r); //TODO counts as reflection but should not
 		}
 
         // Porblem: Reihenfolge der Punkte in Linie beeinflusst vektor -> addition klappt nicht
@@ -288,9 +303,13 @@ public class Raytracer {
     }
 
     public Ray getLineReflection(Ray ray, Line line, Point S){
+        // vertical to line
         Ray h = new Ray(ray.o, new Vector(line.end.y - line.start.y, line.start.x - line.end.x));
+        // dropped perpendicular foot (Lotfußpunkt) of ray.o on the line
         Point R = getLineIntersection(h, line).point;
+        // ray.o mirrored on the line
         Point P = (ray.o.toVector().add((new Line(ray.o, R)).toVector().mul(2))).toPoint();
+        // intersection ray, line and Vector P -> S
         return new Ray(S, new Vector(S.x - P.x, S.y - P.y));
     }
 
