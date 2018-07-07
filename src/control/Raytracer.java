@@ -161,7 +161,7 @@ public class Raytracer {
             }
         }
         if (hitCorner) return new StructRayObj(getCornerReflection(cornerObjs), cornerObjs.get(0));
-        return new StructRayObj(getReflection(closestObj, getIntersection(closestObj)), closestObj);
+		else return new StructRayObj(getReflection(closestObj, getIntersection(closestObj)), closestObj);
     }
 
     public Ray getCornerReflection(ArrayList<Object> cornerObjs){
@@ -214,7 +214,7 @@ public class Raytracer {
 			return new Ray(S, this.ray.r.mul(-1));
 		}
 		if (Tools.equal(this.ray.r.getAngle(minVec) + this.ray.r.getAngle(maxVec), 360 - minVec.getAngle(maxVec))) { // inner corner, 360 because direction
-			if (this.ray.r.getAngle(maxVec) < this.ray.r.getAngle(minVec)) { // minVec <- closest vector
+			if (this.ray.r.getAngle(maxVec) > this.ray.r.getAngle(minVec)) { // minVec <- closest vector
 				Vector temp = maxVec;
 				maxVec = minVec;
 				minVec = temp;
@@ -227,6 +227,7 @@ public class Raytracer {
 			if (maxVec.getDirAngle(v2) < maxVec.getDirAngle(minVec)) {
 				v2 = getLineReflection(new Ray(v2.mul(-1).toPoint(), v2), minVec.toLine(), new Point(0, 0)).r;
 			}
+			// problem: v1 = -v2
 			return new Ray(S, v1.add(v2).mul(-1)); //TODO: normieren?
 		} else { // outer corner || no corner
 			if (this.ray.r.getAngle(minVec.mul(1/minVec.length()).add(maxVec.mul(1/maxVec.length()))) < 90) { // old: Tools.equal(this.ray.r.getAngle(minVec) + this.ray.r.getAngle(maxVec), minVec.getAngle(maxVec))
