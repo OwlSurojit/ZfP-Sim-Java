@@ -15,16 +15,14 @@ import java.io.ObjectOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class MainWindow extends javax.swing.JFrame {
-    
-    public Body body;
-    
+public class MainWindow extends BodyWindow {
+        
     public MainWindow() {
         initComponents();
         body = new Body(); body.exampleLongBar();
         simPanel.main = this;
         scanPanel.main = this;
-        simPanel.addBody();
+        simPanel.drawBody();
     }
 
     @SuppressWarnings("unchecked")
@@ -50,8 +48,9 @@ public class MainWindow extends javax.swing.JFrame {
         rangeLabel = new javax.swing.JLabel();
         rangeField = new javax.swing.JTextField();
         simStartButton = new javax.swing.JButton();
+        bodyEditButton = new javax.swing.JButton();
         jSplitPane2 = new javax.swing.JSplitPane();
-        simPanel = new zfP_Sim.SimulationPanel();
+        simPanel = new drawing.DrawPanel();
         scanPanel = new zfP_Sim.ScanPanel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -86,6 +85,7 @@ public class MainWindow extends javax.swing.JFrame {
         jSplitPane1.setPreferredSize(new java.awt.Dimension(1920, 1040));
 
         simToolBar.setBorder(null);
+        simToolBar.setFloatable(false);
         simToolBar.setOrientation(javax.swing.SwingConstants.VERTICAL);
         simToolBar.setRollover(true);
 
@@ -162,9 +162,24 @@ public class MainWindow extends javax.swing.JFrame {
         });
         simToolBar.add(simStartButton);
 
+        bodyEditButton.setText("Prüfkörper editieren");
+        bodyEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bodyEditButton.setFocusable(false);
+        bodyEditButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bodyEditButton.setMaximumSize(new java.awt.Dimension(120, 26));
+        bodyEditButton.setMinimumSize(new java.awt.Dimension(120, 26));
+        bodyEditButton.setPreferredSize(new java.awt.Dimension(120, 26));
+        bodyEditButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bodyEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bodyEditButtonActionPerformed(evt);
+            }
+        });
+        simToolBar.add(bodyEditButton);
+
         jSplitPane1.setLeftComponent(simToolBar);
 
-        jSplitPane2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        jSplitPane2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jSplitPane2.setDividerLocation(660);
         jSplitPane2.setDividerSize(0);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -182,7 +197,7 @@ public class MainWindow extends javax.swing.JFrame {
         simPanel.setLayout(simPanelLayout);
         simPanelLayout.setHorizontalGroup(
             simPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1908, Short.MAX_VALUE)
+            .addGap(0, 1770, Short.MAX_VALUE)
         );
         simPanelLayout.setVerticalGroup(
             simPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,6 +232,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         new2DMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         new2DMenuItem.setText("2D");
+        new2DMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                new2DMenuItemActionPerformed(evt);
+            }
+        });
         newMenu.add(new2DMenuItem);
 
         new3DMenuItem.setText("3D (T.B.D.)");
@@ -349,7 +369,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void closeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuItemActionPerformed
         body = new Body();
-        simPanel.clearShapes();
+        simPanel.drawClear();
     }//GEN-LAST:event_closeMenuItemActionPerformed
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
@@ -360,6 +380,7 @@ public class MainWindow extends javax.swing.JFrame {
         if(!body.outline.isEmpty()){
             Sender sender = new Sender(new Ray( new Point(Double.parseDouble(senderXField.getText()), Double.parseDouble(senderYField.getText())), new Vector(Double.parseDouble(rayXField.getText()), Double.parseDouble(rayYField.getText()))), Double.parseDouble(rangeField.getText()));
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
+            simPanel.paintDragPoints = false;
             simPanel.simulate(scan.reflections());
             scanPanel.setScores(scan.scan_A());
         }
@@ -376,7 +397,8 @@ public class MainWindow extends javax.swing.JFrame {
                 ObjectInputStream in = new ObjectInputStream(fileIn);
                 body = (Body) in.readObject();
                 in.close();
-                simPanel.addBody();
+                simPanel.paintDragPoints = true;
+                simPanel.drawBody();
          fileIn.close();
             } catch (IOException i) {
                 i.printStackTrace();
@@ -387,6 +409,16 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_newPregenMenuItemActionPerformed
+
+    private void bodyEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bodyEditButtonActionPerformed
+        simPanel.drawBody_Edit();
+    }//GEN-LAST:event_bodyEditButtonActionPerformed
+
+    private void new2DMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_new2DMenuItemActionPerformed
+        this.setVisible(false);
+        EditorWindow ew = new EditorWindow();
+        ew.setVisible(true);
+    }//GEN-LAST:event_new2DMenuItemActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -421,6 +453,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bodyEditButton;
     private javax.swing.JMenuItem closeMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu exportMenu;
@@ -460,7 +493,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel senderXLabel;
     private javax.swing.JTextField senderYField;
     private javax.swing.JLabel senderYLabel;
-    private zfP_Sim.SimulationPanel simPanel;
+    private drawing.DrawPanel simPanel;
     private javax.swing.JButton simStartButton;
     private javax.swing.JToolBar simToolBar;
     private javax.swing.JTextField velocityField;

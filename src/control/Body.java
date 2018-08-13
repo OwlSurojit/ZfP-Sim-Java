@@ -5,9 +5,9 @@ import shapesBase.CircleArc;
 import shapesBase.Polygon;
 import shapesBase.Circle;
 import geometry.Point;
-import geometry.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import drawing.DragPoint;
 
 public class Body implements Serializable {
     public ArrayList<ShapeBase> outline;
@@ -91,12 +91,37 @@ public class Body implements Serializable {
     public ArrayList<ShapeBase> components() {
         ArrayList<ShapeBase> list = new ArrayList<ShapeBase>();
         for(ShapeBase s : outline){
-            list.addAll(s.components());
+            list.addAll(s.getComponents());
         }
         for(ShapeBase s : defects){
-            list.addAll(s.components());
+            list.addAll(s.getComponents());
         }
-        list.addAll((new Polygon( new Point[]{ new Point(3.0,3.0), new Point(1771.0,3.0), new Point(1771.0,654.0), new Point(3.0,654.0), new Point(3.0,3.0) } )).components());
+        list.addAll((new Polygon( new Point[]{ new Point(3.0,3.0), new Point(1771.0,3.0), new Point(1771.0,654.0), new Point(3.0,654.0), new Point(3.0,3.0) } )).getComponents());
         return list;
+    }
+    
+    public ArrayList<DragPoint> getDragPoints(){
+        ArrayList<DragPoint> dragPoints = new ArrayList<DragPoint>();
+        for(ShapeBase shape : defects){
+            ArrayList<Point> points = shape.getDragPoints();
+            for(Point p : points){
+                boolean merged = false;
+                for(DragPoint dp : dragPoints){
+                    if(p.dist(dp) < 1){
+                        if(! dp.shapes.contains(shape)){
+                            dp.addShape(shape);
+                        }
+                        merged = true;
+                        break;
+                    }
+                }
+                if(!merged){
+                    DragPoint dragPoint = new DragPoint(p.x, p.y);
+                    dragPoint.addShape(shape);
+                    dragPoints.add(dragPoint);
+                }
+            }
+        }
+        return dragPoints;
     }
 }

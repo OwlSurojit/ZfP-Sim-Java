@@ -3,6 +3,7 @@ package shapesBase;
 import geometry.Point;
 import java.util.ArrayList;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import structures.StructDrawingInfo;
 
 public class Oval extends ShapeBase{
     public Point p1;
@@ -20,6 +21,8 @@ public class Oval extends ShapeBase{
             this.p1 = p1;
             this.p2 = p2;
             this.e = e;
+            
+            this.drawingInfo = new StructDrawingInfo();
         }
     }
     
@@ -29,9 +32,17 @@ public class Oval extends ShapeBase{
     }
     
     @Override
-    public ArrayList<ShapeBase> components() {
+    public ArrayList<ShapeBase> getComponents() {
         ArrayList<ShapeBase> list = new ArrayList<ShapeBase>();
         list.add(this);
+        return list;
+    }
+    
+    @Override
+    public ArrayList<Point> getDragPoints(){
+        ArrayList<Point> list = new ArrayList<Point>();
+        list.add(p1);
+        list.add(p2);
         return list;
     }
 }
