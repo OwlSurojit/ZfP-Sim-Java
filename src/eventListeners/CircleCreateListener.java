@@ -8,13 +8,13 @@ import javax.swing.JToggleButton;
 import shapesBase.*;
 import drawing.DrawPanel;
 
-public class PolygonCreateListener implements MouseListener{
+public class CircleCreateListener implements MouseListener{
 
     Point center;
     Point peripher;
     DrawPanel drawPanel;
     
-    public PolygonCreateListener(DrawPanel drawPanel){
+    public CircleCreateListener(DrawPanel drawPanel){
         center = null;
         peripher = null;
         this.drawPanel = drawPanel;
