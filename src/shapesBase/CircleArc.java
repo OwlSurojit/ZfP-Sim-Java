@@ -2,7 +2,7 @@ package shapesBase;
 
 import shapesBase.Line;
 import geometry.Point;
-import geometry.Point;
+import geometry.Vector;
 import java.io.Serializable;
 import java.util.ArrayList;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -27,6 +27,14 @@ public class CircleArc extends ShapeBase implements Serializable {
             
             this.drawingInfo = new StructDrawingInfo();
         }
+    }
+    
+    public CircleArc(Point center, Point start, Point end){
+        this.center = center;
+        this.radius = (new Line(center, start)).length();
+        this.offsetangle = (new Vector(1, 0)).getDirAngle((new Line(center, start)).toVector());
+        this.arcangle = ((new Line(center, start)).toVector()).getDirAngle((new Line(center, end)).toVector());
+        
     }
     
     /*public double getRadius(){

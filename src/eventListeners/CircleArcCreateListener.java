@@ -1,4 +1,10 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package eventListeners;
+
 
 import geometry.Point;
 import java.awt.event.MouseEvent;
@@ -8,15 +14,20 @@ import javax.swing.JToggleButton;
 import shapesBase.*;
 import drawing.DrawPanel;
 
-public class PolygonCreateListener implements MouseListener{
-
+/**
+ *
+ * @author morit
+ */
+public class CircleArcCreateListener {
     Point center;
-    Point peripher;
+    Point start;
+    Point end;
     DrawPanel drawPanel;
     
-    public PolygonCreateListener(DrawPanel drawPanel){
+    public CircleArcCreateListener(DrawPanel drawPanel){
         center = null;
-        peripher = null;
+        start = null;
+        end = null;
         this.drawPanel = drawPanel;
     }
     
@@ -29,19 +40,22 @@ public class PolygonCreateListener implements MouseListener{
                 //ArrayList<ShapeBase> temp = new ArrayList<ShapeBase>();
                 //temp.add(center);
                 //drawPanel.drawBody_Edit(temp);
-                // hier bitte Punkt einzeichnen                
-            } else if (peripher == null) {
-                peripher = new Point(me.getX(), me.getY());
-                Circle circle = new Circle(center, Line(center, peripher).length());
+                // hier bitte Punkt einzeichnen
+            } else if (start == null) {
+                start = new Point(me.getX(), me.getY());
+            }else if(end == null){
+                end = new Point(me.getX(), me.getY());
+                CircleArc arc = new CircleArc(center, start, end);
                 ArrayList<ShapeBase> sb = new ArrayList<ShapeBase>();
-                sb.add(circle);
+                sb.add(arc);
                 drawPanel.main.body.addDefect(sb);
                 drawPanel.drawBody_Edit();
             }
         }
         if(me.getButton() == 3){
             center = null;
-            peripher = null;
+            start = null;
+            end = null;
             drawPanel.drawBody_Edit();
         }
     }
@@ -65,5 +79,4 @@ public class PolygonCreateListener implements MouseListener{
     public void mouseExited(MouseEvent me) {
         // passes
     }
-    
 }
