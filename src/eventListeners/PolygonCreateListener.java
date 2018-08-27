@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JToggleButton;
 import shapesBase.*;
 import drawing.DrawPanel;
+import java.lang.Math;
 
 public class PolygonCreateListener implements MouseListener{
 
@@ -29,6 +30,14 @@ public class PolygonCreateListener implements MouseListener{
             ArrayList<ShapeBase> temp = new ArrayList<ShapeBase>();
             temp.add( new Polygon( currentPolygon.toArray(points)) );
             drawPanel.drawBody_Edit(temp);
+
+            Point p0 = currentPolygon.get(0);
+            if (currentPolygon.size() > 1 && Math.abs(p1.x - p0.x) <= 10 && Math.abs(p1.y - p0.y) <= 10) {
+                points = new Point[currentPolygon.size()];
+                drawPanel.main.body.addDefect(new Polygon( currentPolygon.toArray(points)));
+                currentPolygon = new ArrayList<Point>();
+                drawPanel.drawBody_Edit();
+            }
         }
         if(me.getButton() == 3){
             currentPolygon = new ArrayList<Point>();

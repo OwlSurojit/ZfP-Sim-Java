@@ -18,7 +18,7 @@ import drawing.DrawPanel;
  *
  * @author morit
  */
-public class CircleArcCreateListener {
+public class CircleArcCreateListener implements MouseListener{
     Point center;
     Point start;
     Point end;
