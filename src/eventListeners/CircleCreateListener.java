@@ -32,7 +32,7 @@ public class CircleCreateListener implements MouseListener{
                 // hier bitte Punkt einzeichnen                
             } else if (peripher == null) {
                 peripher = new Point(me.getX(), me.getY());
-                Circle circle = new Circle(center, Line(center, peripher).length());
+                Circle circle = new Circle(center, (new Line(center, peripher)).length());
                 ArrayList<ShapeBase> sb = new ArrayList<ShapeBase>();
                 sb.add(circle);
                 drawPanel.main.body.addDefect(sb);
