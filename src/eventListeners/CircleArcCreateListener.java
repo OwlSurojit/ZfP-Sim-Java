@@ -46,9 +46,10 @@ public class CircleArcCreateListener implements MouseListener{
             }else if(end == null){
                 end = new Point(me.getX(), me.getY());
                 CircleArc arc = new CircleArc(center, start, end);
-                ArrayList<ShapeBase> sb = new ArrayList<ShapeBase>();
-                sb.add(arc);
-                drawPanel.main.body.addDefect(sb);
+                drawPanel.main.body.addDefect(arc);
+                center = null;
+                start = null;
+                end = null;
                 drawPanel.drawBody_Edit();
             }
         }

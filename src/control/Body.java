@@ -1,5 +1,6 @@
 package control;
 
+import drawing.Binding;
 import shapesBase.ShapeBase;
 import shapesBase.CircleArc;
 import shapesBase.Polygon;
@@ -12,6 +13,7 @@ import drawing.DragPoint;
 public class Body implements Serializable {
     public ArrayList<ShapeBase> outline;
     public ArrayList<ShapeBase> defects;
+    public ArrayList<DragPoint> dragPoints;
     
     public Body(){
         outline = new ArrayList();
@@ -20,14 +22,22 @@ public class Body implements Serializable {
     
     public void addOutline(ShapeBase segment){
         outline.add(segment);
+        refreshDragPoints();
+    }
+    
+    public void addOutline(ArrayList<ShapeBase> segment){
+        outline.addAll(segment);
+        refreshDragPoints();
     }
     
     public void addDefect(ShapeBase defect){
         defects.add(defect);
+        refreshDragPoints();
     }
     
     public void addDefect(ArrayList<ShapeBase> defect){
         defects.addAll(defect);
+        refreshDragPoints();
     }
     
     public void exampleOne(){
@@ -35,6 +45,7 @@ public class Body implements Serializable {
         defects = new ArrayList();
         // Ein 2*2-Quadrat, ohne Fehler. Von oben runter sollte das eine Reflektion an der Rueckwand geben
         outline.add(new Polygon( new Point[]{ new Point(100.0,100.0), new Point(300.0,100.0), new Point(300.0,300.0), new Point(100.0,300.0), new Point(100.0,100.0) } ) );
+        refreshDragPoints();
     }
     
     public void exampleTwo(){
@@ -43,6 +54,7 @@ public class Body implements Serializable {
         // Ein 3*3-Quadrat, ein 1*1-Quadrat als Fehler in der Mitte
         outline.add(new Polygon( new Point[]{ new Point(100.0,100.0), new Point(400.0,100.0), new Point(400.0,400.0), new Point(100.0,400.0), new Point(100.0,100.0) } ) );
         defects.add(new Polygon( new Point[]{ new Point(200.0,200.0), new Point(300.0,200.0), new Point(300.0,300.0), new Point(200.0,300.0), new Point(200.0,200.0) } ) );
+        refreshDragPoints();
     }
     
     public void exampleThree(){
@@ -52,6 +64,7 @@ public class Body implements Serializable {
         outline.add(new Polygon( new Point[]{ new Point(100.0,100.0), new Point(400.0,100.0), new Point(400.0,300.0) } ) );
         outline.add(new CircleArc( new Point(400.0,400.0), 100, 90, 90) );
         outline.add(new Polygon( new Point[]{ new Point(300.0,400.0), new Point(100.0,400.0), new Point(100.0,100.0) } ) );
+        refreshDragPoints();
     }
     
     public void exampleFour(){
@@ -60,6 +73,7 @@ public class Body implements Serializable {
         // Ein 3*3-Quadrat, ein Radius-0.5-Kreis als Fehler in der Mitte
         outline.add(new Polygon( new Point[]{ new Point(100.0,100.0), new Point(400.0,100.0), new Point(400.0,400.0), new Point(100.0,400.0), new Point(100.0,100.0) } ) );
         defects.add(new Circle( new Point(250.0, 250.0), 50.0));
+        refreshDragPoints();
     }
     
     public void exampleLongBar(){
@@ -69,6 +83,7 @@ public class Body implements Serializable {
         outline.add(new Polygon( new Point[]{ new Point(30.0,30.0), new Point(1750.0,30.0), new Point(1750.0,630.0), new Point(30.0,630.0), new Point(30.0,30.0) } ) );
         defects.add(new Polygon( new Point[]{ new Point(830.0,570.0), new Point(890.0,570.0), new Point(890.0,600.0), new Point(830.0,600.0), new Point(830.0,570.0) } ) );
         defects.add(new Circle( new Point(1290.0, 585.0), 30.0));
+        refreshDragPoints();
     }
     
     public void exampleWheelClear(){
@@ -77,6 +92,7 @@ public class Body implements Serializable {
         // Ein r=150-Kreis, r=50-Kreis-Defekt
         outline.add( new Circle( new Point(890.0, 330.0), 300.0) );
         defects.add( new Circle( new Point(890.0, 330.0), 250.0) );
+        refreshDragPoints();
     }
     
     public void exampleWheelDefect(){
@@ -86,6 +102,7 @@ public class Body implements Serializable {
         outline.add( new Circle( new Point(890.0, 330.0), 300.0) );
         defects.add( new Circle( new Point(890.0, 330.0), 250.0) );
         defects.add( new Polygon( new Point[]{ new Point(600,315.0), new Point(630.0,315.0), new Point(630.0,345.0), new Point(600.0,345.0), new Point(600.0,315.0) } ) );
+        refreshDragPoints();
     }
     
     public ArrayList<ShapeBase> components() {
@@ -100,28 +117,47 @@ public class Body implements Serializable {
         return list;
     }
     
-    public ArrayList<DragPoint> getDragPoints(){
-        ArrayList<DragPoint> dragPoints = new ArrayList<DragPoint>();
-        for(ShapeBase shape : defects){
-            ArrayList<Point> points = shape.getDragPoints();
-            for(Point p : points){
+    public void refreshDragPoints(){
+        dragPoints = new ArrayList<DragPoint>();
+        for(ShapeBase shape : outline){
+            ArrayList<Binding> binds = shape.getDragPoints();
+            for(Binding b : binds){
                 boolean merged = false;
                 for(DragPoint dp : dragPoints){
-                    if(p.dist(dp) < 1){
-                        if(! dp.shapes.contains(shape)){
-                            dp.addShape(shape);
+                    if(dp.dist(b) <= 3){
+                        if(! dp.contains(shape)){
+                            dp.addBinding(b);
                         }
                         merged = true;
                         break;
                     }
                 }
                 if(!merged){
-                    DragPoint dragPoint = new DragPoint(p.x, p.y);
-                    dragPoint.addShape(shape);
+                    DragPoint dragPoint = new DragPoint(b.x, b.y);
+                    dragPoint.addBinding(b);
                     dragPoints.add(dragPoint);
                 }
             }
         }
-        return dragPoints;
+        for(ShapeBase shape : defects){
+            ArrayList<Binding> binds = shape.getDragPoints();
+            for(Binding b : binds){
+                boolean merged = false;
+                for(DragPoint dp : dragPoints){
+                    if(dp.dist(b) <= 3){
+                        if(! dp.contains(shape)){
+                            dp.addBinding(b);
+                        }
+                        merged = true;
+                        break;
+                    }
+                }
+                if(!merged){
+                    DragPoint dragPoint = new DragPoint(b.x, b.y);
+                    dragPoint.addBinding(b);
+                    dragPoints.add(dragPoint);
+                }
+            }
+        }
     }
 }

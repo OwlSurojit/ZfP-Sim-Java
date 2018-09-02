@@ -1,5 +1,7 @@
 package shapesBase;
 
+import drawing.Binding;
+import enums.bindType;
 import geometry.Point;
 import geometry.Ray;
 import geometry.Vector;
@@ -33,8 +35,12 @@ public class Line extends ShapeBase implements Serializable {
         return Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
     }
 
-    public Line reverse() {
-            return new Line(this.end, this.start);
+    public Line reverse(){
+        return new Line(this.end, this.start);
+    }
+    
+    public Point getCenter(){
+        return Point.center(start, end);
     }
 
     public Vector toVector(){
@@ -53,10 +59,31 @@ public class Line extends ShapeBase implements Serializable {
     }
     
     @Override
-    public ArrayList<Point> getDragPoints(){
-        ArrayList<Point> list = new ArrayList<Point>();
-        list.add(start);
-        list.add(end);
+    public ArrayList<Binding> getDragPoints(){
+        ArrayList<Binding> list = new ArrayList<Binding>();
+        list.add(new Binding(start, this, bindType.LINE_START));
+        list.add(new Binding(getCenter(), this, bindType.LINE_CENTER));
+        list.add(new Binding(end, this, bindType.LINE_END));
         return list;
+    }
+    
+    @Override
+    public void refactor(Binding bind, double nx, double ny){
+        switch(bind.type){
+            case LINE_CENTER:
+                Point c = getCenter();
+                double tx = (nx-c.x);
+                double ty = (ny-c.y);
+                start = new Point(start.x + tx, start.y + ty);
+                end = new Point(end.x + tx, end.y + ty);                
+                break;
+            case LINE_START:
+                break;
+            case LINE_END:
+                end = new Point(nx, ny);
+                break;
+            default:
+                break;
+        }
     }
 }

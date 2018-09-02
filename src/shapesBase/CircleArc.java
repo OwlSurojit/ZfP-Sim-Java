@@ -1,6 +1,7 @@
 package shapesBase;
 
-import shapesBase.Line;
+import drawing.Binding;
+import enums.bindType;
 import geometry.Point;
 import geometry.Vector;
 import java.io.Serializable;
@@ -35,6 +36,7 @@ public class CircleArc extends ShapeBase implements Serializable {
         this.offsetangle = (new Vector(1, 0)).getDirAngle((new Line(center, start)).toVector());
         this.arcangle = ((new Line(center, start)).toVector()).getDirAngle((new Line(center, end)).toVector());
         
+        this.drawingInfo = new StructDrawingInfo();
     }
     
     /*public double getRadius(){
@@ -58,9 +60,14 @@ public class CircleArc extends ShapeBase implements Serializable {
     }
     
     @Override
-    public ArrayList<Point> getDragPoints(){
-        ArrayList<Point> list = new ArrayList<Point>();
-        list.add(center);
+    public ArrayList<Binding> getDragPoints(){
+        ArrayList<Binding> list = new ArrayList<Binding>();
+        list.add(new Binding(center, this, bindType.CARC_CENTER));
         return list;
+    }
+    
+    @Override
+    public void refactor(Binding bind, double nx, double ny){
+        center = new Point(nx, ny);
     }
 }
