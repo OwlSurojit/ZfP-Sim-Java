@@ -240,7 +240,10 @@ public class Raytracer {
 
 
 
-        } else { // outer corner  or  no corner reflection
+        }// else if()
+        
+        
+        else { // outer corner  or  no corner reflection
             // outer corner reflection
                 if (this.ray.r.getAngle(Vec1.mul(1/Vec1.length()).add(Vec2.mul(1/Vec2.length()))) < 90) { // old: Tools.equal(this.ray.r.getAngle(minVec) + this.ray.r.getAngle(maxVec), minVec.getAngle(maxVec))
                         Ray r = new Ray(S, Vec1.mul(1/Vec1.length()).add(Vec2.mul(-1/Vec2.length()))); // minVec - maxVec
@@ -249,35 +252,6 @@ public class Raytracer {
                 // just passes corner
                 } else return new Ray(S, this.ray.r); //TODO counts as reflection but should not
         }
-
-        // Porblem: Reihenfolge der Punkte in Linie beeinflusst vektor -> addition klappt nicht
-        /*Vector v = maxObj.toVector().mul(1/maxObj.length()).add(minObj.toVector().mul(1/minObj.length()));
-        Point S = getLineIntersection(minObj.toRay(), maxObj).point;
-        Ray r = new Ray(S, (new Vector(v.y, -v.x)));
-        line = new Line(r.getPoint(-1), r.getPoint(1));*/
-
-        // Normierung nach Laenge fehlt
-        /*Point S = getLineIntersection(minObj.toRay(), maxObj).point;
-        Line l1, l2;
-        if (minObj.start.equals(S)) l1 = new Line(S, minObj.end);
-        else l1 = new Line(S, minObj.start);
-        if (maxObj.start.equals(S)) l2 = new Line(S, maxObj.end);
-        else l2 = new Line(S, maxObj.start);
-
-        Vector v = l1.toVector().mul(1/l1.length()).add(l2.toVector().mul(1/l2.length()));
-        Ray r = new Ray(S, new Vector(-v.y, v.x));
-        line = new Line(r.getPoint(-1), r.getPoint(1));*/
-
-
-//        Point S = getLineIntersection(minObj.toRay(), maxObj).point; // alt
-//        Vector v1 = minObj.toVector().mul(1/minObj.length());
-//        Vector v2 = maxObj.toVector().mul(1/maxObj.length());
-//        if (!minObj.start.equals(S)) v1 = v1.mul(-1);
-//        if (!maxObj.start.equals(S)) v2 = v2.mul(-1);
-//        Ray r = new Ray(S, v1.add(v2).toNormal());
-//        line = new Line(r.getPoint(-1), r.getPoint(1));
-//
-//        return getLineReflection(line, S);
     }
 
     public Ray getReflection(Object obj, Point S){
