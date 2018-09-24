@@ -63,7 +63,7 @@ public class RectangleCreateListener implements MouseListener{
                 Point diagonal = new Point(me.getX(), me.getY());
                 Point p1 = new Point(this.start.x, diagonal.y);
                 Point p2 = new Point(diagonal.x, this.start.y);
-                Point[] points = {this.start, p1, diagonal, p2};
+                Point[] points = {this.start, p1, diagonal, p2, this.start};
                 drawPanel.main.body.addDefect(new Polygon(points));
                 this.start = null;
                 this.corner1 = null;
