@@ -87,7 +87,7 @@ public class Raytracer {
         return S;
     }
 
-    public StructPointBool getLineIntersection(Ray ray, Line line) {
+    public static StructPointBool getLineIntersection(Ray ray, Line line) {
         Ray v = line.toRay();
         if (ray.r.equals(v.r)) return new StructPointBool(null, false);
         else {

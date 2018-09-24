@@ -1,5 +1,7 @@
 package shapesBase;
 
+import drawing.Binding;
+import enums.bindType;
 import geometry.Point;
 import java.util.ArrayList;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -39,10 +41,15 @@ public class Oval extends ShapeBase{
     }
     
     @Override
-    public ArrayList<Point> getDragPoints(){
-        ArrayList<Point> list = new ArrayList<Point>();
-        list.add(p1);
-        list.add(p2);
+    public ArrayList<Binding> getDragPoints(){
+        ArrayList<Binding> list = new ArrayList<Binding>();
+        list.add(new Binding(p1, this, bindType.OVAL_P1));
+        list.add(new Binding(p2, this, bindType.OVAL_P2));
         return list;
+    }
+    
+    @Override
+    public void refactor(Binding bind, double nx, double ny){
+        
     }
 }
