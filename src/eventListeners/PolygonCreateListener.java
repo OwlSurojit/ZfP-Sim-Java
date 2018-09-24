@@ -22,13 +22,22 @@ public class PolygonCreateListener implements MouseListener{
     @Override
     public void mouseClicked(MouseEvent me) {
         if(me.getButton() == 1){
+            Point p0 = currentPolygon.get(0);
             Point p1 = new Point(me.getX(), me.getY());
-            currentPolygon.add(p1);
-            
-            Point[] points = new Point[currentPolygon.size()];
-            ArrayList<ShapeBase> temp = new ArrayList<ShapeBase>();
-            temp.add( new Polygon( currentPolygon.toArray(points)) );
-            drawPanel.drawBody_Edit(temp);
+            if (currentPolygon.size() > 1 && Math.abs(p1.x - p0.x) <= 6 && Math.abs(p1.y - p0.y) <= 6) {
+                currentPolygon.add(new Point(p0.x, p0.y));
+                Point[] points = new Point[currentPolygon.size()];
+                drawPanel.main.body.addDefect(new Polygon( currentPolygon.toArray(points)));
+                currentPolygon = new ArrayList<Point>();
+                drawPanel.drawBody_Edit();
+            }
+            else{
+                currentPolygon.add(p1);
+                Point[] points = new Point[currentPolygon.size()];
+                ArrayList<ShapeBase> temp = new ArrayList<ShapeBase>();
+                temp.add( new Polygon( currentPolygon.toArray(points)) );
+                drawPanel.drawBody_Edit(temp);
+            }
         }
         if(me.getButton() == 3){
             currentPolygon = new ArrayList<Point>();

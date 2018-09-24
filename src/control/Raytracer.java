@@ -87,7 +87,7 @@ public class Raytracer {
         return S;
     }
 
-    public StructPointBool getLineIntersection(Ray ray, Line line) {
+    public static StructPointBool getLineIntersection(Ray ray, Line line) {
         Ray v = line.toRay();
         if (ray.r.equals(v.r)) return new StructPointBool(null, false);
         else {
@@ -117,17 +117,18 @@ public class Raytracer {
     public Double[] getCircleArcIntersection(CircleArc arc){
         Double[] factors = getCircleIntersection(arc.toCircle());
         Point S;
+        double intersecangle;
         if (factors[0] != null) {
             S = this.ray.getPoint(factors[0]);
             // Winkel zwischen Start und SP
-            double intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
+            intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
             //Außerhalb des Kreisbogens -> kein SP mit CircleArc
-            if (intersecangle > arc.arcangle) factors[0] = null;
+            if (intersecangle < 0 || intersecangle > arc.arcangle) factors[0] = null;
         }
         if (factors[1] != null){
             S = this.ray.getPoint(factors[1]);
-            double intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
-            if (intersecangle > arc.arcangle) factors[1] = null;
+            intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
+            if (intersecangle < 0 || intersecangle > arc.arcangle) factors[1] = null;
         }
         return factors;
     }

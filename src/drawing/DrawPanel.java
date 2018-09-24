@@ -17,7 +17,6 @@ public class DrawPanel extends javax.swing.JPanel{
     public BodyWindow main;
     public ArrayList<ShapeBase> tempShapes;
     public double[][] raytracer;
-    public ArrayList<DragPoint> dragPoints;
     
     public boolean paintBody;
     public boolean paintTemp;
@@ -78,6 +77,7 @@ public class DrawPanel extends javax.swing.JPanel{
     
     public void drawClear(){
         paintBody = false;
+        paintTemp = false;
         paintRaytracer = false;
         paintDragPoints = false;
         
@@ -118,13 +118,13 @@ public class DrawPanel extends javax.swing.JPanel{
         }
         
         if(paintDragPoints){
-            dragPoints = main.body.getDragPoints();
-            for(DragPoint dragPoint : dragPoints){
+            for(DragPoint dragPoint : main.body.dragPoints){
                 if(dragPoint.highlight){
                     paintNode(g2d, dragPoint.x, dragPoint.y, 3, Color.GREEN);
+                    paintShapeLit(g2d, dragPoint.bindings.get(dragPoint.highlight_index).shape);
                 }
                 else{
-                    paintNode(g2d, dragPoint.x, dragPoint.y, 2, Color.BLUE);
+                    paintNode(g2d, dragPoint.x, dragPoint.y, 3, Color.BLUE);
                 }
             }
         }
@@ -159,6 +159,37 @@ public class DrawPanel extends javax.swing.JPanel{
         }
         else if(shape instanceof CircleArc){
             g2d.setColor(shape.drawingInfo.lineColor);
+            g2d.draw(getCircleArc2D((CircleArc) shape));
+        }
+    }
+    
+    public void paintShapeLit(Graphics2D g2d, ShapeBase shape){
+        if(shape instanceof Line){
+            g2d.setColor(shape.drawingInfo.lineColorLit);
+            g2d.draw(getLine2D((Line) shape));
+        }
+        else if (shape instanceof Polygon){
+            if ( shape.drawingInfo.fill && ((Polygon) shape).closed() ){
+                g2d.setColor(shape.drawingInfo.fillColor);
+                g2d.fillPolygon(getPolygon2D((Polygon) shape));
+            }
+            
+            g2d.setColor(shape.drawingInfo.lineColorLit);
+            for(Line line : ((Polygon) shape).lines){
+                g2d.draw(getLine2D(line));
+            }
+        }
+        else if(shape instanceof Circle){
+            Ellipse2D.Double circle = getCircle2D((Circle) shape); 
+            if( shape.drawingInfo.fill ){
+                g2d.setColor(shape.drawingInfo.fillColor);
+                g2d.fill(circle);
+            }
+            g2d.setColor(shape.drawingInfo.lineColorLit);
+            g2d.draw(circle);
+        }
+        else if(shape instanceof CircleArc){
+            g2d.setColor(shape.drawingInfo.lineColorLit);
             g2d.draw(getCircleArc2D((CircleArc) shape));
         }
     }

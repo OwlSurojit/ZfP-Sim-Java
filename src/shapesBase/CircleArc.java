@@ -1,8 +1,9 @@
 package shapesBase;
 
-import shapesBase.Line;
+import drawing.Binding;
+import enums.bindType;
 import geometry.Point;
-import geometry.Point;
+import geometry.Vector;
 import java.io.Serializable;
 import java.util.ArrayList;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -29,6 +30,15 @@ public class CircleArc extends ShapeBase implements Serializable {
         }
     }
     
+    public CircleArc(Point center, Point start, Point end){
+        this.center = center;
+        this.radius = (new Line(center, start)).length();
+        this.offsetangle = (new Vector(1, 0)).getDirAngle((new Line(center, start)).toVector());
+        this.arcangle = ((new Line(center, start)).toVector()).getDirAngle((new Line(center, end)).toVector());
+        
+        this.drawingInfo = new StructDrawingInfo();
+    }
+    
     /*public double getRadius(){
         return (new Line(center, start)).length();
     }*/
@@ -50,9 +60,14 @@ public class CircleArc extends ShapeBase implements Serializable {
     }
     
     @Override
-    public ArrayList<Point> getDragPoints(){
-        ArrayList<Point> list = new ArrayList<Point>();
-        list.add(center);
+    public ArrayList<Binding> getDragPoints(){
+        ArrayList<Binding> list = new ArrayList<Binding>();
+        list.add(new Binding(center, this, bindType.CARC_CENTER));
         return list;
+    }
+    
+    @Override
+    public void refactor(Binding bind, double nx, double ny){
+        center = new Point(nx, ny);
     }
 }

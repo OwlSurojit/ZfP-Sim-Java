@@ -3,8 +3,10 @@ package zfP_Sim;
 import control.Body;
 import control.Scan;
 import control.Sender;
+import eventListeners.DragDropListener;
 import geometry.*;
 import java.awt.Dimension;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +21,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleLongBar();
+        body = new Body(); body.exampleDebug();
         simPanel.main = this;
         scanPanel.main = this;
         simPanel.drawBody();
@@ -72,7 +74,7 @@ public class MainWindow extends BodyWindow {
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        editMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
 
@@ -313,8 +315,13 @@ public class MainWindow extends BodyWindow {
 
         viewMenu.setText("Ansicht");
 
-        jMenuItem2.setText("T.B.D.");
-        viewMenu.add(jMenuItem2);
+        editMenuItem.setText("T.B.D.");
+        editMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(editMenuItem);
 
         menuBar.add(viewMenu);
 
@@ -411,14 +418,36 @@ public class MainWindow extends BodyWindow {
     }//GEN-LAST:event_newPregenMenuItemActionPerformed
 
     private void bodyEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bodyEditButtonActionPerformed
-        simPanel.drawBody_Edit();
+        MouseListener[] listeners = simPanel.getMouseListeners();
+        if(listeners.length == 1){
+            simPanel.removeMouseListener(listeners[0]);
+            simPanel.drawBody();
+        }
+        else{
+            simPanel.addMouseListener(new DragDropListener(simPanel));
+            body.refreshDragPoints();
+            simPanel.drawBody_Edit();
+        }
     }//GEN-LAST:event_bodyEditButtonActionPerformed
 
     private void new2DMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_new2DMenuItemActionPerformed
         this.setVisible(false);
-        EditorWindow ew = new EditorWindow();
+        EditorWindow ew = new EditorWindow(this);
         ew.setVisible(true);
     }//GEN-LAST:event_new2DMenuItemActionPerformed
+
+    private void editMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuItemActionPerformed
+        MouseListener[] listeners = simPanel.getMouseListeners();
+        if(listeners.length == 1){
+            simPanel.removeMouseListener(listeners[0]);
+            simPanel.drawBody();
+        }
+        else{
+            simPanel.addMouseListener(new DragDropListener(simPanel));
+            body.refreshDragPoints();
+            simPanel.drawBody_Edit();
+        }
+    }//GEN-LAST:event_editMenuItemActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -455,12 +484,12 @@ public class MainWindow extends BodyWindow {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bodyEditButton;
     private javax.swing.JMenuItem closeMenuItem;
+    private javax.swing.JMenuItem editMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenu importMenu;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
