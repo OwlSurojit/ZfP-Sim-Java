@@ -34,6 +34,8 @@ public class EditorWindow extends BodyWindow {
         circleToggleButton = new javax.swing.JToggleButton();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         carcToggleButton = new javax.swing.JToggleButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
+        ovalToggleButton = new javax.swing.JToggleButton();
         jSplitPane2 = new javax.swing.JSplitPane();
         drawPanel = new drawing.DrawPanel();
         objToolBar = new javax.swing.JToolBar();
@@ -122,6 +124,19 @@ public class EditorWindow extends BodyWindow {
             }
         });
         geomToolBar.add(carcToggleButton);
+        geomToolBar.add(jSeparator5);
+
+        toolButtonGroup.add(ovalToggleButton);
+        ovalToggleButton.setText("Ellipse");
+        ovalToggleButton.setFocusable(false);
+        ovalToggleButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ovalToggleButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ovalToggleButton.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                ovalToggleButtonStateChanged(evt);
+            }
+        });
+        geomToolBar.add(ovalToggleButton);
 
         jSplitPane1.setTopComponent(geomToolBar);
 
@@ -263,6 +278,18 @@ public class EditorWindow extends BodyWindow {
         mainWindow.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void ovalToggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ovalToggleButtonStateChanged
+        if(ovalToggleButton.isSelected()){
+            MouseListener[] listeners = drawPanel.getMouseListeners();
+            if(listeners.length == 1){
+                drawPanel.removeMouseListener(listeners[0]);
+            }
+            drawPanel.addMouseListener(new OvalCreateListener(drawPanel));
+            body.refreshDragPoints();
+            drawPanel.drawBody_Edit();
+        }
+    }//GEN-LAST:event_ovalToggleButtonStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton carcToggleButton;
     private javax.swing.JToggleButton circleToggleButton;
@@ -278,10 +305,12 @@ public class EditorWindow extends BodyWindow {
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JToolBar objToolBar;
+    private javax.swing.JToggleButton ovalToggleButton;
     private javax.swing.JToggleButton polygonToggleButton;
     private javax.swing.JToggleButton rectangleToggleButton;
     private javax.swing.ButtonGroup toolButtonGroup;
