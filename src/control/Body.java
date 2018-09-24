@@ -105,13 +105,19 @@ public class Body implements Serializable {
         refreshDragPoints();
     }
     
+    public void exampleDebug() {
+        outline = new ArrayList();
+        defects = new ArrayList();
+        outline.add(new Polygon( new Point[]{ new Point(30.0,30.0), new Point(1750.0,30.0), new Point(1750.0,630.0), new Point(30.0,630.0), new Point(30.0,30.0) } ) );
+        defects.add(new CircleArc(new Point(300, 300), 100, 150, 200));
+    }
+  
     public void exampleCornerRef(){
         outline = new ArrayList();
         defects = new ArrayList();
         outline.add(new Polygon( new Point[]{ new Point(100, 100), new Point(500, 100), new Point(500, 500), new Point(100, 500), new Point(100, 100) } ));
         defects.add(new Polygon( new Point[]{ new Point(200, 200), new Point(400, 200), new Point(400, 400), new Point(200, 400), new Point(200, 200) } ));
         refreshDragPoints();
-        
     }
     
     public ArrayList<ShapeBase> components() {
