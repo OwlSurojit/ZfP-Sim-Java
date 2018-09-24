@@ -171,6 +171,7 @@ public class Raytracer {
         Vector minVec = null;
         Line line = null;
         double angle;
+        // search lines for reflection
         for (Object obj : cornerObjs){
             // Line, Reflection happens on
             if (Line.class.isInstance(obj)) {
@@ -219,9 +220,6 @@ public class Raytracer {
                     v2 = getLineReflection(new Ray(v2.mul(-1).toPoint(), v2), minVec.toLine(), new Point(0,0)).r;
                 }
                 return new Ray(S, v1.add(v2));
-
-                
-
         // ray passes at outer corner
         } else if(this.ray.r.getDirAngle(minVec) > 180 && this.ray.r.getDirAngle(maxVec) > 180 || this.ray.r.getDirAngle(minVec) < 180 && this.ray.r.getDirAngle(maxVec) < 180){
             return new Ray(S, this.ray.r);
