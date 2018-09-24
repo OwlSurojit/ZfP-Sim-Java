@@ -105,6 +105,15 @@ public class Body implements Serializable {
         refreshDragPoints();
     }
     
+    public void exampleCornerRef(){
+        outline = new ArrayList();
+        defects = new ArrayList();
+        outline.add(new Polygon( new Point[]{ new Point(100, 100), new Point(500, 100), new Point(500, 500), new Point(100, 500), new Point(100, 100) } ));
+        defects.add(new Polygon( new Point[]{ new Point(200, 200), new Point(400, 200), new Point(400, 400), new Point(200, 400), new Point(200, 200) } ));
+        refreshDragPoints();
+        
+    }
+    
     public ArrayList<ShapeBase> components() {
         ArrayList<ShapeBase> list = new ArrayList<ShapeBase>();
         for(ShapeBase s : outline){
