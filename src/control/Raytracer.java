@@ -129,6 +129,7 @@ public class Raytracer {
             S = this.ray.getPoint(factors[1]);
             intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
             if (intersecangle < 0 || intersecangle > arc.arcangle) factors[1] = null;
+            // adsf
         }
         return factors;
     }
