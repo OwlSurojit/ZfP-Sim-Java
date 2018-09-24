@@ -15,5 +15,9 @@ public class test {
 		System.out.println(v1.getDirAngle(v3));
 		System.out.println(v1.getDirAngle(v4));
                 
+                Double a = Math.sqrt(-1);
+                if (a.isNaN()) a = null;
+		System.out.println(Math.pow(5*a, 2));
+                
 	}
 }
