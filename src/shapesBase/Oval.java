@@ -13,13 +13,13 @@ public class Oval extends ShapeBase{
     public double e;
     
     public Oval(Point p1, Point p2, double e){
-        if(p1.equals(p2)){
+        if (p1.equals(p2)){
             throw new ValueException("P1 and P2 mustn't be identical.");
         }
-        else if(e <= (new Line(p1, p2)).length()){
+        else if (e <= (new Line(p1, p2)).length()){
             throw new ValueException("E must be greater than distance of P1 and P2.");
         }
-        else{
+        else {
             this.p1 = p1;
             this.p2 = p2;
             this.e = e;
