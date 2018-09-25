@@ -298,7 +298,7 @@ public class DrawPanel extends javax.swing.JPanel{
     public Ellipse2D.Double getOval2D(Oval oval){
         Ellipse2D.Double oval2d = new Ellipse2D.Double();
         oval2d.width = oval.e;
-        oval2d.height = Math.sqrt(Math.pow(oval.e/2, 2)-Math.pow((new Line(oval.p1, oval.p2)).length()/2, 2));
+        oval2d.height = 2*Math.sqrt(Math.pow(oval.e/2, 2)-Math.pow((new Line(oval.p1, oval.p2)).length()/2, 2));
         oval2d.x = (oval.p1.x + oval.p2.x - oval2d.width)/2;
         oval2d.y = (oval.p1.y + oval.p2.y - oval2d.height)/2;
         return oval2d;
