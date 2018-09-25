@@ -120,15 +120,20 @@ public class Raytracer {
         double intersecangle;
         if (factors[0] != null) {
             S = this.ray.getPoint(factors[0]);
-            // Winkel zwischen Start und SP
-            intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
-            //Außerhalb des Kreisbogens -> kein SP mit CircleArc
-            if (intersecangle < 0 || intersecangle > arc.arcangle) factors[0] = null;
+            Vector S_offset = new Vector(Math.cos(Math.toRadians(arc.offsetangle)), -Math.sin(Math.toRadians(arc.offsetangle)));
+            if (S_offset.getDirAngle((new Line(arc.center, S)).toVector()) > arc.arcangle) factors[0] = null;
+//            // Winkel zwischen Start und SP
+//            //Problem: gilt nur, wenn Vector(1,0) auf offenen Teil zeigt
+//            intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
+//            //Außerhalb des Kreisbogens -> kein SP mit CircleArc
+//            if (intersecangle < 0 || intersecangle > arc.arcangle) factors[0] = null;
         }
         if (factors[1] != null){
             S = this.ray.getPoint(factors[1]);
-            intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
-            if (intersecangle < 0 || intersecangle > arc.arcangle) factors[1] = null;
+            Vector S_offset = new Vector(Math.cos(Math.toRadians(arc.offsetangle)), -Math.sin(Math.toRadians(arc.offsetangle)));
+            if (S_offset.getDirAngle((new Line(arc.center, S)).toVector()) > arc.arcangle) factors[1] = null;
+//            intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
+//            if (intersecangle < 0 || intersecangle > arc.arcangle) factors[1] = null;
         }
         return factors;
     }
