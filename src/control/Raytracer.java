@@ -276,11 +276,21 @@ public class Raytracer {
     }
 
     public Ray getOvalReflection(Oval oval, Point S){
-        double factor = -(new Line(S, oval.p1)).length() / (new Line(S, oval.p2)).length();
+        /*double factor = -(new Line(S, oval.p1)).length() / (new Line(S, oval.p2)).length();
         Vector v = (new Line(oval.p2, S)).toVector().mul(factor);
         Ray tv = new Ray(S, v.add((new Line(oval.p2, S)).toVector()));
         Line tr = new Line(tv.getPoint(-1), tv.getPoint(1));
-        return getLineReflection(this.ray, tr, S);
+        return getLineReflection(this.ray, tr, S);*/
+        
+        // Weg ueber Kreis um Oval:
+        // Schnittpunkt des Strahls p1 ueber S auf Kreis = T
+        Ray r1 = new Ray(oval.p1, (new Line(oval.p1, S)).toVector());
+        Point T = r1.getPoint(oval.e/(new Line(oval.p1, S).length()));
+        Vector vt = (new Line(oval.p2, S)).toVector().add((new Line(T, S)).toVector());
+        Ray rt = new Ray(S, vt);
+        Line tangente = new Line(rt.getPoint(-1), rt.getPoint(1));
+        return getLineReflection(this.ray, tangente, S);
+        
     }
 
 }

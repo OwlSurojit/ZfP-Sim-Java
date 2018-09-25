@@ -18,3 +18,5 @@ nbproject/private/private.xml
 README.md
 *.class
 *.ser
+*.properties
+nbproject/private/private.xml
