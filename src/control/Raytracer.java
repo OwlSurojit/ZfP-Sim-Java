@@ -283,14 +283,25 @@ public class Raytracer {
         return getLineReflection(this.ray, tr, S);*/
         
         // Weg ueber Kreis um Oval:
-        // Schnittpunkt des Strahls p1 ueber S auf Kreis = T
-        Ray r1 = new Ray(oval.p1, (new Line(oval.p1, S)).toVector());
-        Point T = r1.getPoint(oval.e/(new Line(oval.p1, S).length()));
+        // Schnittpunkt des Strahls p1 ueber S auf Kreis k = T
+        Ray rk = new Ray(oval.p1, (new Line(oval.p1, S)).toVector());
+        Point T = rk.getPoint(oval.e/(new Line(oval.p1, S).length()));
+        // Vector der Tangente als Summe beider (gleic langer) Teilvekoren
         Vector vt = (new Line(oval.p2, S)).toVector().add((new Line(T, S)).toVector());
         Ray rt = new Ray(S, vt);
-        Line tangente = new Line(rt.getPoint(-1), rt.getPoint(1));
-        return getLineReflection(this.ray, tangente, S);
+        // Tagnente aus 2 Punkten im Strahl an S
+        Line t = new Line(rt.getPoint(-1), rt.getPoint(1));
         
+        
+        // Weg ueber Brennpunkteigenschaft (Winkelhalbierende = Normale)
+        // Winkel der Normalen zu Bezug (1,0)
+        double globalNormAngle = Math.toRadians((new Vector(1,0)).getDirAngle((new Line(S, oval.p1)).toVector()) + (new Line(S, oval.p1)).toVector().getAngle((new Line(S, oval.p2).toVector()))/2);
+        Vector vt1 = (new Vector(Math.sin(globalNormAngle), Math.cos(globalNormAngle))).toNormal();
+        Ray rt1 = new Ray(S, vt1);
+        Line t1 = new Line(rt1.getPoint(-1), rt1.getPoint(1));
+        
+        
+        return getLineReflection(this.ray, t, S);
     }
 
 }
