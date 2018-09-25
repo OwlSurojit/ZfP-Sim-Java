@@ -17,22 +17,17 @@ import zfP_Sim.EditorWindow;
 
 public class DrawingTab extends PropertiesTab{
     
-    public javax.swing.JLabel nameLabel;
-    public javax.swing.JLabel lineColorLabel;
-    public javax.swing.JLabel lineColorLitLabel;
-    public javax.swing.JLabel fillLabel;
-    public javax.swing.JLabel fillColorLabel;
-    
-    public javax.swing.JTextField nameField;
-    public javax.swing.JButton lineColorButton;
-    public javax.swing.JButton lineColorLitButton;
-    public javax.swing.JCheckBox fillCheckBox;
-    public javax.swing.JButton fillColorButton;
+    public ShapeBase shape;
+
+    public javax.swing.JLabel lineColorLabel; public javax.swing.JButton lineColorButton;
+    public javax.swing.JLabel lineColorLitLabel; public javax.swing.JButton lineColorLitButton;
+    public javax.swing.JLabel fillLabel; public javax.swing.JCheckBox fillCheckBox;
+    public javax.swing.JLabel fillColorLabel; public javax.swing.JButton fillColorButton;
     
     public DrawingTab(ShapeBase shape){
         this.shape = shape;
         
-        setLayout(new GridLayout(5, 2));
+        setLayout(new GridLayout(4, 2));
         
         /*NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);
@@ -43,37 +38,31 @@ public class DrawingTab extends PropertiesTab{
         formatter.setCommitsOnValidEdit(true);
         new JFormattedTextField(formatter);*/
         
-        nameLabel = new JLabel("Name");
         lineColorLabel = new JLabel("Linienfarbe");
-        lineColorLitLabel = new JLabel("Linienfarbe [markiert]");
-        fillLabel = new JLabel("Füllen");
-        fillColorLabel = new JLabel("Füllfarbe");
-        
-        nameField = new JTextField(shape.drawingInfo.name);
-        
         lineColorButton = new JButton("");
         lineColorButton.setBackground(shape.drawingInfo.lineColor);
         lineColorButton.addActionListener((java.awt.event.ActionEvent evt) -> {
             lineColorButtonActionPerformed(evt);
         });
         
+        lineColorLitLabel = new JLabel("Linienfarbe [markiert]");
         lineColorLitButton = new JButton("");
         lineColorLitButton.setBackground(shape.drawingInfo.lineColorLit);
         lineColorLitButton.addActionListener((java.awt.event.ActionEvent evt) -> {
             lineColorLitButtonActionPerformed(evt);
         });
         
+        fillLabel = new JLabel("Füllen");
         fillCheckBox = new JCheckBox("");
         fillCheckBox.setSelected(shape.drawingInfo.fill);
         
+        fillColorLabel = new JLabel("Füllfarbe");
         fillColorButton = new JButton("");
         fillColorButton.setBackground(shape.drawingInfo.fillColor);
         fillColorButton.addActionListener((java.awt.event.ActionEvent evt) -> {
             fillColorButtonActionPerformed(evt);
         });
         
-        add(nameLabel);
-        add(nameField);
         add(lineColorLabel);
         add(lineColorButton);
         add(lineColorLitLabel);
@@ -107,7 +96,6 @@ public class DrawingTab extends PropertiesTab{
     
     @Override
     public void commit(){
-        shape.drawingInfo.name = nameField.getText();
         shape.drawingInfo.lineColor = lineColorButton.getBackground();
         shape.drawingInfo.lineColorLit = lineColorLitButton.getBackground();
         shape.drawingInfo.fill = fillCheckBox.isSelected();
