@@ -174,14 +174,13 @@ public class DrawPanel extends javax.swing.JPanel{
             //at.rotate(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(P1, P2).toVector()))));
             AffineTransform at = new AffineTransform();
             at.setToRotation(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(P1, P2).toVector()))), (P1.x + P2.x)/2, (P1.y + P2.y)/2);
-            g2d.transform(at);
             Ellipse2D.Double oval = getOval2D((Oval) shape);
             g2d.setColor(shape.drawingInfo.lineColor);
             if (shape.drawingInfo.fill){
                 g2d.setColor(shape.drawingInfo.fillColor);
-                g2d.fill(oval);
+                g2d.fill(at.createTransformedShape(oval));
             }
-            g2d.draw(oval);
+            g2d.draw(at.createTransformedShape(oval));
             
         }
     }
@@ -214,6 +213,28 @@ public class DrawPanel extends javax.swing.JPanel{
         else if(shape instanceof CircleArc){
             g2d.setColor(shape.drawingInfo.lineColorLit);
             g2d.draw(getCircleArc2D((CircleArc) shape));
+        }
+        else if (shape instanceof Oval){
+            
+            
+            /*g2d.rotate((new Vector(1, 0)).getDirAngle((new Line(((Oval)shape).p1, ((Oval)shape).p2).toVector())));
+            g2d.draw(oval);*/
+            
+            //AffineTransform at = AffineTransform.getTranslateInstance(oval.x, oval.y);
+            Point P1 = ((Oval)shape).p1;
+            Point P2 = ((Oval)shape).p2;
+            //AffineTransform at = AffineTransform.getTranslateInstance((P1.x + P2.x)/2, (P1.y + P2.y)/2);
+            //at.rotate(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(P1, P2).toVector()))));
+            AffineTransform at = new AffineTransform();
+            at.setToRotation(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(P1, P2).toVector()))), (P1.x + P2.x)/2, (P1.y + P2.y)/2);
+            Ellipse2D.Double oval = getOval2D((Oval) shape);
+            g2d.setColor(shape.drawingInfo.lineColorLit);
+            if (shape.drawingInfo.fill){
+                g2d.setColor(shape.drawingInfo.fillColor);
+                g2d.fill(at.createTransformedShape(oval));
+            }
+            g2d.draw(at.createTransformedShape(oval));
+            
         }
     }
     
