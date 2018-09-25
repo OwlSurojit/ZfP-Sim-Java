@@ -10,34 +10,64 @@ import geometry.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import drawing.DragPoint;
+import javax.swing.DefaultListModel;
+import javax.swing.ListModel;
 
 public class Body implements Serializable {
     public ArrayList<ShapeBase> outline;
     public ArrayList<ShapeBase> defects;
+    public DefaultListModel<ShapeBase> shapes;
     public ArrayList<DragPoint> dragPoints;
     
     public Body(){
         outline = new ArrayList();
         defects = new ArrayList();
+        shapes = new DefaultListModel<>();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
     }
     
     public void addOutline(ShapeBase segment){
         outline.add(segment);
+        shapes.addElement(segment);
         refreshDragPoints();
     }
     
     public void addOutline(ArrayList<ShapeBase> segment){
         outline.addAll(segment);
+        for(ShapeBase sb : segment){
+            shapes.addElement(sb);
+        }
+        refreshDragPoints();
+    }
+    
+    public void removeOutline(ShapeBase segment){
+        outline.remove(segment);
+        shapes.removeElement(segment);
         refreshDragPoints();
     }
     
     public void addDefect(ShapeBase defect){
         defects.add(defect);
+        shapes.addElement(defect);
         refreshDragPoints();
     }
     
     public void addDefect(ArrayList<ShapeBase> defect){
         defects.addAll(defect);
+        for(ShapeBase sb : defect){
+            shapes.addElement(sb);
+        }
+        refreshDragPoints();
+    }
+    
+    public void removeDefect(ShapeBase defect){
+        defects.remove(defect);
+        shapes.removeElement(defect);
         refreshDragPoints();
     }
     
@@ -46,6 +76,13 @@ public class Body implements Serializable {
         defects = new ArrayList();
         // Ein 2*2-Quadrat, ohne Fehler. Von oben runter sollte das eine Reflektion an der Rueckwand geben
         outline.add(new Polygon( new Point[]{ new Point(100.0,100.0), new Point(300.0,100.0), new Point(300.0,300.0), new Point(100.0,300.0), new Point(100.0,100.0) } ) );
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
     
@@ -55,6 +92,13 @@ public class Body implements Serializable {
         // Ein 3*3-Quadrat, ein 1*1-Quadrat als Fehler in der Mitte
         outline.add(new Polygon( new Point[]{ new Point(100.0,100.0), new Point(400.0,100.0), new Point(400.0,400.0), new Point(100.0,400.0), new Point(100.0,100.0) } ) );
         defects.add(new Polygon( new Point[]{ new Point(200.0,200.0), new Point(300.0,200.0), new Point(300.0,300.0), new Point(200.0,300.0), new Point(200.0,200.0) } ) );
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
     
@@ -65,6 +109,13 @@ public class Body implements Serializable {
         outline.add(new Polygon( new Point[]{ new Point(100.0,100.0), new Point(400.0,100.0), new Point(400.0,300.0) } ) );
         outline.add(new CircleArc( new Point(400.0,400.0), 100, 90, 90) );
         outline.add(new Polygon( new Point[]{ new Point(300.0,400.0), new Point(100.0,400.0), new Point(100.0,100.0) } ) );
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
     
@@ -74,6 +125,13 @@ public class Body implements Serializable {
         // Ein 3*3-Quadrat, ein Radius-0.5-Kreis als Fehler in der Mitte
         outline.add(new Polygon( new Point[]{ new Point(100.0,100.0), new Point(400.0,100.0), new Point(400.0,400.0), new Point(100.0,400.0), new Point(100.0,100.0) } ) );
         defects.add(new Circle( new Point(250.0, 250.0), 50.0));
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
     
@@ -84,6 +142,13 @@ public class Body implements Serializable {
         outline.add(new Polygon( new Point[]{ new Point(30.0,30.0), new Point(1750.0,30.0), new Point(1750.0,630.0), new Point(30.0,630.0), new Point(30.0,30.0) } ) );
         defects.add(new Polygon( new Point[]{ new Point(830.0,570.0), new Point(890.0,570.0), new Point(890.0,600.0), new Point(830.0,600.0), new Point(830.0,570.0) } ) );
         defects.add(new Circle( new Point(1290.0, 585.0), 30.0));
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
     
@@ -93,6 +158,13 @@ public class Body implements Serializable {
         // Ein r=150-Kreis, r=50-Kreis-Defekt
         outline.add( new Circle( new Point(890.0, 330.0), 300.0) );
         defects.add( new Circle( new Point(890.0, 330.0), 250.0) );
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
     
@@ -103,6 +175,13 @@ public class Body implements Serializable {
         outline.add( new Circle( new Point(890.0, 330.0), 300.0) );
         defects.add( new Circle( new Point(890.0, 330.0), 250.0) );
         defects.add( new Polygon( new Point[]{ new Point(600,315.0), new Point(630.0,315.0), new Point(630.0,345.0), new Point(600.0,345.0), new Point(600.0,315.0) } ) );
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
     
@@ -110,6 +189,13 @@ public class Body implements Serializable {
         outline = new ArrayList();
         defects = new ArrayList();
         outline.add(new Oval(new Point(200, 200), new Point(400, 200), 200*Math.sqrt(2)));
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
   
@@ -118,6 +204,13 @@ public class Body implements Serializable {
         defects = new ArrayList();
         outline.add(new Polygon( new Point[]{ new Point(100, 100), new Point(500, 100), new Point(500, 500), new Point(100, 500), new Point(100, 100) } ));
         defects.add(new Polygon( new Point[]{ new Point(200, 200), new Point(400, 200), new Point(400, 400), new Point(200, 400), new Point(200, 200) } ));
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
         refreshDragPoints();
     }
     

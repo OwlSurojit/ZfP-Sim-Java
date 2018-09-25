@@ -24,18 +24,18 @@ public class ScanPanel extends JPanel {
     private int width = 1780;
     private int heigth = 380;
     private int padding = 25;
-    private int labelPadding = 25;
+    private int labelPadding = 30;
     private Color lineColor = new Color(44, 102, 230, 180);
     private Color pointColor = new Color(100, 100, 100, 180);
     private Color gridColor = new Color(200, 200, 200, 200);
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     private int pointWidth = 4;
+    private int numberXDivisions = 10;
     private int numberYDivisions = 10;
     private List<Double[]> scores;
 
     public ScanPanel(){
         scores = new ArrayList<>();
-        scores.add(new Double[]{0.0,0.0});
     }
 
     @Override
@@ -43,63 +43,77 @@ public class ScanPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / Math.ceil((scores.get(scores.size() - 1)[0]));
-        double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
-
+        
+        
+        int graphWidth = getWidth() - (2 * padding) - labelPadding;
+        int graphHeight = getHeight() - (2 * padding) - labelPadding;
+        
+        double lowerPow;
+        double xMax;
+        double yMax;
+        double xScale;
+        double yScale;
+        if(scores.size()>0){
+            lowerPow = Math.floor(Math.log10(scores.get(scores.size() - 1)[0]));
+            xMax = (Math.pow(10, lowerPow) * Math.ceil(scores.get(scores.size() - 1)[0] / Math.pow(10, lowerPow)));
+            yMax = scores.get(0)[1];
+            xScale = graphWidth / xMax;
+            yScale = graphHeight / scores.get(0)[1];
+        }
+        else{
+            lowerPow = 0;
+            xMax = 1;
+            yMax = 1;
+            xScale = graphWidth;
+            yScale = graphHeight;
+        }
+        
         List<Point> graphPoints = new ArrayList<>();
         for (int i = 0; i < scores.size(); i++) {
             int x1 = (int) (scores.get(i)[0] * xScale + padding + labelPadding);
-            int y1 = (int) ((getMaxScore() - scores.get(i)[1]) * yScale + padding);
+            int y1 = (int) ((yMax - scores.get(i)[1]) * yScale + padding);
             graphPoints.add(new Point(x1, y1));
         }
 
         // draw white background
         g2.setColor(Color.WHITE);
-        g2.fillRect(padding + labelPadding, padding, getWidth() - (2 * padding) - labelPadding, getHeight() - 2 * padding - labelPadding);
+        g2.fillRect(padding + labelPadding, padding, graphWidth, graphHeight);
         g2.setColor(Color.BLACK);
 
         // create hatch marks and grid lines for y axis.
         for (int i = 0; i < numberYDivisions + 1; i++) {
             int x0 = padding + labelPadding;
-            int x1 = pointWidth + padding + labelPadding;
-            int y0 = getHeight() - ((i * (getHeight() - padding * 2 - labelPadding)) / numberYDivisions + padding + labelPadding);
-            int y1 = y0;
-            if (scores.size() > 0) {
-                g2.setColor(gridColor);
-                g2.drawLine(padding + labelPadding + 1 + pointWidth, y0, getWidth() - padding, y1);
-                g2.setColor(Color.BLACK);
-                String yLabel = ((int) ((getMinScore() + (getMaxScore() - getMinScore()) * ((i * 1.0) / numberYDivisions)) * 100)) / 100.0 + "";
-                FontMetrics metrics = g2.getFontMetrics();
-                int labelWidth = metrics.stringWidth(yLabel);
-                g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
-            }
-            g2.drawLine(x0, y0, x1, y1);
+            int x1 = x0 + pointWidth;
+            int y = graphHeight + padding - ( i * graphHeight / numberYDivisions);
+            
+            g2.setColor(gridColor);
+            g2.drawLine(x0, y, getWidth() - padding, y);
+            g2.setColor(Color.BLACK);
+            String yLabel = (double) (yMax * i / numberYDivisions) + "";
+            FontMetrics metrics = g2.getFontMetrics();
+            int labelWidth = metrics.stringWidth(yLabel);
+            g2.drawString(yLabel, x0 - labelWidth - 5, y + (metrics.getHeight() / 2) - 3);
+            g2.drawLine(x0, y, x1, y);
         }
 
         // and for x axis
-        for (int i = 0; i < scores.size(); i++) {
-            if (scores.size() > 1) {
-                int x0 = i * (getWidth() - padding * 2 - labelPadding) / /*(scores.size() - 1)*/((int) Math.ceil((scores.get(scores.size() - 1)[0]))) + padding + labelPadding;
-                int x1 = x0;
-                int y0 = getHeight() - padding - labelPadding;
-                int y1 = y0 - pointWidth;
-                if ((i % ((int) ((scores.size() / 20.0)) + 1)) == 0) {
-                    g2.setColor(gridColor);
-                    g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth, x1, padding);
-                    g2.setColor(Color.BLACK);
-                    String xLabel = i + "";
-                    FontMetrics metrics = g2.getFontMetrics();
-                    int labelWidth = metrics.stringWidth(xLabel);
-                    g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
-                }
-                g2.drawLine(x0, y0, x1, y1);
-            }
+        for (int i = 0; i < numberXDivisions + 1; i++) {
+            int x = padding + labelPadding + (i * graphWidth / numberXDivisions);
+            int y0 = graphHeight + padding;
+            int y1 = y0 - pointWidth;
+            g2.setColor(gridColor);
+            g2.drawLine(x, y0, x, padding);
+            g2.setColor(Color.BLACK);
+            String xLabel = (double) (xMax * i / numberXDivisions) + "";
+            FontMetrics metrics = g2.getFontMetrics();
+            int labelWidth = metrics.stringWidth(xLabel);
+            g2.drawString(xLabel, x - labelWidth / 2, y0 + metrics.getHeight() + 3);
+            g2.drawLine(x, y0, x, y1);
         }
 
-        // create x and y axes 
-        g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, padding + labelPadding, padding);
-        g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, getWidth() - padding, getHeight() - padding - labelPadding);
+        // create x and y axes
+        g2.drawLine(padding + labelPadding, graphHeight + padding, graphWidth + padding + labelPadding, graphHeight + padding);
+        g2.drawLine(padding + labelPadding, graphHeight + padding, padding + labelPadding, padding);       
 
         Stroke oldStroke = g2.getStroke();
         g2.setColor(lineColor);
@@ -127,22 +141,6 @@ public class ScanPanel extends JPanel {
 //    public Dimension getPreferredSize() {
 //        return new Dimension(width, heigth);
 //    }
-
-    private double getMinScore() {
-        double minScore = Double.MAX_VALUE;
-        for (Double[] score : scores) {
-            minScore = Math.min(minScore, score[1]);
-        }
-        return minScore;
-    }
-
-    private double getMaxScore() {
-        double maxScore = Double.MIN_VALUE;
-        for (Double[] score : scores) {
-            maxScore = Math.max(maxScore, score[1]);
-        }
-        return maxScore;
-    }
 
     public void setScores(Double[][] scores) {
         this.scores = Arrays.asList(scores);
