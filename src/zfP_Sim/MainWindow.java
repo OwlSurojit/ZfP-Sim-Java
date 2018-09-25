@@ -21,7 +21,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleDebug();
+        body = new Body(); body.exampleLongBar();
         simPanel.main = this;
         scanPanel.main = this;
         simPanel.drawBody();
@@ -94,7 +94,7 @@ public class MainWindow extends BodyWindow {
         senderXLabel.setText("Sender x");
         simToolBar.add(senderXLabel);
 
-        senderXField.setText("100");
+        senderXField.setText("430");
         senderXField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(senderXField);
@@ -102,7 +102,7 @@ public class MainWindow extends BodyWindow {
         senderYLabel.setText("Sender y");
         simToolBar.add(senderYLabel);
 
-        senderYField.setText("500");
+        senderYField.setText("30");
         senderYField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderYField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(senderYField);
@@ -111,7 +111,7 @@ public class MainWindow extends BodyWindow {
         rayXLabel.setText("Vektor x");
         simToolBar.add(rayXLabel);
 
-        rayXField.setText("1");
+        rayXField.setText("0");
         rayXField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayXField);
@@ -119,7 +119,7 @@ public class MainWindow extends BodyWindow {
         rayYLabel.setText("Vektor y");
         simToolBar.add(rayYLabel);
 
-        rayYField.setText("-1");
+        rayYField.setText("1");
         rayYField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayYField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayYField);
@@ -128,7 +128,7 @@ public class MainWindow extends BodyWindow {
         refLabel.setText("Reflexionen");
         simToolBar.add(refLabel);
 
-        refField.setText("20");
+        refField.setText("2");
         refField.setMinimumSize(new java.awt.Dimension(48, 26));
         refField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(refField);
