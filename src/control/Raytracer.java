@@ -293,9 +293,9 @@ public class Raytracer {
         // Weg ueber Brennpunkteigenschaft (Winkelhalbierende = Normale) (funktioiert auch)
         // Winkel der Normalen zu Bezug (1,0)
         /*double globalNormAngle = Math.toRadians((new Vector(1,0)).getDirAngle((new Line(S, oval.p1)).toVector()) + (new Line(S, oval.p1)).toVector().getAngle((new Line(S, oval.p2).toVector()))/2);
-        Vector vt1 = (new Vector(Math.sin(globalNormAngle), Math.cos(globalNormAngle))).toNormal();
-        Ray rt1 = new Ray(S, vt1);
-        Line t1 = new Line(rt1.getPoint(-100), rt1.getPoint(100));*/
+        Vector vt = (new Vector(Math.sin(globalNormAngle), Math.cos(globalNormAngle))).toNormal();
+        Ray rt = new Ray(S, vt1);
+        Line t = new Line(rt1.getPoint(-100), rt1.getPoint(100));*/
         
         return getLineReflection(this.ray, t, S);
     }
