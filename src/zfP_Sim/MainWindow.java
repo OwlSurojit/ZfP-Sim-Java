@@ -21,7 +21,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleLongBar();
+        body = new Body(); body.exampleCornerRef();
         simPanel.main = this;
         scanPanel.main = this;
         simPanel.drawBody();
