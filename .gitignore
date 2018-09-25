@@ -20,4 +20,4 @@ README.md
 *.ser
 *.properties
 nbproject/private/private.xml
-/build/
+nbproject/private/private.xml
