@@ -120,8 +120,12 @@ public class DrawPanel extends javax.swing.JPanel{
         if(paintDragPoints){
             for(DragPoint dragPoint : main.body.dragPoints){
                 if(dragPoint.highlight){
-                    paintNode(g2d, dragPoint.x, dragPoint.y, 3, Color.GREEN);
                     paintShapeLit(g2d, dragPoint.bindings.get(dragPoint.highlight_index).shape);
+                }
+            }
+            for(DragPoint dragPoint : main.body.dragPoints){
+                if(dragPoint.highlight){
+                    paintNode(g2d, dragPoint.x, dragPoint.y, 3, Color.GREEN);
                 }
                 else{
                     paintNode(g2d, dragPoint.x, dragPoint.y, 3, Color.BLUE);
