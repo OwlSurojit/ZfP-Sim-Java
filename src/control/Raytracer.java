@@ -117,7 +117,6 @@ public class Raytracer {
     public Double[] getCircleArcIntersection(CircleArc arc){
         Double[] factors = getCircleIntersection(arc.toCircle());
         Point S;
-        double intersecangle;
         if (factors[0] != null) {
             S = this.ray.getPoint(factors[0]);
             Vector S_offset = new Vector(Math.cos(Math.toRadians(arc.offsetangle)), -Math.sin(Math.toRadians(arc.offsetangle)));
