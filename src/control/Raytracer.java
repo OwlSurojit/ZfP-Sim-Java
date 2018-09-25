@@ -122,6 +122,7 @@ public class Raytracer {
             Vector S_offset = new Vector(Math.cos(Math.toRadians(arc.offsetangle)), -Math.sin(Math.toRadians(arc.offsetangle)));
             if (S_offset.getDirAngle((new Line(arc.center, S)).toVector()) > arc.arcangle) factors[0] = null;
 //            // Winkel zwischen Start und SP
+//            //Problem: gilt nur, wenn Vector(1,0) auf offenen Teil zeigt
 //            intersecangle = (new Vector(1,0).getDirAngle((new Line(arc.center, S)).toVector())) - arc.offsetangle;
 //            //Außerhalb des Kreisbogens -> kein SP mit CircleArc
 //            if (intersecangle < 0 || intersecangle > arc.arcangle) factors[0] = null;
@@ -136,7 +137,6 @@ public class Raytracer {
         return factors;
     }
 
-    //TODO
     public Double[] getOvalIntersection(Oval oval){
         Double factor1 = ((-(oval.e*Math.sqrt(Math.pow(oval.e, 4)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*Math.pow(oval.e, 2)*(2*Math.pow(this.ray.o.x, 2)*Math.pow(this.ray.r.y, 2)-2*this.ray.o.x*(2*this.ray.o.y*this.ray.r.x+oval.p1.x*this.ray.r.y-oval.p1.y*this.ray.r.x+oval.p2.x*this.ray.r.y-oval.p2.y*this.ray.r.x)*this.ray.r.y+2*Math.pow(this.ray.o.y, 2)*Math.pow(this.ray.r.x, 2)+2*this.ray.o.y*(oval.p1.x*this.ray.r.y-oval.p1.y*this.ray.r.x+oval.p2.x*this.ray.r.y-oval.p2.y*this.ray.r.x)*this.ray.r.x+Math.pow(oval.p1.x, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*oval.p1.x*(oval.p2.x*this.ray.r.x+oval.p2.y*this.ray.r.y)*this.ray.r.x+Math.pow(oval.p1.y, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*oval.p1.y*(oval.p2.x*this.ray.r.x+oval.p2.y*this.ray.r.y)*this.ray.r.y+(Math.pow(oval.p2.x, 2)+Math.pow(oval.p2.y, 2))*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2)))+(4*Math.pow(this.ray.o.x, 2)*Math.pow(this.ray.r.y, 2)-4*this.ray.o.x*(2*this.ray.o.y*this.ray.r.x+oval.p1.x*this.ray.r.y-oval.p1.y*this.ray.r.x+oval.p2.x*this.ray.r.y-oval.p2.y*this.ray.r.x)*this.ray.r.y+4*Math.pow(this.ray.o.y, 2)*Math.pow(this.ray.r.x, 2)+4*this.ray.o.y*(oval.p1.x*this.ray.r.y-oval.p1.y*this.ray.r.x+oval.p2.x*this.ray.r.y-oval.p2.y*this.ray.r.x)*this.ray.r.x+Math.pow(oval.p1.x, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*oval.p1.x*(oval.p2.x*(Math.pow(this.ray.r.x, 2)-Math.pow(this.ray.r.y, 2))+2*oval.p2.y*this.ray.r.x*this.ray.r.y)+Math.pow(oval.p1.y, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*oval.p1.y*(2*oval.p2.x*this.ray.r.x*this.ray.r.y-oval.p2.y*(Math.pow(this.ray.r.x, 2)-Math.pow(this.ray.r.y, 2)))+(Math.pow(oval.p2.x, 2)+Math.pow(oval.p2.y, 2))*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2)))*(Math.pow(oval.p1.x, 2)-2*oval.p1.x*oval.p2.x+Math.pow(oval.p1.y, 2)-2*oval.p1.y*oval.p2.y+Math.pow(oval.p2.x, 2)+Math.pow(oval.p2.y, 2)))+Math.pow(oval.e, 2)*(2*this.ray.o.x*this.ray.r.x+2*this.ray.o.y*this.ray.r.y-oval.p1.x*this.ray.r.x-oval.p1.y*this.ray.r.y-oval.p2.x*this.ray.r.x-oval.p2.y*this.ray.r.y)-(2*this.ray.o.x*(oval.p1.x-oval.p2.x)+2*this.ray.o.y*(oval.p1.y-oval.p2.y)-Math.pow(oval.p1.x, 2)-Math.pow(oval.p1.y, 2)+Math.pow(oval.p2.x, 2)+Math.pow(oval.p2.y, 2))*(oval.p1.x*this.ray.r.x+oval.p1.y*this.ray.r.y-oval.p2.x*this.ray.r.x-oval.p2.y*this.ray.r.y)))/(2*(Math.pow(oval.e, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-Math.pow(oval.p1.x*this.ray.r.x+oval.p1.y*this.ray.r.y-oval.p2.x*this.ray.r.x-oval.p2.y*this.ray.r.y, 2))));
         Double factor2 = ((oval.e*Math.sqrt(Math.pow(oval.e, 4)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*Math.pow(oval.e, 2)*(2*Math.pow(this.ray.o.x, 2)*Math.pow(this.ray.r.y, 2)-2*this.ray.o.x*(2*this.ray.o.y*this.ray.r.x+oval.p1.x*this.ray.r.y-oval.p1.y*this.ray.r.x+oval.p2.x*this.ray.r.y-oval.p2.y*this.ray.r.x)*this.ray.r.y+2*Math.pow(this.ray.o.y, 2)*Math.pow(this.ray.r.x, 2)+2*this.ray.o.y*(oval.p1.x*this.ray.r.y-oval.p1.y*this.ray.r.x+oval.p2.x*this.ray.r.y-oval.p2.y*this.ray.r.x)*this.ray.r.x+Math.pow(oval.p1.x, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*oval.p1.x*(oval.p2.x*this.ray.r.x+oval.p2.y*this.ray.r.y)*this.ray.r.x+Math.pow(oval.p1.y, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*oval.p1.y*(oval.p2.x*this.ray.r.x+oval.p2.y*this.ray.r.y)*this.ray.r.y+(Math.pow(oval.p2.x, 2)+Math.pow(oval.p2.y, 2))*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2)))+(4*Math.pow(this.ray.o.x, 2)*Math.pow(this.ray.r.y, 2)-4*this.ray.o.x*(2*this.ray.o.y*this.ray.r.x+oval.p1.x*this.ray.r.y-oval.p1.y*this.ray.r.x+oval.p2.x*this.ray.r.y-oval.p2.y*this.ray.r.x)*this.ray.r.y+4*Math.pow(this.ray.o.y, 2)*Math.pow(this.ray.r.x, 2)+4*this.ray.o.y*(oval.p1.x*this.ray.r.y-oval.p1.y*this.ray.r.x+oval.p2.x*this.ray.r.y-oval.p2.y*this.ray.r.x)*this.ray.r.x+Math.pow(oval.p1.x, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*oval.p1.x*(oval.p2.x*(Math.pow(this.ray.r.x, 2)-Math.pow(this.ray.r.y, 2))+2*oval.p2.y*this.ray.r.x*this.ray.r.y)+Math.pow(oval.p1.y, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-2*oval.p1.y*(2*oval.p2.x*this.ray.r.x*this.ray.r.y-oval.p2.y*(Math.pow(this.ray.r.x, 2)-Math.pow(this.ray.r.y, 2)))+(Math.pow(oval.p2.x, 2)+Math.pow(oval.p2.y, 2))*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2)))*(Math.pow(oval.p1.x, 2)-2*oval.p1.x*oval.p2.x+Math.pow(oval.p1.y, 2)-2*oval.p1.y*oval.p2.y+Math.pow(oval.p2.x, 2)+Math.pow(oval.p2.y, 2)))-Math.pow(oval.e, 2)*(2*this.ray.o.x*this.ray.r.x+2*this.ray.o.y*this.ray.r.y-oval.p1.x*this.ray.r.x-oval.p1.y*this.ray.r.y-oval.p2.x*this.ray.r.x-oval.p2.y*this.ray.r.y)+(2*this.ray.o.x*(oval.p1.x-oval.p2.x)+2*this.ray.o.y*(oval.p1.y-oval.p2.y)-Math.pow(oval.p1.x, 2)-Math.pow(oval.p1.y, 2)+Math.pow(oval.p2.x, 2)+Math.pow(oval.p2.y, 2))*(oval.p1.x*this.ray.r.x+oval.p1.y*this.ray.r.y-oval.p2.x*this.ray.r.x-oval.p2.y*this.ray.r.y))/(2*(Math.pow(oval.e, 2)*(Math.pow(this.ray.r.x, 2)+Math.pow(this.ray.r.y, 2))-Math.pow(oval.p1.x*this.ray.r.x+oval.p1.y*this.ray.r.y-oval.p2.x*this.ray.r.x-oval.p2.y*this.ray.r.y, 2))));
@@ -278,13 +278,7 @@ public class Raytracer {
         return getLineReflection(this.ray, line, S);
     }
 
-    public Ray getOvalReflection(Oval oval, Point S){
-        /*double factor = -(new Line(S, oval.p1)).length() / (new Line(S, oval.p2)).length();
-        Vector v = (new Line(oval.p2, S)).toVector().mul(factor);
-        Ray tv = new Ray(S, v.add((new Line(oval.p2, S)).toVector()));
-        Line tr = new Line(tv.getPoint(-1), tv.getPoint(1));
-        return getLineReflection(this.ray, tr, S);*/
-        
+    public Ray getOvalReflection(Oval oval, Point S){        
         // Weg ueber Kreis um Oval:
         // Schnittpunkt des Strahls p1 ueber S auf Kreis k = T
         Ray rk = new Ray(oval.p1, (new Line(oval.p1, S)).toVector());
@@ -295,14 +289,12 @@ public class Raytracer {
         // Tagnente aus 2 Punkten im Strahl an S
         Line t = new Line(rt.getPoint(-1), rt.getPoint(1));
         
-        
-        // Weg ueber Brennpunkteigenschaft (Winkelhalbierende = Normale)
+        // Weg ueber Brennpunkteigenschaft (Winkelhalbierende = Normale) (funktioiert auch)
         // Winkel der Normalen zu Bezug (1,0)
-        double globalNormAngle = Math.toRadians((new Vector(1,0)).getDirAngle((new Line(S, oval.p1)).toVector()) + (new Line(S, oval.p1)).toVector().getAngle((new Line(S, oval.p2).toVector()))/2);
-        Vector vt1 = (new Vector(Math.sin(globalNormAngle), Math.cos(globalNormAngle))).toNormal();
-        Ray rt1 = new Ray(S, vt1);
-        Line t1 = new Line(rt1.getPoint(-1), rt1.getPoint(1));
-        
+        /*double globalNormAngle = Math.toRadians((new Vector(1,0)).getDirAngle((new Line(S, oval.p1)).toVector()) + (new Line(S, oval.p1)).toVector().getAngle((new Line(S, oval.p2).toVector()))/2);
+        Vector vt = (new Vector(Math.sin(globalNormAngle), Math.cos(globalNormAngle))).toNormal();
+        Ray rt = new Ray(S, vt1);
+        Line t = new Line(rt1.getPoint(-100), rt1.getPoint(100));*/
         
         return getLineReflection(this.ray, t, S);
     }

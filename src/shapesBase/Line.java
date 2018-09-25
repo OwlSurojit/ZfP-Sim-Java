@@ -13,7 +13,7 @@ import structures.StructDrawingInfo;
 public class Line extends ShapeBase implements Serializable {
     public Point start;
     public Point end;
-
+    
     public Line(Point start, Point end){
         if(start.equals(end)){
             throw new ValueException("Start and end points of a line mustn't be identical.");

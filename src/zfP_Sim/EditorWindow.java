@@ -3,16 +3,26 @@ package zfP_Sim;
 import control.Body;
 import drawing.DragPoint;
 import eventListeners.*;
+import java.awt.MouseInfo;
 import java.awt.event.MouseListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+import javax.swing.SwingUtilities;
+import properties.PropertiesWindow;
+import shapesBase.ShapeBase;
+import properties.ShapesCellRenderer;
 
 public class EditorWindow extends BodyWindow {
     
     MainWindow mainWindow;
 
     public EditorWindow(MainWindow mw) {
-        initComponents();
         mainWindow = mw;
         body = new Body(); body.exampleLongBar();
+        
+        initComponents();
+        
         drawPanel.main = this;
         drawPanel.drawBody_Edit();
         cursorToggleButton.doClick();
@@ -38,7 +48,8 @@ public class EditorWindow extends BodyWindow {
         ovalToggleButton = new javax.swing.JToggleButton();
         jSplitPane2 = new javax.swing.JSplitPane();
         drawPanel = new drawing.DrawPanel();
-        objToolBar = new javax.swing.JToolBar();
+        shapesScrollPane = new javax.swing.JScrollPane();
+        shapesList = new javax.swing.JList<>();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
@@ -48,6 +59,7 @@ public class EditorWindow extends BodyWindow {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Körpereditor");
 
         jSplitPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jSplitPane1.setDividerLocation(40);
@@ -151,22 +163,29 @@ public class EditorWindow extends BodyWindow {
         drawPanel.setLayout(drawPanelLayout);
         drawPanelLayout.setHorizontalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1770, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         drawPanelLayout.setVerticalGroup(
             drawPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 969, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jSplitPane2.setRightComponent(drawPanel);
 
-        objToolBar.setBorder(null);
-        objToolBar.setFloatable(false);
-        objToolBar.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        objToolBar.setRollover(true);
-        objToolBar.setMaximumSize(new java.awt.Dimension(140, 1040));
-        objToolBar.setPreferredSize(new java.awt.Dimension(140, 1040));
-        jSplitPane2.setLeftComponent(objToolBar);
+        shapesScrollPane.setName(""); // NOI18N
+        shapesScrollPane.setPreferredSize(new java.awt.Dimension(200, 1040));
+
+        shapesList.setModel(body.shapes);
+        shapesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        shapesList.setCellRenderer(new ShapesCellRenderer());
+        shapesList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                shapesListMouseClicked(evt);
+            }
+        });
+        shapesScrollPane.setViewportView(shapesList);
+
+        jSplitPane2.setLeftComponent(shapesScrollPane);
 
         jSplitPane1.setRightComponent(jSplitPane2);
 
@@ -278,7 +297,20 @@ public class EditorWindow extends BodyWindow {
         mainWindow.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void ovalToggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ovalToggleButtonStateChanged
+    private void shapesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_shapesListMouseClicked
+        if(evt.getButton() == 3){
+            java.awt.Point p = MouseInfo.getPointerInfo().getLocation();
+            SwingUtilities.convertPointFromScreen(p, shapesList);
+            int index = shapesList.locationToIndex(p);
+            
+            if (index > -1){
+                PropertiesWindow pw = new PropertiesWindow(shapesList.getModel().getElementAt(index), this);
+                pw.setVisible(true);
+            }
+        }
+    }//GEN-LAST:event_shapesListMouseClicked
+    
+    private void ovalToggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {                                              
         if(ovalToggleButton.isSelected()){
             MouseListener[] listeners = drawPanel.getMouseListeners();
             if(listeners.length == 1){
@@ -294,7 +326,7 @@ public class EditorWindow extends BodyWindow {
     private javax.swing.JToggleButton carcToggleButton;
     private javax.swing.JToggleButton circleToggleButton;
     private javax.swing.JToggleButton cursorToggleButton;
-    private drawing.DrawPanel drawPanel;
+    public drawing.DrawPanel drawPanel;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JToolBar geomToolBar;
     private javax.swing.JMenu helpMenu;
@@ -309,10 +341,11 @@ public class EditorWindow extends BodyWindow {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JToolBar objToolBar;
     private javax.swing.JToggleButton ovalToggleButton;
     private javax.swing.JToggleButton polygonToggleButton;
     private javax.swing.JToggleButton rectangleToggleButton;
+    public javax.swing.JList<ShapeBase> shapesList;
+    private javax.swing.JScrollPane shapesScrollPane;
     private javax.swing.ButtonGroup toolButtonGroup;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables

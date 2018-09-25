@@ -3,12 +3,14 @@ package structures;
 import java.awt.Color;
 
 public class StructDrawingInfo {
+    public String name;
     public Color lineColor;
     public Color lineColorLit;
     public boolean fill;
     public Color fillColor;
     
     public StructDrawingInfo(){
+        name = "";
         lineColor = Color.BLACK;
         lineColorLit = Color.RED;
         fill = false;
