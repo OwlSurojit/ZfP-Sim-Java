@@ -10,6 +10,7 @@ import shapesBase.Oval;
 import geometry.Point;
 import structures.StructPointBool;
 import structures.StructRayObj;
+import structures.StructCornerAngles;
 import java.util.ArrayList;
 import misc.Tools;
 
@@ -171,33 +172,15 @@ public class Raytracer {
         if (hitCorner) return new StructRayObj(getCornerReflection(cornerObjs, getIntersection(cornerObjs.get(0))), cornerObjs.get(0));
 	else return new StructRayObj(getReflection(closestObj, getIntersection(closestObj)), closestObj);
     }
-
-    public Ray getCornerReflection(ArrayList<Object> cornerObjs, Point S){
+    
+    public StructCornerAngles getCRefVectors(ArrayList<Vector> vectors){
         double minangle = Double.POSITIVE_INFINITY;
         Vector maxVec = null;
         double maxangle = Double.NEGATIVE_INFINITY;
         Vector minVec = null;
-        Line line = null;
-        double angle;
-        // search lines for reflection
-        for (Object obj : cornerObjs){
-            // Line, Reflection happens on
-            if (Line.class.isInstance(obj)) {
-                line = (Line)obj;
-            } else if (Circle.class.isInstance(obj)) {
-
-            } else if (CircleArc.class.isInstance(obj)) {
-
-            } else if (Oval.class.isInstance(obj)) {
-
-            }
-            
-            Vector vector;
-            if (S.equals(line.start)) vector = line.toVector();
-            else vector = line.toVector().mul(-1);
-
+        for (Vector vector : vectors){
             // two lines closest to Ray
-            angle = this.ray.r.getDirAngle(vector);
+            double angle = this.ray.r.getDirAngle(vector);
             if (angle < minangle) {
                 minangle = angle;
                 minVec = vector;
@@ -207,6 +190,50 @@ public class Raytracer {
                 maxVec = vector;
             }
         }
+        return new StructCornerAngles(minangle, maxangle, minVec, maxVec);
+    }
+
+    public Ray getCornerReflection(ArrayList<Object> cornerObjs, Point S){
+        ArrayList<Vector> vectors = new ArrayList();
+        // search lines for reflection
+        for (Object obj : cornerObjs){
+            // Line, Reflection happens on
+            if (Line.class.isInstance(obj)) {
+                Line line = (Line)obj;
+                if (S.equals(line.start)) vectors.add(line.toVector());
+                else vectors.add(line.toVector().mul(-1));
+            } else if (CircleArc.class.isInstance(obj)) {
+                CircleArc arc = (CircleArc) obj;
+                Point c1 = new Point(Math.cos(Math.toRadians(arc.offsetangle)), -Math.sin(Math.toRadians(arc.offsetangle)));
+                Point c2 = new Point(Math.cos(Math.toRadians(arc.offsetangle + arc.arcangle)), -Math.sin(Math.toRadians(arc.offsetangle + arc.arcangle)));
+                if (S.equals(c1)){
+                    vectors.add((new Line(arc.center, c1)).toVector().toNormal().mul(-1));
+                } else if (S.equals(c2)){
+                    vectors.add((new Line(arc.center, c2)).toVector().toNormal());
+                }else{
+                    Ray rt = arc.toCircle().getTangent(S);
+                    vectors.add((new Line(S, rt.getPoint(-1))).toVector());
+                    vectors.add((new Line(S, rt.getPoint(1))).toVector());
+                }
+            } else if (Circle.class.isInstance(obj)) {
+                Circle circle = (Circle)obj;
+                Ray rt = circle.getTangent(S);
+                vectors.add((new Line(S, rt.getPoint(-1))).toVector());
+                vectors.add((new Line(S, rt.getPoint(1))).toVector());
+            } else if (Oval.class.isInstance(obj)) {
+                Oval oval = (Oval)obj;
+                Ray rt = oval.getTangent(S);
+                vectors.add((new Line(S, rt.getPoint(-1))).toVector());
+                vectors.add((new Line(S, rt.getPoint(1))).toVector());
+                
+            }
+        }
+        
+        StructCornerAngles sca = getCRefVectors(vectors);
+        double minangle = sca.minangle;
+        double maxangle = sca.maxangle;
+        Vector minVec = sca.minVec;
+        Vector maxVec = sca.maxVec;
         
         // Ray in center between Lines -> return inverted
         if (Tools.equal(this.ray.r.getAngle(minVec), this.ray.r.getAngle(maxVec))) {
@@ -233,6 +260,7 @@ public class Raytracer {
             return new Ray(S, this.ray.r);
         // outer corner reflection
         } else {
+            // Strahl an Ecke aus normale zu Vektorsumme == "Tangente"
             Ray normal = new Ray(S, minVec.mul(1/minVec.length()).add(maxVec.mul(1/maxVec.length())).toNormal());
             Line l = new Line(normal.getPoint(-1), normal.getPoint(1));
             return getLineReflection(this.ray, l, S);
@@ -245,13 +273,13 @@ public class Raytracer {
             return getLineReflection(this.ray, line, S);
         }else if(Circle.class.isInstance(obj)){
             Circle circle = (Circle)obj;
-            return getCircleReflection(circle, S);
+            return getCircleReflection(this.ray, circle, S);
         }else if(CircleArc.class.isInstance(obj)){
             Circle circle = ((CircleArc)obj).toCircle();
-            return getCircleReflection(circle, S);
+            return getCircleReflection(this.ray, circle, S);
         }else if(Oval.class.isInstance(obj)){
             Oval oval = (Oval)obj;
-            return getOvalReflection(oval, S);
+            return getOvalReflection(this.ray, oval, S);
         }else{
             System.err.println("Can't get reflection: obj has an unsupported type");
             System.exit(1);
@@ -270,33 +298,17 @@ public class Raytracer {
         return new Ray(S, new Vector(S.x - P.x, S.y - P.y));
     }
 
-    public Ray getCircleReflection(Circle circle, Point S){
-        Vector r1 = (new Line(circle.center, S)).toVector();
-        Ray r2 = new Ray(S, new Vector(-r1.y, r1.x)); //senkrecht zu r1
-        Line line = new Line(r2.getPoint(-1), r2.getPoint(1)); // Linie, an der reflektiert wird
-        if (line.toVector().equals(this.ray.r))return this.ray;
-        return getLineReflection(this.ray, line, S);
+    public Ray getCircleReflection(Ray ray, Circle circle, Point S){
+        Ray rt = circle.getTangent(S);
+        Line line = new Line(rt.getPoint(-1), rt.getPoint(1)); // Linie, an der reflektiert wird
+        if (rt.r.equals(this.ray.r))return this.ray; // Ray ist Tangente -> keine Ref
+        return getLineReflection(ray, line, S);
     }
 
-    public Ray getOvalReflection(Oval oval, Point S){        
-        // Weg ueber Kreis um Oval:
-        // Schnittpunkt des Strahls p1 ueber S auf Kreis k = T
-        Ray rk = new Ray(oval.p1, (new Line(oval.p1, S)).toVector());
-        Point T = rk.getPoint(oval.e/(new Line(oval.p1, S).length()));
-        // Vector der Tangente als Summe beider (gleic langer) Teilvekoren
-        Vector vt = (new Line(oval.p2, S)).toVector().add((new Line(T, S)).toVector());
-        Ray rt = new Ray(S, vt);
-        // Tagnente aus 2 Punkten im Strahl an S
+    public Ray getOvalReflection(Ray ray, Oval oval, Point S){ 
+        Ray rt = oval.getTangent(S);
         Line t = new Line(rt.getPoint(-1), rt.getPoint(1));
-        
-        // Weg ueber Brennpunkteigenschaft (Winkelhalbierende = Normale) (funktioiert auch)
-        // Winkel der Normalen zu Bezug (1,0)
-        /*double globalNormAngle = Math.toRadians((new Vector(1,0)).getDirAngle((new Line(S, oval.p1)).toVector()) + (new Line(S, oval.p1)).toVector().getAngle((new Line(S, oval.p2).toVector()))/2);
-        Vector vt = (new Vector(Math.sin(globalNormAngle), Math.cos(globalNormAngle))).toNormal();
-        Ray rt = new Ray(S, vt1);
-        Line t = new Line(rt1.getPoint(-100), rt1.getPoint(100));*/
-        
-        return getLineReflection(this.ray, t, S);
+        return getLineReflection(ray, t, S);
     }
 
 }

@@ -2,7 +2,7 @@ package shapesBase;
 
 import drawing.Binding;
 import enums.BindType;
-import geometry.Point;
+import geometry.*;
 import java.util.ArrayList;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import structures.StructDrawingInfo;
@@ -33,6 +33,22 @@ public class Oval extends ShapeBase{
         return "Oval(p1 = " + p1 + ", p2 = " + p2 + ", e = " + e + ")";
     }
     
+    public Ray getTangent(Point S){
+        // Weg ueber Kreis um Oval:
+        // Schnittpunkt des Strahls p1 ueber S auf Kreis k = T
+        Ray rk = new Ray(this.p1, (new Line(this.p1, S)).toVector());
+        Point T = rk.getPoint(this.e/(new Line(this.p1, S).length()));
+        // Vector der Tangente als Summe beider (gleic langer) Teilvekoren
+        Vector vt = (new Line(this.p2, S)).toVector().add((new Line(T, S)).toVector());
+        return new Ray(S, vt);
+        
+        // Weg ueber Brennpunkteigenschaft (Winkelhalbierende = Normale) (funktioiert auch)
+        // Winkel der Normalen zu Bezug (1,0)
+        /*double globalNormAngle = Math.toRadians((new Vector(1,0)).getDirAngle((new Line(S, oval.p1)).toVector()) + (new Line(S, oval.p1)).toVector().getAngle((new Line(S, oval.p2).toVector()))/2);
+        Vector vt = (new Vector(Math.sin(globalNormAngle), Math.cos(globalNormAngle))).toNormal();
+        return new Ray(S, vt);*/
+    }
+    
     @Override
     public ArrayList<ShapeBase> getComponents() {
         ArrayList<ShapeBase> list = new ArrayList<ShapeBase>();
@@ -46,6 +62,12 @@ public class Oval extends ShapeBase{
         list.add(new Binding(Point.center(p1, p2), this, BindType.OVAL_CENTER));
         list.add(new Binding(p1, this, BindType.OVAL_P1));
         list.add(new Binding(p2, this, BindType.OVAL_P2));
+        Ray r1 = new Ray(Point.center(p1, p2), new Vector(p1, p2));
+        Ray r2 = new Ray(r1.o, r1.r.toNormal());
+        list.add(new Binding(r1.getPoint(e/2 / r1.r.length()), this, BindType.OVAL_PERIPHER));
+        list.add(new Binding(r1.getPoint(-e/2 / r1.r.length()), this, BindType.OVAL_PERIPHER));
+        list.add(new Binding(r2.getPoint(Math.sqrt(Math.pow(e, 2) - Math.pow(r2.r.length(), 2))/2 / r1.r.length()), this, BindType.OVAL_PERIPHER));
+        list.add(new Binding(r2.getPoint(-Math.sqrt(Math.pow(e, 2) - Math.pow(r2.r.length(), 2))/2 / r1.r.length()), this, BindType.OVAL_PERIPHER));
         return list;
     }
     
@@ -70,6 +92,9 @@ public class Oval extends ShapeBase{
                 if(e > np2.dist(p1)){
                     p2 = np2;
                 }
+                break;
+            case OVAL_PERIPHER:
+                e = p1.dist(new Point(nx, ny)) + p2.dist(new Point(nx, ny));
                 break;
             default:
                 break;

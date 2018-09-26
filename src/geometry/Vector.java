@@ -25,14 +25,14 @@ public class Vector {
     }
 
     public double dotP(Vector other) {
-            return this.x * other.x + this.y * other.y;
+        return this.x * other.x + this.y * other.y;
     }
 
     public Vector toNormal(){
         return new Vector(-this.y, this.x);
     }
 
-	@Override
+    @Override
     public String toString() {
         return String.format("(%g %g)", this.x, this.y);
     }
@@ -55,6 +55,11 @@ public class Vector {
 
     public double getAngle(Vector other) {
         return Math.toDegrees(Math.acos(this.dotP(other) / (this.length() * other.length())));
+    }
+    
+    public Vector rotate(double angle){
+        double selfangle = (new Vector(1,0)).getDirAngle(this);
+        return (new Vector(Math.cos(Math.toRadians(angle+selfangle)), -Math.sin(Math.toRadians(angle+selfangle)))).mul(this.length());
     }
 
     public shapesBase.Line toLine() {

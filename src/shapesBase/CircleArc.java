@@ -2,8 +2,7 @@ package shapesBase;
 
 import drawing.Binding;
 import enums.BindType;
-import geometry.Point;
-import geometry.Vector;
+import geometry.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -39,10 +38,6 @@ public class CircleArc extends ShapeBase implements Serializable {
         this.drawingInfo = new StructDrawingInfo();
     }
     
-    /*public double getRadius(){
-        return (new Line(center, start)).length();
-    }*/
-    
     @Override
     public String toString(){
         return "Arc(center = " + center + ", radius = " + radius + ", arcangle = " + arcangle + " offsetangle = " + offsetangle + ")";
@@ -62,13 +57,31 @@ public class CircleArc extends ShapeBase implements Serializable {
     @Override
     public ArrayList<Binding> getDragPoints(){
         ArrayList<Binding> list = new ArrayList<Binding>();
-        list.add(new Binding(center, this, BindType.CARC_CENTER));
+        list.add(new Binding(center, this, BindType.CIRCLEARC_CENTER));
+        list.add(new Binding((new Ray(center, (new Vector(1, 0)).rotate(offsetangle))).getPoint(radius), this, BindType.CIRCLEARC_START));
+        list.add(new Binding((new Ray(center, (new Vector(1, 0)).rotate(offsetangle + arcangle))).getPoint(radius), this, BindType.CIRCLEARC_END));
+        list.add(new Binding((new Ray(center, (new Vector(1, 0)).rotate(offsetangle + arcangle/2))).getPoint(radius), this, BindType.CIRCLEARC_RADIUS));
         return list;
     }
     
     @Override
     public void refactor(Binding bind, double nx, double ny){
-        center = new Point(nx, ny);
+        switch(bind.type) {
+            case CIRCLEARC_CENTER:
+                center = new Point(nx, ny);
+                break;
+            case CIRCLEARC_START:
+                offsetangle = (new Vector(1, 0)).getDirAngle((new Line(center, new Point(nx, ny))).toVector());
+                break;
+            case CIRCLEARC_END:
+                arcangle = (new Vector(1, 0)).rotate(offsetangle).getDirAngle((new Line(center, new Point(nx, ny))).toVector());
+                break;
+            case CIRCLEARC_RADIUS:
+                radius = center.dist(new Point(nx, ny));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

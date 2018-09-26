@@ -9,21 +9,15 @@ import shapesBase.CircleArc;
 
 public class CircleArcTab extends PropertiesTab{
     public CircleArc cirlceArc;
-        
+    public FieldVerifier fv;
+    
     public JLabel nameLabel; public JTextField nameField;
     
-    public CircleArcTab(CircleArc cirlceArc){
+    public CircleArcTab(CircleArc cirlceArc, FieldVerifier fv){
         this.cirlceArc = cirlceArc;
+        this.fv = fv;
         
         setLayout(new GridLayout(1, 2));
-        
-        NumberFormat format = NumberFormat.getInstance();
-        NumberFormatter formatter = new NumberFormatter(format);
-        formatter.setValueClass(Integer.class);
-        formatter.setMinimum(0);
-        formatter.setMaximum(Integer.MAX_VALUE);
-        formatter.setAllowsInvalid(false);
-        formatter.setCommitsOnValidEdit(true);
         
         nameLabel = new JLabel("Name");
         nameField = new JTextField(cirlceArc.drawingInfo.name);
