@@ -111,7 +111,7 @@ public class MainWindow extends BodyWindow {
         rayXLabel.setText("Vektor x");
         simToolBar.add(rayXLabel);
 
-        rayXField.setText("2");
+        rayXField.setText("-1");
         rayXField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayXField);
@@ -119,7 +119,7 @@ public class MainWindow extends BodyWindow {
         rayYLabel.setText("Vektor y");
         simToolBar.add(rayYLabel);
 
-        rayYField.setText("3");
+        rayYField.setText("4");
         rayYField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayYField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayYField);
@@ -128,7 +128,7 @@ public class MainWindow extends BodyWindow {
         refLabel.setText("Reflexionen");
         simToolBar.add(refLabel);
 
-        refField.setText("200");
+        refField.setText("20");
         refField.setMinimumSize(new java.awt.Dimension(48, 26));
         refField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(refField);
@@ -389,12 +389,20 @@ public class MainWindow extends BodyWindow {
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
             simPanel.paintDragPoints = false;
             simPanel.simulate(scan.reflections());
-            //original
-            //scanPanel.setScores(scan.scan_A());
+            scanPanel.setScores(scan.scan_A());
             
-            //for testing
-            //scanPanel.setScores(scan.MultiScan_A(5, 5.0));
-            scanPanel.setScores(scan.MultiScan_A(5, 5.0, 30000));
+            /*for testing
+            int numray = 5;
+            double angle = -1.0;
+            int way = 3500;
+            //double[][][] ref = scan.MultiReflections(numray, angle);
+            double[][][] ref = scan.MultiReflections(numray, angle, way);
+            for(double[][] rx : ref){
+                simPanel.simulate(rx);
+                // zeichnet nur letzte Reflektion
+            }
+            //scanPanel.setScores(scan.MultiScan_A(numray, angle));
+            scanPanel.setScores(scan.MultiScan_A(numray, angle, way));*/
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 
