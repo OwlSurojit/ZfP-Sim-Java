@@ -16,6 +16,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import shapesBase.ShapeBase;
 
 public class MainWindow extends BodyWindow {
         
@@ -437,7 +438,7 @@ public class MainWindow extends BodyWindow {
             simPanel.drawBody();
         }
         else{
-            simPanel.addMouseListener(new DragDropListener(simPanel));
+            simPanel.addMouseListener(new DragDropListener(simPanel, this));
             body.refreshDragPoints();
             simPanel.drawBody_Edit();
         }
@@ -456,7 +457,7 @@ public class MainWindow extends BodyWindow {
             simPanel.drawBody();
         }
         else{
-            simPanel.addMouseListener(new DragDropListener(simPanel));
+            simPanel.addMouseListener(new DragDropListener(simPanel, this));
             body.refreshDragPoints();
             simPanel.drawBody_Edit();
         }
@@ -542,4 +543,9 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JLabel velocityLabel;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void setLit(ShapeBase shape) {
+        lit = shape;
+    }
 }

@@ -26,7 +26,7 @@ public class DrawPanel extends javax.swing.JPanel{
     public int delay;
     
     
-    public DrawPanel(){        
+    public DrawPanel(){
         paintBody = false;
         paintTemp = false;
         paintRaytracer = false;
@@ -36,6 +36,7 @@ public class DrawPanel extends javax.swing.JPanel{
     }
     
     public void simulate(double[][] tracer){
+        main.setLit(null);
         raytracer = tracer;
         
         paintBody = true;
@@ -47,6 +48,7 @@ public class DrawPanel extends javax.swing.JPanel{
     }
     
     public void drawBody(){
+        main.setLit(null);
         paintBody = true;
         paintTemp = false;
         paintRaytracer = false;
@@ -76,6 +78,7 @@ public class DrawPanel extends javax.swing.JPanel{
     }
     
     public void drawClear(){
+        main.setLit(null);
         paintBody = false;
         paintTemp = false;
         paintRaytracer = false;
@@ -118,10 +121,10 @@ public class DrawPanel extends javax.swing.JPanel{
         }
         
         if(paintDragPoints){
+            paintShapeLit(g2d, main.lit);
             for(DragPoint dragPoint : main.body.dragPoints){
                 if(dragPoint.highlight){
                     paintNode(g2d, dragPoint.x, dragPoint.y, 3, Color.GREEN);
-                    paintShapeLit(g2d, dragPoint.bindings.get(dragPoint.highlight_index).shape);
                 }
                 else{
                     paintNode(g2d, dragPoint.x, dragPoint.y, 3, Color.BLUE);
@@ -175,11 +178,11 @@ public class DrawPanel extends javax.swing.JPanel{
             AffineTransform at = new AffineTransform();
             at.setToRotation(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(P1, P2).toVector()))), (P1.x + P2.x)/2, (P1.y + P2.y)/2);
             Ellipse2D.Double oval = getOval2D((Oval) shape);
-            g2d.setColor(shape.drawingInfo.lineColor);
             if (shape.drawingInfo.fill){
                 g2d.setColor(shape.drawingInfo.fillColor);
                 g2d.fill(at.createTransformedShape(oval));
             }
+            g2d.setColor(shape.drawingInfo.lineColor);
             g2d.draw(at.createTransformedShape(oval));
             
         }
@@ -228,11 +231,12 @@ public class DrawPanel extends javax.swing.JPanel{
             AffineTransform at = new AffineTransform();
             at.setToRotation(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(P1, P2).toVector()))), (P1.x + P2.x)/2, (P1.y + P2.y)/2);
             Ellipse2D.Double oval = getOval2D((Oval) shape);
-            g2d.setColor(shape.drawingInfo.lineColorLit);
+            
             if (shape.drawingInfo.fill){
                 g2d.setColor(shape.drawingInfo.fillColor);
                 g2d.fill(at.createTransformedShape(oval));
             }
+            g2d.setColor(shape.drawingInfo.lineColorLit);
             g2d.draw(at.createTransformedShape(oval));
             
         }

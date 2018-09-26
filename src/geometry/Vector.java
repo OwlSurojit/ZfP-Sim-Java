@@ -10,6 +10,11 @@ public class Vector {
         this.x = x;
         this.y = y;
     }
+    
+    public Vector(Point start, Point end){
+        this.x = end.x - start.x;
+        this.y = end.y - start.y;
+    }
 
     public Vector add(Vector other) {
         return new Vector(this.x + other.x, this.y + other.y);
@@ -20,7 +25,7 @@ public class Vector {
     }
 
     public double dotP(Vector other) {
-	return this.x * other.x + this.y * other.y;
+        return this.x * other.x + this.y * other.y;
     }
 
     public Vector toNormal(){
@@ -58,6 +63,6 @@ public class Vector {
     }
 
     public shapesBase.Line toLine() {
-	return new shapesBase.Line(new Point(0, 0), this.toPoint());
+        return new shapesBase.Line(new Point(0, 0), this.toPoint());
     }
 }

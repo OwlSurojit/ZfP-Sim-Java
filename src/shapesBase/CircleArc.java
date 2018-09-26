@@ -70,4 +70,9 @@ public class CircleArc extends ShapeBase implements Serializable {
     public void refactor(Binding bind, double nx, double ny){
         center = new Point(nx, ny);
     }
+
+    @Override
+    public void rotate(double degree) {
+        offsetangle = (offsetangle-degree) % 360;
+    }
 }

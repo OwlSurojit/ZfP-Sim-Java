@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import properties.PropertiesWindow;
 import shapesBase.ShapeBase;
@@ -22,7 +23,8 @@ public class EditorWindow extends BodyWindow {
         body = new Body(); body.exampleLongBar();
         
         initComponents();
-        
+        ListSelectionModel listSelectionModel = shapesList.getSelectionModel();
+        listSelectionModel.addListSelectionListener(new ListSelectionHandler(this, shapesList));
         drawPanel.main = this;
         drawPanel.drawBody_Edit();
         cursorToggleButton.doClick();
@@ -52,7 +54,7 @@ public class EditorWindow extends BodyWindow {
         shapesList = new javax.swing.JList<>();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        returnMenuItem = new javax.swing.JMenuItem();
         viewMenu = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
@@ -191,13 +193,13 @@ public class EditorWindow extends BodyWindow {
 
         fileMenu.setText("Datei");
 
-        jMenuItem3.setText("Return");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        returnMenuItem.setText("Return");
+        returnMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                returnMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(jMenuItem3);
+        fileMenu.add(returnMenuItem);
 
         menuBar.add(fileMenu);
 
@@ -237,7 +239,7 @@ public class EditorWindow extends BodyWindow {
             if(listeners.length == 1){
                 drawPanel.removeMouseListener(listeners[0]);
             }
-            drawPanel.addMouseListener(new DragDropListener(drawPanel));
+            drawPanel.addMouseListener(new DragDropListener(drawPanel, this));
             body.refreshDragPoints();
             drawPanel.drawBody_Edit();
         }
@@ -251,6 +253,7 @@ public class EditorWindow extends BodyWindow {
             }
             drawPanel.addMouseListener(new PolygonCreateListener(drawPanel));
             body.refreshDragPoints();
+            setLit(null);
             drawPanel.drawBody_Edit();
         }
     }//GEN-LAST:event_polygonToggleButtonStateChanged
@@ -263,6 +266,7 @@ public class EditorWindow extends BodyWindow {
             }
             drawPanel.addMouseListener(new RectangleCreateListener(drawPanel));
             body.refreshDragPoints();
+            setLit(null);
             drawPanel.drawBody_Edit();
         }
     }//GEN-LAST:event_rectangleToggleButtonStateChanged
@@ -275,6 +279,7 @@ public class EditorWindow extends BodyWindow {
             }
             drawPanel.addMouseListener(new CircleCreateListener(drawPanel));
             body.refreshDragPoints();
+            setLit(null);
             drawPanel.drawBody_Edit();
         }
     }//GEN-LAST:event_circleToggleButtonStateChanged
@@ -287,15 +292,16 @@ public class EditorWindow extends BodyWindow {
             }
             drawPanel.addMouseListener(new CircleArcCreateListener(drawPanel));
             body.refreshDragPoints();
+            setLit(null);
             drawPanel.drawBody_Edit();
         }
     }//GEN-LAST:event_carcToggleButtonStateChanged
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void returnMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnMenuItemActionPerformed
         this.setVisible(false);
         mainWindow.body = this.body;
         mainWindow.setVisible(true);
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_returnMenuItemActionPerformed
 
     private void shapesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_shapesListMouseClicked
         if(evt.getButton() == 3){
@@ -318,9 +324,10 @@ public class EditorWindow extends BodyWindow {
             }
             drawPanel.addMouseListener(new OvalCreateListener(drawPanel));
             body.refreshDragPoints();
+            setLit(null);
             drawPanel.drawBody_Edit();
         }
-    }//GEN-LAST:event_ovalToggleButtonStateChanged
+    }                                             
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton carcToggleButton;
@@ -332,7 +339,6 @@ public class EditorWindow extends BodyWindow {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
@@ -344,9 +350,62 @@ public class EditorWindow extends BodyWindow {
     private javax.swing.JToggleButton ovalToggleButton;
     private javax.swing.JToggleButton polygonToggleButton;
     private javax.swing.JToggleButton rectangleToggleButton;
+    private javax.swing.JMenuItem returnMenuItem;
     public javax.swing.JList<ShapeBase> shapesList;
     private javax.swing.JScrollPane shapesScrollPane;
     private javax.swing.ButtonGroup toolButtonGroup;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void setLit(ShapeBase shape) {
+        if(shape == null){
+            shapesList.clearSelection();
+            lit = null;
+            if(drawPanel.getMouseListeners()[0] instanceof DragDropListener){
+                DragDropListener ddl = (DragDropListener) drawPanel.getMouseListeners()[0];
+                if(ddl.lit != null){
+                    ddl.lit.highlight = false;
+                    ddl.dragging = false;
+                    ddl.lit = null;
+                }
+            }
+        }
+        else if(drawPanel.getMouseListeners()[0] instanceof DragDropListener){
+            lit = shape;
+            if(shapesList.getSelectedValue() != lit){
+                for(int i = 0; i < shapesList.getModel().getSize(); i++){
+                    if(shapesList.getModel().getElementAt(i) == lit){
+                        shapesList.getSelectionModel().setSelectionInterval(i, i);
+                        break;
+                    }
+                }
+            }
+            
+            DragDropListener ddl = (DragDropListener) drawPanel.getMouseListeners()[0];
+            if(ddl.lit != null && ddl.lit.bindings.get(ddl.lit.highlight_index).shape != shape){
+                    cursorToggleButton.doClick();
+            }
+            else{
+                drawPanel.drawBody_Edit();
+            }
+            
+        }
+        else{
+            lit = shape;
+            if(shapesList.getSelectedValue() != lit){
+                for(int i = 0; i < shapesList.getModel().getSize(); i++){
+                    if(shapesList.getModel().getElementAt(i) == lit){
+                        shapesList.getSelectionModel().setSelectionInterval(i, i);
+                        break;
+                    }
+                }
+            }
+            
+            cursorToggleButton.doClick();
+            
+            
+        }
+        
+    }
 }
