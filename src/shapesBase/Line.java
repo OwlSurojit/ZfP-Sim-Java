@@ -1,7 +1,7 @@
 package shapesBase;
 
 import drawing.Binding;
-import enums.bindType;
+import enums.BindType;
 import geometry.Point;
 import geometry.Ray;
 import geometry.Vector;
@@ -44,7 +44,7 @@ public class Line extends ShapeBase implements Serializable {
     }
 
     public Vector toVector(){
-        return new Vector(end.x-start.x, end.y-start.y);
+        return new Vector(start, end);
     }
 
     public Ray toRay(){
@@ -61,9 +61,9 @@ public class Line extends ShapeBase implements Serializable {
     @Override
     public ArrayList<Binding> getDragPoints(){
         ArrayList<Binding> list = new ArrayList<Binding>();
-        list.add(new Binding(start, this, bindType.LINE_START));
-        list.add(new Binding(getCenter(), this, bindType.LINE_CENTER));
-        list.add(new Binding(end, this, bindType.LINE_END));
+        list.add(new Binding(start, this, BindType.LINE_START));
+        list.add(new Binding(getCenter(), this, BindType.LINE_CENTER));
+        list.add(new Binding(end, this, BindType.LINE_END));
         return list;
     }
     
@@ -86,5 +86,12 @@ public class Line extends ShapeBase implements Serializable {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void rotate(double degree) {
+        Point c = getCenter();
+        start.rotateAround(c, degree);
+        end.rotateAround(c, degree);
     }
 }

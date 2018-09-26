@@ -4,15 +4,18 @@ import drawing.DragPoint;
 import drawing.DrawPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import zfP_Sim.BodyWindow;
 
 public class DragDropListener implements MouseListener{
-
-    DrawPanel drawPanel;
-    DragPoint lit;
-    boolean dragging;
     
-    public DragDropListener(DrawPanel drawPanel){
+    BodyWindow main;
+    DrawPanel drawPanel;
+    public DragPoint lit;
+    public boolean dragging;
+    
+    public DragDropListener(DrawPanel drawPanel, BodyWindow main){
         this.drawPanel = drawPanel;
+        this.main = main;
         lit = null;
         dragging = false;
     }
@@ -24,6 +27,7 @@ public class DragDropListener implements MouseListener{
             if(dp.cont(me.getX(), me.getY(), 10)){
                 if(dp == lit){
                     dp.next();
+                    main.setLit(dp.bindings.get(dp.highlight_index).shape);
                 }
                 else{
                     if(lit != null){
@@ -31,6 +35,7 @@ public class DragDropListener implements MouseListener{
                     }
                     dp.light();
                     lit = dp;
+                    main.setLit(dp.bindings.get(dp.highlight_index).shape);
                 }
                 drawPanel.drawBody_Edit();
                 return;
@@ -39,8 +44,9 @@ public class DragDropListener implements MouseListener{
         if(lit != null){
             lit.highlight = false;
             lit = null;
-            drawPanel.drawBody_Edit();
         }
+        main.setLit(null);
+        drawPanel.drawBody_Edit();
     }
 
     @Override
@@ -58,6 +64,7 @@ public class DragDropListener implements MouseListener{
                 lit.bindings.get(lit.highlight_index).shape.refactor(lit.bindings.get(lit.highlight_index), me.getX(), me.getY());
                 drawPanel.main.body.refreshDragPoints();
                 lit = null;
+                main.setLit(null);
                 drawPanel.drawBody_Edit();
             }
         }

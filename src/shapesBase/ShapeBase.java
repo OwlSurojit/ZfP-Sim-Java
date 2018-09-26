@@ -10,4 +10,5 @@ public abstract class ShapeBase {
     public abstract ArrayList<ShapeBase> getComponents();
     public abstract ArrayList<Binding> getDragPoints();
     public abstract void refactor(Binding bind, double nx, double ny);
+    public abstract void rotate(double degree);
 }

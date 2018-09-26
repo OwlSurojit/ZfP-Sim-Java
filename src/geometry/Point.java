@@ -34,6 +34,18 @@ public class Point implements Serializable {
         return Math.sqrt(Math.pow(x - this.x, 2) + Math.pow(y - this.y, 2));
     }
     
+    public void rotateAround(Point axis, double degree){
+        Vector old = new Vector(axis, this);
+        double nx = old.x / Math.sqrt(old.x*old.x + old.y*old.y);
+        double ny = old.y / Math.sqrt(old.x*old.x + old.y*old.y);
+        double old_Radians = Math.atan2(ny, nx);
+        double old_Degrees = Math.toDegrees(old_Radians);
+        double new_Radians = Math.toRadians(old_Degrees + degree);
+        Vector neww = new Vector(Math.cos(new_Radians) * Math.sqrt(old.x*old.x + old.y*old.y), Math.sin(new_Radians) * Math.sqrt(old.x*old.x + old.y*old.y));
+        this.x = axis.x + neww.x;
+        this.y = axis.y + neww.y;
+    }
+    
     public static Point center(ArrayList<Point> points){
         double x = 0;
         double y = 0;
@@ -50,5 +62,9 @@ public class Point implements Serializable {
         double x = (p1.x + p2.x)/2;
         double y = (p1.y + p2.y)/2;
         return new Point(x, y);
+    }
+    
+    public static Point transformed(Point p, Vector t){
+        return new Point(p.x+t.x, p.y+t.y);
     }
 }

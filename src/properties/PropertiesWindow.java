@@ -28,9 +28,6 @@ public class PropertiesWindow extends javax.swing.JFrame{
         setSize(600, 280);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         
-        tabs = new PropertiesTabbedPane(shape);
-        tabs.setSize(600, 250);
-        
         lowerPanel = new JPanel();
         lowerPanel.setLayout(new GridLayout(1, 2));
         lowerPanel.setSize(600, 30);
@@ -48,6 +45,11 @@ public class PropertiesWindow extends javax.swing.JFrame{
         lowerPanel.add(saveButton);
         lowerPanel.add(cancelButton);
         
+        FieldVerifier fv = new FieldVerifier(saveButton);
+        
+        tabs = new PropertiesTabbedPane(shape, fv);
+        tabs.setSize(600, 250);
+        
         add(tabs);
         add(lowerPanel);
     }
@@ -56,6 +58,7 @@ public class PropertiesWindow extends javax.swing.JFrame{
         tabs.constructionTab.commit();
         tabs.drawingTab.commit();
         
+        main.body.refreshDragPoints();
         main.drawPanel.drawBody_Edit();
         main.shapesList.updateUI();
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));

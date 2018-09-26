@@ -1,7 +1,7 @@
 package shapesBase;
 
 import drawing.Binding;
-import enums.bindType;
+import enums.BindType;
 import geometry.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -65,12 +65,12 @@ public class Polygon extends ShapeBase implements Serializable {
     public ArrayList<Binding> getDragPoints(){
         ArrayList<Binding> list = new ArrayList<Binding>();
         for(Point p : points){
-            list.add(new Binding(p, this, bindType.POLY_POINT));
+            list.add(new Binding(p, this, BindType.POLY_POINT));
         }
         if(closed()){
             list.remove(list.size()-1);
         }
-        list.add(new Binding(getCenter(), this, bindType.POLY_CENTER));
+        list.add(new Binding(getCenter(), this, BindType.POLY_CENTER));
         return list;
     }
     
@@ -107,6 +107,18 @@ public class Polygon extends ShapeBase implements Serializable {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void rotate(double degree) {
+        Point c = getCenter();
+        for(int i = 0; i<points.length; i++){
+            points[i].rotateAround(c, degree);
+        }
+        this.lines = new Line[points.length-1];
+        for(int i = 0; i<points.length -1; i++){
+            lines[i] = new Line(points[i], points[i+1]);
         }
     }
 }
