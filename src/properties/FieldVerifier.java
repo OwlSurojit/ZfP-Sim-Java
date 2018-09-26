@@ -30,6 +30,11 @@ public class FieldVerifier {
                 controlled.setEnabled(false);
             }
         }
+        else{
+            if(verify(field)){
+                fullVerification();
+            }
+        }
     }
 
     public void fullVerification() {
