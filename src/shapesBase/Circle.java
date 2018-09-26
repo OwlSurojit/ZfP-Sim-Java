@@ -2,7 +2,7 @@
 package shapesBase;
 
 import drawing.Binding;
-import enums.bindType;
+import enums.BindType;
 import geometry.Point;
 import geometry.Vector;
 import geometry.Ray;
@@ -47,7 +47,7 @@ public class Circle extends ShapeBase implements Serializable {
     @Override
     public ArrayList<Binding> getDragPoints(){
         ArrayList<Binding> list = new ArrayList<Binding>();
-        list.add(new Binding(center, this, bindType.CIRCLE_CENTER));
+        list.add(new Binding(center, this, BindType.CIRCLE_CENTER));
         return list;
     }
     

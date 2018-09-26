@@ -1,7 +1,7 @@
 package shapesBase;
 
 import drawing.Binding;
-import enums.bindType;
+import enums.BindType;
 import geometry.Point;
 import geometry.Ray;
 import geometry.Vector;
@@ -61,9 +61,9 @@ public class Line extends ShapeBase implements Serializable {
     @Override
     public ArrayList<Binding> getDragPoints(){
         ArrayList<Binding> list = new ArrayList<Binding>();
-        list.add(new Binding(start, this, bindType.LINE_START));
-        list.add(new Binding(getCenter(), this, bindType.LINE_CENTER));
-        list.add(new Binding(end, this, bindType.LINE_END));
+        list.add(new Binding(start, this, BindType.LINE_START));
+        list.add(new Binding(getCenter(), this, BindType.LINE_CENTER));
+        list.add(new Binding(end, this, BindType.LINE_END));
         return list;
     }
     

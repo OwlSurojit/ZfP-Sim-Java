@@ -1,7 +1,7 @@
 package shapesBase;
 
 import drawing.Binding;
-import enums.bindType;
+import enums.BindType;
 import geometry.Point;
 import geometry.Vector;
 import java.io.Serializable;
@@ -62,7 +62,7 @@ public class CircleArc extends ShapeBase implements Serializable {
     @Override
     public ArrayList<Binding> getDragPoints(){
         ArrayList<Binding> list = new ArrayList<Binding>();
-        list.add(new Binding(center, this, bindType.CARC_CENTER));
+        list.add(new Binding(center, this, BindType.CARC_CENTER));
         return list;
     }
     

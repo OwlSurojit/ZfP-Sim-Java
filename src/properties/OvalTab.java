@@ -9,21 +9,15 @@ import shapesBase.Oval;
 
 public class OvalTab extends PropertiesTab{
     public Oval oval;
+    public FieldVerifier fv;
         
     public JLabel nameLabel; public JTextField nameField;
     
-    public OvalTab(Oval oval){
+    public OvalTab(Oval oval, FieldVerifier fv){
         this.oval = oval;
+        this.fv = fv;
         
         setLayout(new GridLayout(1, 2));
-        
-        NumberFormat format = NumberFormat.getInstance();
-        NumberFormatter formatter = new NumberFormatter(format);
-        formatter.setValueClass(Integer.class);
-        formatter.setMinimum(0);
-        formatter.setMaximum(Integer.MAX_VALUE);
-        formatter.setAllowsInvalid(false);
-        formatter.setCommitsOnValidEdit(true);
         
         nameLabel = new JLabel("Name");
         nameField = new JTextField(oval.drawingInfo.name);
