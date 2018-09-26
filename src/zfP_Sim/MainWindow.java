@@ -393,7 +393,8 @@ public class MainWindow extends BodyWindow {
             //scanPanel.setScores(scan.scan_A());
             
             //for testing
-            scanPanel.setScores(scan.MultiScan_A(500, 142.0));
+            //scanPanel.setScores(scan.MultiScan_A(5, 5.0));
+            scanPanel.setScores(scan.MultiScan_A(5, 5.0, 30000));
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 
