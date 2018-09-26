@@ -19,15 +19,15 @@ public class Vector {
         return new Vector(factor * this.x, factor * this.y);
     }
 
-	public double dotP(Vector other) {
-		return this.x * other.x + this.y * other.y;
-	}
+    public double dotP(Vector other) {
+	return this.x * other.x + this.y * other.y;
+    }
 
     public Vector toNormal(){
         return new Vector(-this.y, this.x);
     }
 
-	@Override
+    @Override
     public String toString() {
         return String.format("(%g %g)", this.x, this.y);
     }
@@ -48,11 +48,16 @@ public class Vector {
         return (-Math.toDegrees(Math.atan2(this.x * other.y - this.y * other.x, this.x * other.x + this.y * other.y)) + 360) % 360;
     }
 
-	public double getAngle(Vector other) {
-		return Math.toDegrees(Math.acos(this.dotP(other) / (this.length() * other.length())));
-	}
+    public double getAngle(Vector other) {
+        return Math.toDegrees(Math.acos(this.dotP(other) / (this.length() * other.length())));
+    }
+    
+    public Vector rotate(double angle){
+        double selfangle = (new Vector(1,0)).getDirAngle(this);
+        return (new Vector(Math.cos(Math.toRadians(angle+selfangle)), -Math.sin(Math.toRadians(angle+selfangle)))).mul(this.length());
+    }
 
-	public shapesBase.Line toLine() {
-		return new shapesBase.Line(new Point(0, 0), this.toPoint());
-	}
+    public shapesBase.Line toLine() {
+	return new shapesBase.Line(new Point(0, 0), this.toPoint());
+    }
 }

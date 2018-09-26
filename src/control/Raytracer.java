@@ -173,7 +173,7 @@ public class Raytracer {
 	else return new StructRayObj(getReflection(closestObj, getIntersection(closestObj)), closestObj);
     }
     
-    public StructCornerAngles getClosestVectors(ArrayList<Vector> vectors){
+    public StructCornerAngles getCRefVectors(ArrayList<Vector> vectors){
         double minangle = Double.POSITIVE_INFINITY;
         Vector maxVec = null;
         double maxangle = Double.NEGATIVE_INFINITY;
@@ -229,7 +229,7 @@ public class Raytracer {
             }
         }
         
-        StructCornerAngles sca = getClosestVectors(vectors);
+        StructCornerAngles sca = getCRefVectors(vectors);
         double minangle = sca.minangle;
         double maxangle = sca.maxangle;
         Vector minVec = sca.minVec;

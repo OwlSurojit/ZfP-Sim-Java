@@ -4,6 +4,7 @@ import structures.StructRayObj;
 import shapesBase.Line;
 import geometry.Ray;
 import java.util.ArrayList;
+import misc.Tools;
 import shapesBase.ShapeBase;
 
 public class Scan {
@@ -32,7 +33,7 @@ public class Scan {
     }
 
     public Double[][] scan_A(){
-        StructRayObj[] history = (new Raytracer(ray, this.sender.obj, this.objects, this.numref)).trace();
+        StructRayObj[] history = (new Raytracer(this.ray, this.sender.obj, this.objects, this.numref)).trace();
         double time = 0;
         Double[][] hits = new Double[numref+1][2];
         hits[0] = new Double[]{0.0,1.0};
@@ -49,7 +50,7 @@ public class Scan {
     }
 
     public double[][] reflections(){
-        StructRayObj[] history = (new Raytracer(ray, this.sender.obj, this.objects, this.numref)).trace();
+        StructRayObj[] history = (new Raytracer(this.ray, this.sender.obj, this.objects, this.numref)).trace();
         double[][] points = new double[history.length][2];
         for (int i = 0; i < history.length; i++){
             points[i][0] = history[i].ray.o.x;
@@ -58,4 +59,36 @@ public class Scan {
         return points;
     }
     
+    public Double[][] MultiScan_A(int numray, double angle){
+        if (numray < 2 || Tools.equal(angle, 0)) return scan_A();
+        
+        //Double[][][] hits = new Double[numray][this.numref+1][2];
+        
+        int pos = 0;
+        Double[][] hits = new Double[numray*(this.numref+1)][2];
+        for (int i = 0; i < numray; i++){
+            // Rays gleich verteilt ueber Winkel
+            Ray ray = new Ray(this.ray.o, this.ray.r.rotate(-angle/2+(i*angle/(numray-1))));
+            StructRayObj[] history = (new Raytracer(ray, this.sender.obj, this.objects, this.numref)).trace();
+            double time = 0;
+            hits[pos] = new Double[]{0.0, 1.0};
+            for (int j = 1; j < history.length; j++){
+                time += (new Line(history[j].ray.o, history[j-1].ray.o)).length() / this.velocity;
+                if (this.sender.get_hit(history[j].ray.o, history[j].obj)){
+                    hits[pos+j][1] = this.sender.intensity / Math.pow(1.05, time);
+                }else{
+                    hits[pos+j][1] = 0.0;
+                }
+                hits[pos+j][0] = time;
+            }
+            pos += numref+1;
+        }
+        // Treffer sortieren notwendig?
+        java.util.Arrays.sort(hits, new java.util.Comparator<Double[]>() {
+            public int compare(Double[] a, Double[] b) {
+                return Double.compare(a[0], b[0]);
+            }
+        });
+        return hits;
+    }
 }
