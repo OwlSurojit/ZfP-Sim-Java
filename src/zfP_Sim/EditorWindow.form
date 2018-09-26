@@ -11,12 +11,12 @@
             <Property name="text" type="java.lang.String" value="Datei"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+            <MenuItem class="javax.swing.JMenuItem" name="returnMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Return"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="returnMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

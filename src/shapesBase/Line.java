@@ -44,7 +44,7 @@ public class Line extends ShapeBase implements Serializable {
     }
 
     public Vector toVector(){
-        return new Vector(end.x-start.x, end.y-start.y);
+        return new Vector(start, end);
     }
 
     public Ray toRay(){
@@ -86,5 +86,12 @@ public class Line extends ShapeBase implements Serializable {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void rotate(double degree) {
+        Point c = getCenter();
+        start.rotateAround(c, degree);
+        end.rotateAround(c, degree);
     }
 }

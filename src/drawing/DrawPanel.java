@@ -26,7 +26,7 @@ public class DrawPanel extends javax.swing.JPanel{
     public int delay;
     
     
-    public DrawPanel(){        
+    public DrawPanel(){
         paintBody = false;
         paintTemp = false;
         paintRaytracer = false;
@@ -36,6 +36,7 @@ public class DrawPanel extends javax.swing.JPanel{
     }
     
     public void simulate(double[][] tracer){
+        main.setLit(null);
         raytracer = tracer;
         
         paintBody = true;
@@ -47,6 +48,7 @@ public class DrawPanel extends javax.swing.JPanel{
     }
     
     public void drawBody(){
+        main.setLit(null);
         paintBody = true;
         paintTemp = false;
         paintRaytracer = false;
@@ -76,6 +78,7 @@ public class DrawPanel extends javax.swing.JPanel{
     }
     
     public void drawClear(){
+        main.setLit(null);
         paintBody = false;
         paintTemp = false;
         paintRaytracer = false;
@@ -118,11 +121,7 @@ public class DrawPanel extends javax.swing.JPanel{
         }
         
         if(paintDragPoints){
-            for(DragPoint dragPoint : main.body.dragPoints){
-                if(dragPoint.highlight){
-                    paintShapeLit(g2d, dragPoint.bindings.get(dragPoint.highlight_index).shape);
-                }
-            }
+            paintShapeLit(g2d, main.lit);
             for(DragPoint dragPoint : main.body.dragPoints){
                 if(dragPoint.highlight){
                     paintNode(g2d, dragPoint.x, dragPoint.y, 3, Color.GREEN);

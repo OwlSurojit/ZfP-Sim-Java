@@ -75,4 +75,11 @@ public class Oval extends ShapeBase{
                 break;
         }
     }
+
+    @Override
+    public void rotate(double degree) {
+        Point c = Point.center(p1, p2);
+        p1.rotateAround(c, degree);
+        p2.rotateAround(c, degree);
+    }
 }
