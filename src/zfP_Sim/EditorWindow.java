@@ -158,8 +158,14 @@ public class EditorWindow extends BodyWindow {
         geomToolBar.add(filler1);
 
         exactInputField.setPreferredSize(new java.awt.Dimension(150, 30));
+        exactInputField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                exactInputFieldKeyPressed(evt);
+            }
+        });
         geomToolBar.add(exactInputField);
 
+        ReadInputButton.setMnemonic('h');
         ReadInputButton.setText("Enter");
         ReadInputButton.setFocusable(false);
         ReadInputButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -213,6 +219,7 @@ public class EditorWindow extends BodyWindow {
 
         fileMenu.setText("Datei");
 
+        returnMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
         returnMenuItem.setText("Return");
         returnMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -371,6 +378,10 @@ public class EditorWindow extends BodyWindow {
         }
         exactInputField.setText("");
     }//GEN-LAST:event_ReadInputButtonMouseClicked
+
+    private void exactInputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exactInputFieldKeyPressed
+        if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
+    }//GEN-LAST:event_exactInputFieldKeyPressed
     
     private void ovalToggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {                                              
         if(ovalToggleButton.isSelected()){
