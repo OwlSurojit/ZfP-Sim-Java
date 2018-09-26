@@ -214,6 +214,24 @@ public class Body implements Serializable {
         refreshDragPoints();
     }
     
+    public void exampleFortyTwo() {
+        outline = new ArrayList();
+        defects = new ArrayList();
+        outline.add(new Circle(new Point(150, 165), 75));
+        defects.add(new Polygon(new Point[]{new Point(100, 200), new Point(130, 170)}));
+        defects.add(new Polygon(new Point[]{new Point(145, 155), new Point(155, 145), new Point(150, 145), new Point(142.5, 152.5), new Point(145, 155)}));
+        defects.add(new Polygon(new Point[]{new Point(150, 150), new Point(200, 200)}));
+        defects.add(new CircleArc(new Point(150, 150), 20*Math.sqrt(2), 225, 225));
+        shapes.clear();
+        for(ShapeBase sb : outline){
+            shapes.addElement(sb);
+        }
+        for(ShapeBase sb : defects){
+            shapes.addElement(sb);
+        }
+        refreshDragPoints();
+    }
+    
     public ArrayList<ShapeBase> components() {
         ArrayList<ShapeBase> list = new ArrayList<ShapeBase>();
         for(ShapeBase s : outline){

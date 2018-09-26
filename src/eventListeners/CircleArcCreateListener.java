@@ -31,6 +31,25 @@ public class CircleArcCreateListener implements MouseListener{
         this.drawPanel = drawPanel;
     }
     
+    public void exactInput(double x, double y) {
+        if (center == null) {
+            center = new Point(x, y);
+            //ArrayList<ShapeBase> temp = new ArrayList<ShapeBase>();
+            //temp.add(center);
+            //drawPanel.drawBody_Edit(temp);
+            // hier bitte Punkt einzeichnen
+        } else if (start == null) {
+            start = new Point(x, y);
+        }else if(end == null){
+            end = new Point(x, y);
+            CircleArc arc = new CircleArc(center, start, end);
+            drawPanel.main.body.addDefect(arc);
+            center = null;
+            start = null;
+            end = null;
+            drawPanel.drawBody_Edit();
+        }
+    }
 
     @Override
     public void mouseClicked(MouseEvent me) {

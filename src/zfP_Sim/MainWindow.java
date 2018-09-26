@@ -22,7 +22,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleCornerRef();
+        body = new Body(); body.exampleLongBar();
         simPanel.main = this;
         scanPanel.main = this;
         simPanel.drawBody();
@@ -98,6 +98,11 @@ public class MainWindow extends BodyWindow {
         senderXField.setText("200");
         senderXField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderXField.setPreferredSize(new java.awt.Dimension(48, 26));
+        senderXField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                senderXFieldKeyPressed(evt);
+            }
+        });
         simToolBar.add(senderXField);
 
         senderYLabel.setText("Sender y");
@@ -106,6 +111,11 @@ public class MainWindow extends BodyWindow {
         senderYField.setText("100");
         senderYField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderYField.setPreferredSize(new java.awt.Dimension(48, 26));
+        senderYField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                senderYFieldKeyPressed(evt);
+            }
+        });
         simToolBar.add(senderYField);
         simToolBar.add(jSeparator6);
 
@@ -115,6 +125,11 @@ public class MainWindow extends BodyWindow {
         rayXField.setText("-1");
         rayXField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayXField.setPreferredSize(new java.awt.Dimension(48, 26));
+        rayXField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rayXFieldKeyPressed(evt);
+            }
+        });
         simToolBar.add(rayXField);
 
         rayYLabel.setText("Vektor y");
@@ -123,6 +138,11 @@ public class MainWindow extends BodyWindow {
         rayYField.setText("4");
         rayYField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayYField.setPreferredSize(new java.awt.Dimension(48, 26));
+        rayYField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rayYFieldKeyPressed(evt);
+            }
+        });
         simToolBar.add(rayYField);
         simToolBar.add(jSeparator7);
 
@@ -132,6 +152,11 @@ public class MainWindow extends BodyWindow {
         refField.setText("20");
         refField.setMinimumSize(new java.awt.Dimension(48, 26));
         refField.setPreferredSize(new java.awt.Dimension(48, 26));
+        refField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                refFieldKeyPressed(evt);
+            }
+        });
         simToolBar.add(refField);
 
         velocityLabel.setText("Geschwindigkeit");
@@ -140,6 +165,11 @@ public class MainWindow extends BodyWindow {
         velocityField.setText("1000");
         velocityField.setMinimumSize(new java.awt.Dimension(48, 26));
         velocityField.setPreferredSize(new java.awt.Dimension(48, 26));
+        velocityField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                velocityFieldKeyPressed(evt);
+            }
+        });
         simToolBar.add(velocityField);
 
         rangeLabel.setText("Reichweite");
@@ -148,6 +178,11 @@ public class MainWindow extends BodyWindow {
         rangeField.setText("20");
         rangeField.setMinimumSize(new java.awt.Dimension(48, 26));
         rangeField.setPreferredSize(new java.awt.Dimension(48, 26));
+        rangeField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rangeFieldKeyPressed(evt);
+            }
+        });
         simToolBar.add(rangeField);
 
         simStartButton.setText("Simulation starten");
@@ -291,6 +326,7 @@ public class MainWindow extends BodyWindow {
         });
         fileMenu.add(saveMenuItem);
 
+        saveAsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         saveAsMenuItem.setText("Speichern als");
         saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -462,6 +498,34 @@ public class MainWindow extends BodyWindow {
             simPanel.drawBody_Edit();
         }
     }//GEN-LAST:event_editMenuItemActionPerformed
+
+    private void senderXFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senderXFieldKeyPressed
+        if (evt.getKeyCode() == 10) simStartButtonActionPerformed(null);
+    }//GEN-LAST:event_senderXFieldKeyPressed
+
+    private void senderYFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senderYFieldKeyPressed
+        if (evt.getKeyCode() == 10) simStartButtonActionPerformed(null);
+    }//GEN-LAST:event_senderYFieldKeyPressed
+
+    private void rayXFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rayXFieldKeyPressed
+        if (evt.getKeyCode() == 10) simStartButtonActionPerformed(null);
+    }//GEN-LAST:event_rayXFieldKeyPressed
+
+    private void rayYFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rayYFieldKeyPressed
+        if (evt.getKeyCode() == 10) simStartButtonActionPerformed(null);
+    }//GEN-LAST:event_rayYFieldKeyPressed
+
+    private void refFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_refFieldKeyPressed
+        if (evt.getKeyCode() == 10) simStartButtonActionPerformed(null);
+    }//GEN-LAST:event_refFieldKeyPressed
+
+    private void velocityFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_velocityFieldKeyPressed
+        if (evt.getKeyCode() == 10) simStartButtonActionPerformed(null);
+    }//GEN-LAST:event_velocityFieldKeyPressed
+
+    private void rangeFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rangeFieldKeyPressed
+        if (evt.getKeyCode() == 10) simStartButtonActionPerformed(null);
+    }//GEN-LAST:event_rangeFieldKeyPressed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

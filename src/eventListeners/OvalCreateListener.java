@@ -12,7 +12,7 @@ import control.Raytracer;
 
 public class OvalCreateListener implements MouseListener{
 
-    Point P1, P2;
+    public Point P1, P2;
     Double e;
     DrawPanel drawPanel;
     
@@ -23,6 +23,23 @@ public class OvalCreateListener implements MouseListener{
         this.drawPanel = drawPanel;
     }
     
+    public void exactInput(double x, double y) {
+        if (this.P1 == null) {
+            this.P1 = new Point(x, y);
+        }
+        else {
+            this.P2 = new Point(x, y);
+        }
+    }
+    
+    public void exactInput(double e) {
+        Oval oval = new Oval(this.P1, this.P2, e);
+        drawPanel.main.body.addDefect(oval);
+        this.P1 = null;
+        this.P2 = null;
+        this.e = null;
+        drawPanel.drawBody_Edit();
+    }
 
     @Override
     public void mouseClicked(MouseEvent me) {
