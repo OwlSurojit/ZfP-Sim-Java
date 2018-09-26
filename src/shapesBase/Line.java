@@ -78,6 +78,7 @@ public class Line extends ShapeBase implements Serializable {
                 end = new Point(end.x + tx, end.y + ty);                
                 break;
             case LINE_START:
+                start = new Point(nx, ny);
                 break;
             case LINE_END:
                 end = new Point(nx, ny);
