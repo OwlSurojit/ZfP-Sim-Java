@@ -10,9 +10,9 @@ import drawing.DrawPanel;
 
 public class CircleCreateListener implements MouseListener{
 
-    Point center;
-    Point peripher;
-    DrawPanel drawPanel;
+    public Point center;
+    public Point peripher;
+    public DrawPanel drawPanel;
     
     public CircleCreateListener(DrawPanel drawPanel){
         center = null;
@@ -20,6 +20,17 @@ public class CircleCreateListener implements MouseListener{
         this.drawPanel = drawPanel;
     }
     
+    public void exactInput(double x, double y) {
+        center = new Point(x, y);
+    }
+    
+    public void exactInput(double r) {
+        Circle circle = new Circle(center, r);
+                drawPanel.main.body.addDefect(circle);
+                center = null;
+                peripher = null;
+                drawPanel.drawBody_Edit();
+    }
 
     @Override
     public void mouseClicked(MouseEvent me) {

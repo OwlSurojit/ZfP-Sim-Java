@@ -48,6 +48,10 @@ public class EditorWindow extends BodyWindow {
         carcToggleButton = new javax.swing.JToggleButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         ovalToggleButton = new javax.swing.JToggleButton();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(30, 0), new java.awt.Dimension(30, 0), new java.awt.Dimension(30, 32767));
+        exactInputField = new javax.swing.JTextField();
+        ReadInputButton = new javax.swing.JButton();
+        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         jSplitPane2 = new javax.swing.JSplitPane();
         drawPanel = new drawing.DrawPanel();
         shapesScrollPane = new javax.swing.JScrollPane();
@@ -151,6 +155,22 @@ public class EditorWindow extends BodyWindow {
             }
         });
         geomToolBar.add(ovalToggleButton);
+        geomToolBar.add(filler1);
+
+        exactInputField.setPreferredSize(new java.awt.Dimension(150, 30));
+        geomToolBar.add(exactInputField);
+
+        ReadInputButton.setText("Enter");
+        ReadInputButton.setFocusable(false);
+        ReadInputButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ReadInputButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ReadInputButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ReadInputButtonMouseClicked(evt);
+            }
+        });
+        geomToolBar.add(ReadInputButton);
+        geomToolBar.add(filler2);
 
         jSplitPane1.setTopComponent(geomToolBar);
 
@@ -315,6 +335,42 @@ public class EditorWindow extends BodyWindow {
             }
         }
     }//GEN-LAST:event_shapesListMouseClicked
+
+    private void ReadInputButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ReadInputButtonMouseClicked
+        MouseListener listener = drawPanel.getMouseListeners()[0];
+        if (listener instanceof PolygonCreateListener) {
+            String[] input = exactInputField.getText().split(",");
+            if (input.length == 2) {
+                ((PolygonCreateListener)listener).exactInput(Double.parseDouble(input[0]), Double.parseDouble(input[1]));
+            } else {
+                ((PolygonCreateListener)listener).finish();
+            }
+        } else if (listener instanceof CircleCreateListener) {
+            if (((CircleCreateListener)listener).center == null) {
+                String[] input = exactInputField.getText().split(",");
+                ((CircleCreateListener)listener).exactInput(Double.parseDouble(input[0]), Double.parseDouble(input[1]));
+                
+            } else {
+                String input = exactInputField.getText();
+                ((CircleCreateListener)listener).exactInput(Double.parseDouble(input));
+            }
+        } else if (listener instanceof CircleArcCreateListener) {
+            String[] input = exactInputField.getText().split(",");
+            ((CircleArcCreateListener) listener).exactInput(Double.parseDouble(input[0]), Double.parseDouble(input[1]));
+        } else if (listener instanceof OvalCreateListener) {
+            if (((OvalCreateListener)listener).P2 == null) {
+                String[] input = exactInputField.getText().split(",");
+                ((OvalCreateListener)listener).exactInput(Double.parseDouble(input[0]), Double.parseDouble(input[1]));
+            } else {
+                String input = exactInputField.getText();
+                ((OvalCreateListener)listener).exactInput(Double.parseDouble(input));
+            }
+        } else if (listener instanceof RectangleCreateListener) {
+            String[] input = exactInputField.getText().split(",");
+            ((RectangleCreateListener) listener).exactInput(Double.parseDouble(input[0]), Double.parseDouble(input[1]));
+        }
+        exactInputField.setText("");
+    }//GEN-LAST:event_ReadInputButtonMouseClicked
     
     private void ovalToggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {                                              
         if(ovalToggleButton.isSelected()){
@@ -330,11 +386,15 @@ public class EditorWindow extends BodyWindow {
     }                                             
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ReadInputButton;
     private javax.swing.JToggleButton carcToggleButton;
     private javax.swing.JToggleButton circleToggleButton;
     private javax.swing.JToggleButton cursorToggleButton;
     public drawing.DrawPanel drawPanel;
+    private javax.swing.JTextField exactInputField;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.Box.Filler filler2;
     private javax.swing.JToolBar geomToolBar;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem jMenuItem1;

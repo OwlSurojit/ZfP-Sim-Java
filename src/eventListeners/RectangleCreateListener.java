@@ -22,6 +22,32 @@ public class RectangleCreateListener implements MouseListener{
         this.drawPanel = drawPanel;
     }
     
+    public void exactInput(double x, double y) {
+        if (start == null){
+            start = new Point(x, y);
+            Point[] points = {start};
+            ArrayList<ShapeBase> sb = new ArrayList<ShapeBase>();
+            sb.add(new Polygon(points));
+            drawPanel.drawBody_Edit(sb);
+        }else if (corner1 == null){
+            corner1 = new Point(x, y);
+            Point[] points = {start, corner1};
+            ArrayList<ShapeBase> sb = new ArrayList<ShapeBase>();
+            sb.add(new Polygon(points));
+            drawPanel.drawBody_Edit(sb);
+        }else if(corner2 == null){
+            Point p = new Point(x, y);
+            Point sp = Raytracer.getLineIntersection(new Ray(p, (new Line(start, corner1).toVector().toNormal())), new Line(start, corner1)).point;
+            corner2 = (new Ray(start, (new Line(sp, p)).toVector())).getPoint(1);
+            Point corner3 = (new Ray(corner1, (new Line(sp, p)).toVector())).getPoint(1);
+            Point[] points = {start, corner1, corner3, corner2, start};
+            drawPanel.main.body.addDefect(new Polygon(points));
+            this.start = null;
+            this.corner1 = null;
+            this.corner2 = null;
+            drawPanel.drawBody_Edit();
+        }
+    }
 
     @Override
     public void mouseClicked(MouseEvent me) {
