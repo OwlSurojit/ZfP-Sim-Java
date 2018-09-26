@@ -24,7 +24,7 @@ public class DragDropListener implements MouseListener{
     @Override
     public void mouseClicked(MouseEvent me) {
         for(DragPoint dp : drawPanel.main.body.dragPoints){
-            if(dp.cont(me.getX(), me.getY(), 3)){
+            if(dp.cont(me.getX(), me.getY(), 10)){
                 if(dp == lit){
                     dp.next();
                     main.setLit(dp.bindings.get(dp.highlight_index).shape);
@@ -51,7 +51,7 @@ public class DragDropListener implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent me) {
-        if(lit!= null && lit.cont(me.getX(), me.getY(), 3)){
+        if(lit!= null && lit.cont(me.getX(), me.getY(), 10)){
             dragging = true;
         }
     }
@@ -60,7 +60,7 @@ public class DragDropListener implements MouseListener{
     public void mouseReleased(MouseEvent me) {
         if(dragging){
             dragging = false;
-            if(!lit.cont(me.getX(), me.getY(), 3)){
+            if(!lit.cont(me.getX(), me.getY(), 10)){
                 lit.bindings.get(lit.highlight_index).shape.refactor(lit.bindings.get(lit.highlight_index), me.getX(), me.getY());
                 drawPanel.main.body.refreshDragPoints();
                 lit = null;

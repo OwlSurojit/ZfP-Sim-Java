@@ -2,9 +2,7 @@ package shapesBase;
 
 import drawing.Binding;
 import enums.BindType;
-import geometry.Point;
-import geometry.Vector;
-import geometry.Ray;
+import geometry.*;
 import java.util.ArrayList;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import structures.StructDrawingInfo;
@@ -64,6 +62,12 @@ public class Oval extends ShapeBase{
         list.add(new Binding(Point.center(p1, p2), this, BindType.OVAL_CENTER));
         list.add(new Binding(p1, this, BindType.OVAL_P1));
         list.add(new Binding(p2, this, BindType.OVAL_P2));
+        Ray r1 = new Ray(Point.center(p1, p2), new Vector(p1, p2));
+        Ray r2 = new Ray(r1.o, r1.r.toNormal());
+        list.add(new Binding(r1.getPoint(e/2 / r1.r.length()), this, BindType.OVAL_PERIPHER));
+        list.add(new Binding(r1.getPoint(-e/2 / r1.r.length()), this, BindType.OVAL_PERIPHER));
+        list.add(new Binding(r2.getPoint(Math.sqrt(Math.pow(e, 2) - Math.pow(r2.r.length(), 2))/2 / r1.r.length()), this, BindType.OVAL_PERIPHER));
+        list.add(new Binding(r2.getPoint(-Math.sqrt(Math.pow(e, 2) - Math.pow(r2.r.length(), 2))/2 / r1.r.length()), this, BindType.OVAL_PERIPHER));
         return list;
     }
     
@@ -88,6 +92,9 @@ public class Oval extends ShapeBase{
                 if(e > np2.dist(p1)){
                     p2 = np2;
                 }
+                break;
+            case OVAL_PERIPHER:
+                e = p1.dist(new Point(nx, ny)) + p2.dist(new Point(nx, ny));
                 break;
             default:
                 break;
