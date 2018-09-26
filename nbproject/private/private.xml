@@ -2,6 +2,11 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/geometry/Point.java</file>
+            <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/shapesBase/CircleArc.java</file>
+            <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/zfP_Sim/EditorWindow.java</file>
+            <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/shapesBase/Polygon.java</file>
+        </group>
     </open-files>
 </project-private>

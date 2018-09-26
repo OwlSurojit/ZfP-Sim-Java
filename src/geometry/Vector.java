@@ -10,6 +10,11 @@ public class Vector {
         this.x = x;
         this.y = y;
     }
+    
+    public Vector(Point start, Point end){
+        this.x = end.x - start.x;
+        this.y = end.y - start.y;
+    }
 
     public Vector add(Vector other) {
         return new Vector(this.x + other.x, this.y + other.y);
@@ -19,9 +24,9 @@ public class Vector {
         return new Vector(factor * this.x, factor * this.y);
     }
 
-	public double dotP(Vector other) {
-		return this.x * other.x + this.y * other.y;
-	}
+    public double dotP(Vector other) {
+            return this.x * other.x + this.y * other.y;
+    }
 
     public Vector toNormal(){
         return new Vector(-this.y, this.x);
@@ -48,11 +53,11 @@ public class Vector {
         return (-Math.toDegrees(Math.atan2(this.x * other.y - this.y * other.x, this.x * other.x + this.y * other.y)) + 360) % 360;
     }
 
-	public double getAngle(Vector other) {
-		return Math.toDegrees(Math.acos(this.dotP(other) / (this.length() * other.length())));
-	}
+    public double getAngle(Vector other) {
+        return Math.toDegrees(Math.acos(this.dotP(other) / (this.length() * other.length())));
+    }
 
-	public shapesBase.Line toLine() {
-		return new shapesBase.Line(new Point(0, 0), this.toPoint());
-	}
+    public shapesBase.Line toLine() {
+        return new shapesBase.Line(new Point(0, 0), this.toPoint());
+    }
 }

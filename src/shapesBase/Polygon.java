@@ -109,4 +109,16 @@ public class Polygon extends ShapeBase implements Serializable {
                 break;
         }
     }
+
+    @Override
+    public void rotate(double degree) {
+        Point c = getCenter();
+        for(int i = 0; i<points.length; i++){
+            points[i].rotateAround(c, degree);
+        }
+        this.lines = new Line[points.length-1];
+        for(int i = 0; i<points.length -1; i++){
+            lines[i] = new Line(points[i], points[i+1]);
+        }
+    }
 }
