@@ -4,6 +4,8 @@ package shapesBase;
 import drawing.Binding;
 import enums.bindType;
 import geometry.Point;
+import geometry.Vector;
+import geometry.Ray;
 import java.io.Serializable;
 import java.util.ArrayList;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -28,6 +30,11 @@ public class Circle extends ShapeBase implements Serializable {
     @Override
     public String toString(){
         return "Circle(center = " + center + ",  radius = " + radius + ")";
+    }
+    
+    public Ray getTangent(Point S){
+        Vector r = (new Line(this.center, S)).toVector();
+        return new Ray(S, r.toNormal()); //senkrecht zu r1
     }
     
     @Override

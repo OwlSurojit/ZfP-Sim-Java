@@ -22,7 +22,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleLongBar();
+        body = new Body(); body.exampleCornerRef();
         simPanel.main = this;
         scanPanel.main = this;
         simPanel.drawBody();
@@ -95,7 +95,7 @@ public class MainWindow extends BodyWindow {
         senderXLabel.setText("Sender x");
         simToolBar.add(senderXLabel);
 
-        senderXField.setText("430");
+        senderXField.setText("200");
         senderXField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(senderXField);
@@ -103,7 +103,7 @@ public class MainWindow extends BodyWindow {
         senderYLabel.setText("Sender y");
         simToolBar.add(senderYLabel);
 
-        senderYField.setText("30");
+        senderYField.setText("100");
         senderYField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderYField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(senderYField);
@@ -112,7 +112,7 @@ public class MainWindow extends BodyWindow {
         rayXLabel.setText("Vektor x");
         simToolBar.add(rayXLabel);
 
-        rayXField.setText("0");
+        rayXField.setText("-1");
         rayXField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayXField);
@@ -120,7 +120,7 @@ public class MainWindow extends BodyWindow {
         rayYLabel.setText("Vektor y");
         simToolBar.add(rayYLabel);
 
-        rayYField.setText("1");
+        rayYField.setText("4");
         rayYField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayYField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayYField);
@@ -129,7 +129,7 @@ public class MainWindow extends BodyWindow {
         refLabel.setText("Reflexionen");
         simToolBar.add(refLabel);
 
-        refField.setText("2");
+        refField.setText("20");
         refField.setMinimumSize(new java.awt.Dimension(48, 26));
         refField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(refField);
@@ -204,7 +204,7 @@ public class MainWindow extends BodyWindow {
         );
         simPanelLayout.setVerticalGroup(
             simPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 196, Short.MAX_VALUE)
+            .addGap(0, 654, Short.MAX_VALUE)
         );
 
         jSplitPane2.setLeftComponent(simPanel);
@@ -391,6 +391,19 @@ public class MainWindow extends BodyWindow {
             simPanel.paintDragPoints = false;
             simPanel.simulate(scan.reflections());
             scanPanel.setScores(scan.scan_A());
+            
+            /*for testing
+            int numray = 5;
+            double angle = -1.0;
+            int way = 3500;
+            //double[][][] ref = scan.MultiReflections(numray, angle);
+            double[][][] ref = scan.MultiReflections(numray, angle, way);
+            for(double[][] rx : ref){
+                simPanel.simulate(rx);
+                // zeichnet nur letzte Reflektion
+            }
+            //scanPanel.setScores(scan.MultiScan_A(numray, angle));
+            scanPanel.setScores(scan.MultiScan_A(numray, angle, way));*/
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 
