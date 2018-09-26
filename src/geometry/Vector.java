@@ -10,6 +10,11 @@ public class Vector {
         this.x = x;
         this.y = y;
     }
+    
+    public Vector(Point start, Point end){
+        this.x = end.x - start.x;
+        this.y = end.y - start.y;
+    }
 
     public Vector add(Vector other) {
         return new Vector(this.x + other.x, this.y + other.y);
