@@ -233,9 +233,6 @@
                   <Dimension value="[48, 26]"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="senderXFieldKeyPressed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="senderYLabel">
               <Properties>
@@ -252,9 +249,6 @@
                   <Dimension value="[48, 26]"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="senderYFieldKeyPressed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JToolBar$Separator" name="jSeparator6">
             </Component>
@@ -273,9 +267,6 @@
                   <Dimension value="[48, 26]"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="rayXFieldKeyPressed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="rayYLabel">
               <Properties>
@@ -292,9 +283,6 @@
                   <Dimension value="[48, 26]"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="rayYFieldKeyPressed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JToolBar$Separator" name="jSeparator7">
             </Component>
@@ -313,9 +301,6 @@
                   <Dimension value="[48, 26]"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="refFieldKeyPressed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="velocityLabel">
               <Properties>
@@ -332,9 +317,6 @@
                   <Dimension value="[48, 26]"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="velocityFieldKeyPressed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="rangeLabel">
               <Properties>
@@ -351,9 +333,6 @@
                   <Dimension value="[48, 26]"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="rangeFieldKeyPressed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="simStartButton">
               <Properties>
