@@ -420,9 +420,10 @@ public class MainWindow extends BodyWindow {
         if(!body.outline.isEmpty()){
             Sender sender = new Sender(new Ray( new Point(Double.parseDouble(senderXField.getText()), Double.parseDouble(senderYField.getText())), new Vector(Double.parseDouble(rayXField.getText()), Double.parseDouble(rayYField.getText()))), Double.parseDouble(rangeField.getText()));
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
-            simPanel.paintDragPoints = false;
             simPanel.simulate(scan.reflections());
             scanPanel.setScores(scan.scan_A());
+            /*simPanel.simulate(scan.MultiReflections(10, 45));
+            scanPanel.setScores(scan.MultiScan_A(10, 45));*/
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 

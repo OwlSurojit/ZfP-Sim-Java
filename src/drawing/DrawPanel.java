@@ -17,10 +17,12 @@ public class DrawPanel extends javax.swing.JPanel{
     public BodyWindow main;
     public ArrayList<ShapeBase> tempShapes;
     public double[][] raytracer;
+    public double[][][] multitracer;
     
     public boolean paintBody;
     public boolean paintTemp;
     public boolean paintRaytracer;
+    public boolean paintMultiTracer;
     public boolean paintDragPoints;
     
     public int delay;
@@ -30,6 +32,7 @@ public class DrawPanel extends javax.swing.JPanel{
         paintBody = false;
         paintTemp = false;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = false;
         
         delay = 0;
@@ -42,6 +45,20 @@ public class DrawPanel extends javax.swing.JPanel{
         paintBody = true;
         paintTemp = false;
         paintRaytracer = true;
+        paintMultiTracer = false;
+        paintDragPoints = false;
+        
+        repaint();
+    }
+    
+    public void simulate(double[][][] tracer){
+        main.setLit(null);
+        multitracer = tracer;
+        
+        paintBody = true;
+        paintTemp = false;
+        paintRaytracer = false;
+        paintMultiTracer = true;
         paintDragPoints = false;
         
         repaint();
@@ -52,6 +69,7 @@ public class DrawPanel extends javax.swing.JPanel{
         paintBody = true;
         paintTemp = false;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = false;
         
         repaint();
@@ -61,6 +79,7 @@ public class DrawPanel extends javax.swing.JPanel{
         paintBody = true;
         paintTemp = false;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = true;
         
         repaint();
@@ -72,6 +91,7 @@ public class DrawPanel extends javax.swing.JPanel{
         paintBody = true;
         paintTemp = true;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = true;
         
         repaint();
@@ -82,6 +102,7 @@ public class DrawPanel extends javax.swing.JPanel{
         paintBody = false;
         paintTemp = false;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = false;
         
         repaint();
@@ -117,6 +138,19 @@ public class DrawPanel extends javax.swing.JPanel{
             paintNode(g2d, raytracer[0][0], raytracer[0][1], 3, Color.RED);
             for(int i=1; i<raytracer.length; i++){
                 paintNode(g2d, raytracer[i][0], raytracer[i][1], 2, Color.BLACK);
+            }
+        }
+        
+        if(paintMultiTracer){
+            for(int j = 0; j < multitracer.length; j++){
+                g2d.setColor(new Color(j*255/(multitracer.length-1),0,(multitracer.length-1-j)*255/(multitracer.length-1)));
+                for(int i=0; i<multitracer[j].length-1; i++){
+                    g2d.draw(new Line2D.Double(multitracer[j][i][0], multitracer[j][i][1], multitracer[j][i+1][0], multitracer[j][i+1][1]));
+                }
+                paintNode(g2d, multitracer[j][0][0], multitracer[j][0][1], 3, Color.RED);
+                for(int i=1; i<multitracer[j].length; i++){
+                    paintNode(g2d, multitracer[j][i][0], multitracer[j][i][1], 2, Color.BLACK);
+                }
             }
         }
         
