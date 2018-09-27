@@ -119,21 +119,25 @@ public class ScanPanel extends JPanel {
         g2.setColor(lineColor);
         g2.setStroke(GRAPH_STROKE);
         for (int i = 0; i < graphPoints.size() /*- 1*/; i++) {
-            int x1 = graphPoints.get(i).x;
-            int y1 = graphPoints.get(i).y;
-            /*int x2 = graphPoints.get(i + 1).x;
-            int y2 = graphPoints.get(i + 1).y;*/
-            g2.drawLine(x1, y1, x1, getHeight() - padding - labelPadding);
+            if(scores.get(i)[1] != 0.0){
+                int x1 = graphPoints.get(i).x;
+                int y1 = graphPoints.get(i).y;
+                /*int x2 = graphPoints.get(i + 1).x;
+                int y2 = graphPoints.get(i + 1).y;*/
+                g2.drawLine(x1, y1, x1, getHeight() - padding - labelPadding);
+            }
         }
 
         g2.setStroke(oldStroke);
         g2.setColor(pointColor);
         for (int i = 0; i < graphPoints.size(); i++) {
-            int x = graphPoints.get(i).x - pointWidth / 2;
-            int y = graphPoints.get(i).y - pointWidth / 2;
-            int ovalW = pointWidth;
-            int ovalH = pointWidth;
-            g2.fillOval(x, y, ovalW, ovalH);
+            if(scores.get(i)[1] != 0.0){
+                int x = graphPoints.get(i).x - pointWidth / 2;
+                int y = graphPoints.get(i).y - pointWidth / 2;
+                int ovalW = pointWidth;
+                int ovalH = pointWidth;
+                g2.fillOval(x, y, ovalW, ovalH);
+            }
         }
     }
 
