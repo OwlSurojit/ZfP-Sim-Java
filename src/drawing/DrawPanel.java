@@ -142,7 +142,8 @@ public class DrawPanel extends javax.swing.JPanel{
         }
         
         if(paintMultiTracer){
-            for(int j = 0; j < multitracer.length; j++){
+            // Strahl n+1 bedeckt Strahl n
+            /*for(int j = 0; j < multitracer.length; j++){
                 // red to blue 
                 //g2d.setColor(new Color(j*255/(multitracer.length-1),0,(multitracer.length-1-j)*255/(multitracer.length-1)));
                 // full rgb 
@@ -157,7 +158,27 @@ public class DrawPanel extends javax.swing.JPanel{
                 for(int i=1; i<multitracer[j].length; i++){
                     paintNode(g2d, multitracer[j][i][0], multitracer[j][i][1], 2, Color.BLACK);
                 }
+            }*/
+            
+            // Ref n+1 bedeckt Ref n
+            Color[] colors = new Color[multitracer.length];
+            for(int j=0; j<multitracer.length; j++){
+                    int vr = Math.max(0, (int)(510*j/(multitracer.length-1) - 255));
+                    int vb = Math.max(0, (int)(255 - 510*j/(multitracer.length-1)));
+                    int vg = 255 - vr - vb;
+                    colors[j] = new Color(vr, vg, vb);
             }
+            
+            for(int i = 0; i < multitracer[0].length-1; i++){
+                for(int j=0; j<multitracer.length; j++){
+                    g2d.setColor(colors[j]);
+                    g2d.draw(new Line2D.Double(multitracer[j][i][0], multitracer[j][i][1], multitracer[j][i+1][0], multitracer[j][i+1][1]));
+                }
+                for(int j=0; j<multitracer.length; j++){
+                    paintNode(g2d, multitracer[j][i][0], multitracer[j][i][1], 2, Color.BLACK);
+                }
+            }
+            paintNode(g2d, multitracer[0][0][0], multitracer[0][0][1], 3, Color.RED);
         }
         
         if(paintDragPoints){
