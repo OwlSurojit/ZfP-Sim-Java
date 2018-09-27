@@ -8,7 +8,7 @@ public class PropertiesTabbedPane extends javax.swing.JTabbedPane{
     
     public PropertiesTabbedPane(ShapeBase shape, FieldVerifier fv){
         if (shape instanceof Polygon){
-            constructionTab = new PolygonTab((Polygon) shape, fv);
+            constructionTab = new PolygonTab((Polygon) shape);
         }
         else if(shape instanceof Circle){
             constructionTab = new CircleTab((Circle) shape, fv);
