@@ -484,26 +484,14 @@ public class EditorWindow extends BodyWindow {
         exactInputField1.requestFocus();
     }//GEN-LAST:event_ReadInputButtonMouseClicked
 
-    private void exactInputField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exactInputField1KeyPressed
+    private void exactInputField1KeyPressed(java.awt.event.KeyEvent evt) {                                            
         if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
     }
   
-    private void exactInputField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exactInputField2KeyPressed
+    private void exactInputField2KeyPressed(java.awt.event.KeyEvent evt) {                                            
         if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
     }
-  
-    private void ovalToggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {                                              
-          if(ovalToggleButton.isSelected()){
-              MouseListener[] listeners = drawPanel.getMouseListeners();
-              if(listeners.length == 1){
-                  drawPanel.removeMouseListener(listeners[0]);
-              }
-              drawPanel.addMouseListener(new OvalCreateListener(drawPanel));
-              body.refreshDragPoints();
-              setLit(null);
-              drawPanel.drawBody_Edit();
-          }
-      }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ReadInputButton;
