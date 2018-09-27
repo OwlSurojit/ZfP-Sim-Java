@@ -4,6 +4,7 @@ import structures.StructRayObj;
 import shapesBase.Line;
 import geometry.Ray;
 import java.util.ArrayList;
+import java.util.Arrays;
 import misc.Tools;
 import shapesBase.ShapeBase;
 
@@ -52,6 +53,7 @@ public class Scan {
     // jeder Strahl wird numref mal reflektiert 
     // -> durch unterschieldiche verlaeufe werden unterschiedlice Strecken zurueckgelegt
     // -> verschiedene Zeiten im Diagramm
+    // Array: {{time, intensity}, ...}
     public Double[][] MultiScan_A(int numray, double angle){
         if (numray < 2 || Tools.equal(angle, 0)) return scan_A();
         int pos = 0;
@@ -111,7 +113,34 @@ public class Scan {
         java.util.Arrays.sort(hits, (Double[] a, Double[] b) -> Double.compare(a[0], b[0]));
         return hits;
     }
-
+    
+    public Double[][] processScan_A(Double[][] scan, double decaytime){
+        
+        Double[][] pScan = new Double[scan.length][2];
+        for(int i = 0; i < scan.length; i++){
+            pScan[i] = Arrays.copyOf(scan[i], scan.length);
+        }
+        //Double[][] pScan = Arrays.copyOf(scan, scan.length);\
+        //System.arraycopy(scan, 0, pScan, 0, scan.length);
+        double maxvalue = pScan[0][1];
+        for (int i = 1; i < scan.length; i++){
+            int j = i-1;
+            double timedif = scan[i][0] - scan[j][0];
+            while (j >= 0 && timedif < decaytime){
+                timedif = scan[i][0] - scan[j][0];
+                // f(x) = 1/(x^2+1)  -> < 10^-8 for x > 3*sqrt(11111111)
+                double offset = scan[j][1]/(Math.pow((timedif/decaytime), 2)*9+1);
+                pScan[i][1] += offset;
+                if (pScan[i][1] > maxvalue) maxvalue = pScan[i][1];
+                j--;
+            }
+        }
+        for (int i = 0; i < scan.length; i++){
+            pScan[i][1] = pScan[i][1]/maxvalue;
+        }
+        return pScan;
+    }
+            
     public double[][] reflections(){
         StructRayObj[] history = (new Raytracer(this.ray, this.sender.obj, this.objects, this.numref)).trace();
         double[][] points = new double[history.length][2];
