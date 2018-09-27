@@ -118,7 +118,7 @@ public class Scan {
         
         Double[][] pScan = new Double[scan.length][2];
         for(int i = 0; i < scan.length; i++){
-            pScan[i] = Arrays.copyOf(scan[i], scan.length);
+            pScan[i] = Arrays.copyOf(scan[i], 2);
         }
         //Double[][] pScan = Arrays.copyOf(scan, scan.length);\
         //System.arraycopy(scan, 0, pScan, 0, scan.length);
@@ -135,7 +135,7 @@ public class Scan {
                 j--;
             }
         }
-        for (int i = 0; i < scan.length; i++){
+        for (int i = 1; i < scan.length; i++){
             pScan[i][1] = pScan[i][1]/maxvalue;
         }
         return pScan;

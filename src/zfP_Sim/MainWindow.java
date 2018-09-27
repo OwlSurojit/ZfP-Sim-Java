@@ -133,7 +133,7 @@ public class MainWindow extends BodyWindow {
         rayXLabel.setText("Vektor x");
         simToolBar.add(rayXLabel);
 
-        rayXField.setText("0");
+        rayXField.setText("-2");
         rayXField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayXField);
@@ -424,7 +424,7 @@ public class MainWindow extends BodyWindow {
             //scanPanel.setScores(scan.scan_A());
             simPanel.simulate(scan.MultiReflections(11 , 2));
             //scanPanel.setScores(scan.MultiScan_A(1001, 20));
-            scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(3, 2), 1));
+            scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(3, 2), 0.5));
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 
