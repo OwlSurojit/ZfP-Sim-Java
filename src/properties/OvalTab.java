@@ -30,13 +30,13 @@ public class OvalTab extends PropertiesTab{
         nameField = new JTextField(oval.drawingInfo.name);
         
         p1Label = new JLabel("Erster Brennpunkt");
-        p1Panel = new PointPanel(oval.p1.x, oval.p1.y);
+        p1Panel = new PointPanel(Math.round(oval.p1.x * 100.0) / 100.0, Math.round(oval.p1.y * 100.0) / 100.0);
         
         p2Label = new JLabel("Zweiter Brennpunkt");
-        p2Panel = new PointPanel(oval.p2.x, oval.p2.y);
+        p2Panel = new PointPanel(Math.round(oval.p2.x * 100.0) / 100.0, Math.round(oval.p2.y * 100.0) / 100.0);
         
         eLabel = new JLabel("Elongation");
-        eField = new JTextField(Double.toString(oval.e));
+        eField = new JTextField(Double.toString(Math.round(oval.e * 100.0) / 100.0));
         
         StructFieldType p1x = new StructFieldType(p1Panel.xField, VerificationType.NON_NEG_DOUBLE);
         StructFieldType p1y = new StructFieldType(p1Panel.yField, VerificationType.NON_NEG_DOUBLE);

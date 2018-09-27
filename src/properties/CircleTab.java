@@ -28,10 +28,10 @@ public class CircleTab extends PropertiesTab{
         nameField = new JTextField(circle.drawingInfo.name);
         
         centerLabel = new JLabel("Mittelpunkt");
-        centerPanel = new PointPanel(circle.center.x, circle.center.y);
+        centerPanel = new PointPanel(Math.round(circle.center.x * 100.0) / 100.0, Math.round(circle.center.y * 100.0) / 100.0);
         
         radiusLabel = new JLabel("Radius");
-        radiusField = new JTextField(Double.toString(circle.radius));
+        radiusField = new JTextField(Double.toString(Math.round(circle.radius * 100.0) / 100.0));
         
         
         StructFieldType cx = new StructFieldType(centerPanel.xField, VerificationType.NON_NEG_DOUBLE);

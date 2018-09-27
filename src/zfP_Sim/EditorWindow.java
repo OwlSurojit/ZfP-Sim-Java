@@ -175,6 +175,11 @@ public class EditorWindow extends BodyWindow {
                 ReadInputButtonMouseClicked(evt);
             }
         });
+        ReadInputButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ReadInputButtonActionPerformed(evt);
+            }
+        });
         geomToolBar.add(ReadInputButton);
         geomToolBar.add(filler2);
 
@@ -382,6 +387,10 @@ public class EditorWindow extends BodyWindow {
     private void exactInputFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exactInputFieldKeyPressed
         if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
     }//GEN-LAST:event_exactInputFieldKeyPressed
+
+    private void ReadInputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReadInputButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ReadInputButtonActionPerformed
     
     private void ovalToggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {                                              
         if(ovalToggleButton.isSelected()){

@@ -252,6 +252,7 @@
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ReadInputButtonMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ReadInputButtonActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.Box$Filler" name="filler2">

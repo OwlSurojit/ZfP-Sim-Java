@@ -31,16 +31,16 @@ public class CircleArcTab extends PropertiesTab{
         nameField = new JTextField(circleArc.drawingInfo.name);
         
         centerLabel = new JLabel("Mittelpunkt");
-        centerPanel = new PointPanel(circleArc.center.x, circleArc.center.y);
+        centerPanel = new PointPanel(Math.round(circleArc.center.x * 100.0) / 100.0, Math.round(circleArc.center.y * 100.0) / 100.0);
         
         radiusLabel = new JLabel("Radius");
-        radiusField = new JTextField(Double.toString(circleArc.radius));
+        radiusField = new JTextField(Double.toString(Math.round(circleArc.radius * 100.0) / 100.0));
         
         offsetLabel = new JLabel("Bogenanfang (in °)");
-        offsetField = new JTextField(Double.toString(circleArc.offsetangle));
+        offsetField = new JTextField(Double.toString(Math.round(circleArc.offsetangle * 100.0) / 100.0));
         
         arcLabel = new JLabel("Bogengröße (in °)");
-        arcField = new JTextField(Double.toString(circleArc.arcangle));
+        arcField = new JTextField(Double.toString(Math.round(circleArc.arcangle * 100.0) / 100.0));
         
         StructFieldType cx = new StructFieldType(centerPanel.xField, VerificationType.NON_NEG_DOUBLE);
         StructFieldType cy = new StructFieldType(centerPanel.yField, VerificationType.NON_NEG_DOUBLE);

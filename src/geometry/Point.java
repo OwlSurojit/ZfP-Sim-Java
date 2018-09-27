@@ -1,7 +1,6 @@
 package geometry;
 
 import java.io.Serializable;
-import drawing.DragPoint;
 import java.util.ArrayList;
 
 public class Point implements Serializable {
