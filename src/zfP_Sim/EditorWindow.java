@@ -4,8 +4,11 @@ import control.Body;
 import drawing.DragPoint;
 import static enums.VerificationType.*;
 import eventListeners.*;
+import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
+import java.io.PrintStream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
@@ -31,6 +34,56 @@ public class EditorWindow extends BodyWindow {
         drawPanel.main = this;
         drawPanel.drawBody_Edit();
         cursorToggleButton.doClick();
+        
+        //KeyEventListeners
+        //Cursor with F1
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
+            if (evt.getKeyCode() == 112){
+                cursorToggleButton.setSelected(true);
+                cursorToggleButtonStateChanged(null);
+            }
+            return false;
+        });
+        //Polygon with F2
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
+            if (evt.getKeyCode() ==113){
+                polygonToggleButton.setSelected(true);
+                polygonToggleButtonStateChanged(null);
+            }
+            return false;
+        });
+        //Rectangle with F3
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
+            if (evt.getKeyCode() ==114){
+                rectangleToggleButton.setSelected(true);
+                rectangleToggleButtonStateChanged(null);
+            }
+            return false;
+        });
+        //Circle with F4
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
+            if (evt.getKeyCode() ==115){
+                circleToggleButton.setSelected(true);
+                circleToggleButtonStateChanged(null);
+            }
+            return false;
+        });
+        //Arc with F5
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
+            if (evt.getKeyCode() ==116){
+                carcToggleButton.setSelected(true);
+                carcToggleButtonStateChanged(null);
+            }
+            return false;
+        });
+        //Oval with F6
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
+            if (evt.getKeyCode() ==117){
+                ovalToggleButton.setSelected(true);
+                ovalToggleButtonStateChanged(null);
+            }
+            return false;
+        });
     }
 
     @SuppressWarnings("unchecked")
