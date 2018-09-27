@@ -143,7 +143,13 @@ public class DrawPanel extends javax.swing.JPanel{
         
         if(paintMultiTracer){
             for(int j = 0; j < multitracer.length; j++){
-                g2d.setColor(new Color(j*255/(multitracer.length-1),0,(multitracer.length-1-j)*255/(multitracer.length-1)));
+                // red to blue 
+                //g2d.setColor(new Color(j*255/(multitracer.length-1),0,(multitracer.length-1-j)*255/(multitracer.length-1)));
+                // full rgb 
+                int vr = Math.max(0, (int)(510*j/(multitracer.length-1) - 255));
+                int vb = Math.max(0, (int)(255 - 510*j/(multitracer.length-1)));
+                int vg = 255 - vr - vb;
+                g2d.setColor(new Color(vr, vg, vb));
                 for(int i=0; i<multitracer[j].length-1; i++){
                     g2d.draw(new Line2D.Double(multitracer[j][i][0], multitracer[j][i][1], multitracer[j][i+1][0], multitracer[j][i+1][1]));
                 }
