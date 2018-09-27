@@ -46,7 +46,7 @@ public class EditorWindow extends BodyWindow {
         });
         //Polygon with F2
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==113){
+            if (evt.getKeyCode() == 113){
                 polygonToggleButton.setSelected(true);
                 polygonToggleButtonStateChanged(null);
             }
@@ -54,7 +54,7 @@ public class EditorWindow extends BodyWindow {
         });
         //Rectangle with F3
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==114){
+            if (evt.getKeyCode() == 114){
                 rectangleToggleButton.setSelected(true);
                 rectangleToggleButtonStateChanged(null);
             }
@@ -62,7 +62,7 @@ public class EditorWindow extends BodyWindow {
         });
         //Circle with F4
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==115){
+            if (evt.getKeyCode() == 115){
                 circleToggleButton.setSelected(true);
                 circleToggleButtonStateChanged(null);
             }
@@ -70,7 +70,7 @@ public class EditorWindow extends BodyWindow {
         });
         //Arc with F5
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==116){
+            if (evt.getKeyCode() == 116){
                 carcToggleButton.setSelected(true);
                 carcToggleButtonStateChanged(null);
             }
@@ -78,7 +78,7 @@ public class EditorWindow extends BodyWindow {
         });
         //Oval with F6
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==117){
+            if (evt.getKeyCode() == 117){
                 ovalToggleButton.setSelected(true);
                 ovalToggleButtonStateChanged(null);
             }
@@ -238,11 +238,6 @@ public class EditorWindow extends BodyWindow {
         ReadInputButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ReadInputButtonMouseClicked(evt);
-            }
-        });
-        ReadInputButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ReadInputButtonActionPerformed(evt);
             }
         });
         geomToolBar.add(ReadInputButton);
