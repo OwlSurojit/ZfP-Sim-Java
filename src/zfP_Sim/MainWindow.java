@@ -5,12 +5,16 @@ import control.Scan;
 import control.Sender;
 import eventListeners.DragDropListener;
 import geometry.*;
-import java.awt.Dimension;
-import java.awt.KeyEventDispatcher;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -83,6 +87,7 @@ public class MainWindow extends BodyWindow {
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         importMenu = new javax.swing.JMenu();
         exportMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         saveMenuItem = new javax.swing.JMenuItem();
         saveAsMenuItem = new javax.swing.JMenuItem();
@@ -295,6 +300,16 @@ public class MainWindow extends BodyWindow {
         fileMenu.add(importMenu);
 
         exportMenu.setText("Exportieren");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem1.setText("als PDF");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        exportMenu.add(jMenuItem1);
+
         fileMenu.add(exportMenu);
         fileMenu.add(jSeparator3);
 
@@ -466,6 +481,30 @@ public class MainWindow extends BodyWindow {
             simPanel.drawBody_Edit();
         }
     }//GEN-LAST:event_editMenuItemActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        PrinterJob j = PrinterJob.getPrinterJob();
+        //j.setJobName("Out"); 
+        j.setPrintable(new Printable(){
+            public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+                if (pageIndex > 0) return Printable.NO_SUCH_PAGE;
+                Graphics2D g2d = (Graphics2D) graphics;
+                g2d.translate(pageFormat.getImageableX(),pageFormat.getImageableY());
+                g2d.scale(0.32, 0.32);
+                jSplitPane2.paint(g2d);
+                return Printable.PAGE_EXISTS;
+            }
+        });
+        if (j.printDialog()){
+            try{
+                j.print();
+            }catch(PrinterException e){
+                e.printStackTrace();
+            }
+        }
+        
+        
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
     
     
     
@@ -510,6 +549,7 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenu importMenu;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
