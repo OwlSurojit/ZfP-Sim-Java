@@ -17,24 +17,31 @@ import shapesBase.Polygon;
 import shapesBase.ShapeBase;
 
 public class SenderPositions {
-    public static ArrayList<Double[]> getPathPoints(Body body){
+    public static ArrayList<double[]> getPathPoints(Body body){
         Area concat = new Area();
         for(ShapeBase shape : body.outline){
             concat.add(new Area(geomShape(shape)));
         }
         
-        FlatteningPathIterator iter = new FlatteningPathIterator(concat.getPathIterator(new AffineTransform()), 1);
-        ArrayList<Double[]> points = new ArrayList<>();
+        FlatteningPathIterator iter = new FlatteningPathIterator(concat.getPathIterator(new AffineTransform()), 0.1, 100);
+        ArrayList<double[]> segments = new ArrayList<>();
         double[] coords = new double[6];
         while(! iter.isDone()){
             iter.currentSegment(coords);
-            double x = coords[0];
-            double y = coords[1];
-            points.add(new Double[]{x, y});
+            segments.add(new double[]{coords[0], coords[1]});
             iter.next();
         }
+        ArrayList<double[]> points = new ArrayList<>();
+        for(int i = 0; i<segments.size()-1; i++){
+            // TODO:    Break up long segments into many small ones
+            //          Remove last point (see index end of for loop)
+            //          consider minDist; precision of Iterator
+        }
         
-        return points;
+        if(points.isEmpty()){
+            points.add(new double[]{30, 30});
+        }
+        return segments;
     }
     
     public static java.awt.Shape geomShape(ShapeBase shape){

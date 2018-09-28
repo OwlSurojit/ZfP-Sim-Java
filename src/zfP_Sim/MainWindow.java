@@ -28,10 +28,11 @@ import shapesBase.ShapeBase;
 public class MainWindow extends BodyWindow {
     
     public double[][] senderPositions;
+    public int index;
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleLongBar();
+        body = new Body(); body.exampleWheelDefect();
         getSenderPositions();
         simPanel.main = this;
         scanPanel.main = this;
@@ -599,16 +600,43 @@ public class MainWindow extends BodyWindow {
 
     public void getSenderPositions(){
         if(! body.outline.isEmpty()){
-            java.util.ArrayList<Double[]> pointsList = control.SenderPositions.getPathPoints(body);
+            java.util.ArrayList<double[]> pointsList = control.SenderPositions.getPathPoints(body);
             double[][] points = new double[pointsList.size()][];
             for(int i = 0; i<points.length; i++){
                 points[i] = new double[2];
-                points[i][0] = pointsList.get(i)[0].doubleValue();
-                points[i][1] = pointsList.get(i)[1].doubleValue();
+                points[i][0] = pointsList.get(i)[0];
+                points[i][1] = pointsList.get(i)[1];
             }
             senderPositions = points;
         }
         else senderPositions = new double[][] { new double[]{30,30} };
+        setIndex(0);
+    }
+    
+    public void setIndex(int newIndex){
+        if(newIndex < senderPositions.length){
+            index = newIndex;
+            senderXField.setText(Double.toString(senderPositions[index][0]));
+            senderYField.setText(Double.toString(senderPositions[index][1]));
+        }
+        else{
+            index = 0;
+            senderXField.setText(Double.toString(senderPositions[0][0]));
+            senderYField.setText(Double.toString(senderPositions[0][1]));
+        }
+    }
+    
+    public void nextIndex(){
+        if(index < senderPositions.length-1){
+            index++;
+            senderXField.setText(Double.toString(senderPositions[index][0]));
+            senderYField.setText(Double.toString(senderPositions[index][1]));
+        }
+        else{
+            index = 0;
+            senderXField.setText(Double.toString(senderPositions[0][0]));
+            senderYField.setText(Double.toString(senderPositions[0][1]));
+        }
     }
     
     @Override
