@@ -314,7 +314,7 @@ public class DrawPanel extends javax.swing.JPanel{
         g2d.fill(node);
     }
     
-    public Line2D.Double getLine2D(Line line){
+    public static Line2D.Double getLine2D(Line line){
         Line2D.Double line2D = new Line2D.Double();
         line2D.x1 = line.start.x;
         line2D.y1 = line.start.y;
@@ -324,7 +324,7 @@ public class DrawPanel extends javax.swing.JPanel{
         return line2D;
     }
     
-    public java.awt.Polygon getPolygon2D(Polygon polygon){
+    public static java.awt.Polygon getPolygon2D(Polygon polygon){
         java.awt.Polygon polygon2D = new java.awt.Polygon();
         for(Point point : polygon.points){
             polygon2D.addPoint((int)point.x, (int)point.y);
@@ -333,7 +333,7 @@ public class DrawPanel extends javax.swing.JPanel{
         return polygon2D;
     }
     
-    public Ellipse2D.Double getCircle2D(Circle circle){
+    public static Ellipse2D.Double getCircle2D(Circle circle){
         Ellipse2D.Double circle2D = new Ellipse2D.Double();
         circle2D.x = circle.center.x -circle.radius;
         circle2D.y = circle.center.y -circle.radius;
@@ -343,7 +343,7 @@ public class DrawPanel extends javax.swing.JPanel{
         return circle2D;
     }
     
-    public Arc2D.Double getCircleArc2D(CircleArc circleArc){
+    public static Arc2D.Double getCircleArc2D(CircleArc circleArc){
         Arc2D.Double circleArc2D = new Arc2D.Double();
         circleArc2D.x = circleArc.center.x -circleArc.radius;
         circleArc2D.y = circleArc.center.y -circleArc.radius;
@@ -355,7 +355,7 @@ public class DrawPanel extends javax.swing.JPanel{
         return circleArc2D;
     }
     
-    public Ellipse2D.Double getOval2D(Oval oval){
+    public static Ellipse2D.Double getOval2D(Oval oval){
         Ellipse2D.Double oval2d = new Ellipse2D.Double();
         oval2d.width = oval.e;
         oval2d.height = 2*Math.sqrt(Math.pow(oval.e/2, 2)-Math.pow((new Line(oval.p1, oval.p2)).length()/2, 2));

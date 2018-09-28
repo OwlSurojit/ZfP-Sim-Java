@@ -29,7 +29,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleLongBar();
+        body = new Body(); body.exampleWheelDefect();
         simPanel.main = this;
         scanPanel.main = this;
         simPanel.drawBody();
@@ -422,8 +422,16 @@ public class MainWindow extends BodyWindow {
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
             //simPanel.simulate(scan.reflections());
             //scanPanel.setScores(scan.scan_A());
-            simPanel.simulate(scan.MultiReflections(1001 , 20));
+            //simPanel.simulate(scan.MultiReflections(1001 , 20));
             scanPanel.setScores(scan.MultiScan_A(1001, 20));
+            java.util.ArrayList<Double[]> pointsList = control.SenderPositions.getPathPoints(body);
+            double[][] points = new double[pointsList.size()][];
+            for(int i = 0; i<points.length; i++){
+                points[i] = new double[2];
+                points[i][0] = pointsList.get(i)[0].doubleValue();
+                points[i][1] = pointsList.get(i)[1].doubleValue();
+            }
+            simPanel.simulate(points);
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 
