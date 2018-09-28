@@ -59,6 +59,9 @@ public class PropertiesWindow extends javax.swing.JFrame{
         tabs.drawingTab.commit();
         
         main.body.refreshDragPoints();
+        if(main.body.outline.contains(shape)){
+            main.outlineChanged();
+        }
         main.drawPanel.drawBody_Edit();
         main.shapesList.updateUI();
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));

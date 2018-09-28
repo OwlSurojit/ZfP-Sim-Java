@@ -26,10 +26,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import shapesBase.ShapeBase;
 
 public class MainWindow extends BodyWindow {
+    
+    public double[][] senderPositions;
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleWheelDefect();
+        body = new Body(); body.exampleLongBar();
+        getSenderPositions();
         simPanel.main = this;
         scanPanel.main = this;
         simPanel.drawBody();
@@ -409,6 +412,7 @@ public class MainWindow extends BodyWindow {
 
     private void closeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuItemActionPerformed
         body = new Body();
+        getSenderPositions();
         simPanel.drawClear();
     }//GEN-LAST:event_closeMenuItemActionPerformed
 
@@ -422,15 +426,7 @@ public class MainWindow extends BodyWindow {
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
             //simPanel.simulate(scan.reflections());
             //scanPanel.setScores(scan.scan_A());
-            java.util.ArrayList<Double[]> pointsList = control.SenderPositions.getPathPoints(body);
-            double[][] points = new double[pointsList.size()][];
-            for(int i = 0; i<points.length; i++){
-                points[i] = new double[2];
-                points[i][0] = pointsList.get(i)[0].doubleValue();
-                points[i][1] = pointsList.get(i)[1].doubleValue();
-            }
-            simPanel.simulate(points);
-            //simPanel.simulate(scan.MultiReflections(11 , 2));
+            simPanel.simulate(scan.MultiReflections(11 , 2));
             //scanPanel.setScores(scan.MultiScan_A(1001, 20));
             scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(3, 2), 0.5));
         }
@@ -447,6 +443,7 @@ public class MainWindow extends BodyWindow {
                 ObjectInputStream in = new ObjectInputStream(fileIn);
                 body = (Body) in.readObject();
                 in.close();
+                getSenderPositions();
                 simPanel.paintDragPoints = true;
                 simPanel.drawBody();
          fileIn.close();
@@ -600,8 +597,27 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 
+    public void getSenderPositions(){
+        if(! body.outline.isEmpty()){
+            java.util.ArrayList<Double[]> pointsList = control.SenderPositions.getPathPoints(body);
+            double[][] points = new double[pointsList.size()][];
+            for(int i = 0; i<points.length; i++){
+                points[i] = new double[2];
+                points[i][0] = pointsList.get(i)[0].doubleValue();
+                points[i][1] = pointsList.get(i)[1].doubleValue();
+            }
+            senderPositions = points;
+        }
+        else senderPositions = new double[][] { new double[]{30,30} };
+    }
+    
     @Override
     public void setLit(ShapeBase shape) {
         lit = shape;
+    }
+
+    @Override
+    public void outlineChanged() {
+        getSenderPositions();
     }
 }

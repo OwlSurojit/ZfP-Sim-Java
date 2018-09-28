@@ -63,6 +63,9 @@ public class DragDropListener implements MouseListener{
             if(!lit.cont(me.getX(), me.getY(), 10)){
                 lit.bindings.get(lit.highlight_index).shape.refactor(lit.bindings.get(lit.highlight_index), me.getX(), me.getY());
                 drawPanel.main.body.refreshDragPoints();
+                if( main.body.outline.contains(lit.bindings.get(lit.highlight_index).shape) ){
+                    main.outlineChanged();
+                }
                 lit = null;
                 main.setLit(null);
                 drawPanel.drawBody_Edit();
