@@ -116,7 +116,7 @@ public class MainWindow extends BodyWindow {
         senderXLabel.setText("Sender x");
         simToolBar.add(senderXLabel);
 
-        senderXField.setText("200");
+        senderXField.setText("825");
         senderXField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(senderXField);
@@ -124,7 +124,7 @@ public class MainWindow extends BodyWindow {
         senderYLabel.setText("Sender y");
         simToolBar.add(senderYLabel);
 
-        senderYField.setText("100");
+        senderYField.setText("30");
         senderYField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderYField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(senderYField);
@@ -133,7 +133,7 @@ public class MainWindow extends BodyWindow {
         rayXLabel.setText("Vektor x");
         simToolBar.add(rayXLabel);
 
-        rayXField.setText("-1");
+        rayXField.setText("-2");
         rayXField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayXField);
@@ -141,7 +141,7 @@ public class MainWindow extends BodyWindow {
         rayYLabel.setText("Vektor y");
         simToolBar.add(rayYLabel);
 
-        rayYField.setText("4");
+        rayYField.setText("5");
         rayYField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayYField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayYField);
@@ -150,7 +150,7 @@ public class MainWindow extends BodyWindow {
         refLabel.setText("Reflexionen");
         simToolBar.add(refLabel);
 
-        refField.setText("20");
+        refField.setText("5");
         refField.setMinimumSize(new java.awt.Dimension(48, 26));
         refField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(refField);
@@ -422,6 +422,7 @@ public class MainWindow extends BodyWindow {
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
             //simPanel.simulate(scan.reflections());
             //scanPanel.setScores(scan.scan_A());
+<<<<<<< HEAD
             //simPanel.simulate(scan.MultiReflections(1001 , 20));
             scanPanel.setScores(scan.MultiScan_A(1001, 20));
             java.util.ArrayList<Double[]> pointsList = control.SenderPositions.getPathPoints(body);
@@ -432,6 +433,11 @@ public class MainWindow extends BodyWindow {
                 points[i][1] = pointsList.get(i)[1].doubleValue();
             }
             simPanel.simulate(points);
+=======
+            simPanel.simulate(scan.MultiReflections(11 , 2));
+            //scanPanel.setScores(scan.MultiScan_A(1001, 20));
+            scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(3, 2), 0.5));
+>>>>>>> master
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 
