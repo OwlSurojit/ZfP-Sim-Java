@@ -23,7 +23,7 @@ public class SenderPositions {
             concat.add(new Area(geomShape(shape)));
         }
         
-        FlatteningPathIterator iter = new FlatteningPathIterator(concat.getPathIterator(new AffineTransform()), 0.1, 100);
+        FlatteningPathIterator iter = new FlatteningPathIterator(concat.getPathIterator(new AffineTransform()), 0.2, 100);
         ArrayList<double[]> segments = new ArrayList<>();
         double[] coords = new double[6];
         while(! iter.isDone()){
@@ -33,15 +33,24 @@ public class SenderPositions {
         }
         ArrayList<double[]> points = new ArrayList<>();
         for(int i = 0; i<segments.size()-1; i++){
-            // TODO:    Break up long segments into many small ones
-            //          Remove last point (see index end of for loop)
-            //          consider minDist; precision of Iterator
+            points.add(segments.get(i));
+            Point checkP1 = new Point(segments.get(i));
+            Point checkP2 = new Point(segments.get(i+1));
+            double d = checkP1.dist(checkP2);
+            if(d >= 20){
+                int k = (int) Math.floor(d / 10.0) - 1;
+                for(int j = 1; j <= k; j++){
+                    double segX = checkP1.x * (j*10/d) + checkP2.x * (1 - j*10/d);
+                    double segY = checkP1.y * (j*10/d) + checkP2.y * (1 - j*10/d);
+                    points.add(new double[]{segX, segY});
+                }
+            }
         }
         
         if(points.isEmpty()){
             points.add(new double[]{30, 30});
         }
-        return segments;
+        return points;
     }
     
     public static java.awt.Shape geomShape(ShapeBase shape){
