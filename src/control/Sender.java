@@ -25,9 +25,10 @@ public class Sender {
         this.obj = null;
         this.intensity = 1;
     }
-
+    
+    // TODO: Überarbeiten, Objekt einbauen nach Implementierung von Scan.closest
     public boolean get_hit(Point point, Object obj){
-        return this.obj.equals(obj) && (point.equals(this.ray.o) || (new Line(point, this.ray.o)).length() <= this.range);
+        return /*this.obj.equals(obj) &&*/ (point.equals(this.ray.o) || point.dist(this.ray.o) <= this.range);
     }
 
     /*public Ray getRay(){

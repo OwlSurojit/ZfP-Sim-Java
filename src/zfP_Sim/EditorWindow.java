@@ -417,6 +417,7 @@ public class EditorWindow extends BodyWindow {
     private void returnMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnMenuItemActionPerformed
         this.setVisible(false);
         mainWindow.body = this.body;
+        mainWindow.getSenderPositions();
         mainWindow.setVisible(true);
     }//GEN-LAST:event_returnMenuItemActionPerformed
 
@@ -566,9 +567,11 @@ public class EditorWindow extends BodyWindow {
             }
             
             cursorToggleButton.doClick();
-            
-            
         }
+    }
+    
+    @Override
+    public void outlineChanged(){
         
     }
 }
