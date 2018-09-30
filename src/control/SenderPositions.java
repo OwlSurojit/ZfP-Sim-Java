@@ -40,8 +40,8 @@ public class SenderPositions {
             if(d >= 20){
                 int k = (int) Math.floor(d / 10.0) - 1;
                 for(int j = 1; j <= k; j++){
-                    double segX = checkP1.x * (j*10/d) + checkP2.x * (1 - j*10/d);
-                    double segY = checkP1.y * (j*10/d) + checkP2.y * (1 - j*10/d);
+                    double segX = checkP2.x * (j*10/d) + checkP1.x * (1 - j*10/d);
+                    double segY = checkP2.y * (j*10/d) + checkP1.y * (1 - j*10/d);
                     points.add(new double[]{segX, segY});
                 }
             }

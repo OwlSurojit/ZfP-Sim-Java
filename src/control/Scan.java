@@ -27,7 +27,7 @@ public class Scan {
         this.objects = shape_Arr;
         
         this.sender = sender;
-        sender.obj = objects[0];
+        sender.obj = objects[0];//closest(objects);
         this. numref = numref;
         this.velocity = velocity;
         this.delay = delay;
@@ -189,6 +189,11 @@ public class Scan {
             }
         }
         return points;
+    }
+
+    private Object closest(Object[] objects) {
+        return objects[0];
+        // TODO: nächstes Element ermitteln; prüfen, ob Abstand < 1, sonst null ausgeben (Heißt).
     }
     
 }

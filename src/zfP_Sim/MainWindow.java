@@ -7,6 +7,7 @@ import eventListeners.DragDropListener;
 import geometry.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.KeyEventDispatcher;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.KeyboardFocusManager;
@@ -36,22 +37,57 @@ public class MainWindow extends BodyWindow {
         getSenderPositions();
         simPanel.main = this;
         scanPanel.main = this;
-        simPanel.drawBody();
+        simPanel.drawBody(senderPositions[index]);
         
-        //KeyEventListeners
-        //Start Sim with enter
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 10) simStartButtonActionPerformed(null);
-            return false;
+        //KeyEventListener
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent evt) {
+                int keyCode = evt.getKeyCode();
+                switch(keyCode){
+                    case KeyEvent.VK_RIGHT:
+                        MouseListener[] listenersR = simPanel.getMouseListeners();
+                        if(listenersR.length == 1 && lit != null){
+                            lit.rotate(10);
+                            body.refreshDragPoints();
+                            if( body.outline.contains(lit) ){
+                                outlineChanged();
+                            }
+                            simPanel.drawBody_Edit();
+                        }
+                        else if(listenersR.length == 0){
+                            prevIndex();
+                            simPanel.drawBody(senderPositions[index]);
+                        }
+                        return false;
+                    case KeyEvent.VK_LEFT:
+                        MouseListener[] listenersL = simPanel.getMouseListeners();
+                        if(listenersL.length == 1 && lit != null){
+                            lit.rotate(-10);
+                            body.refreshDragPoints();
+                            if( body.outline.contains(lit) ){
+                                outlineChanged();
+                            }
+                            simPanel.drawBody_Edit();
+                        }
+                        else if(listenersL.length == 0){
+                            nextIndex();
+                            simPanel.drawBody(senderPositions[index]);
+                        }
+                        return false;
+                    case KeyEvent.VK_ENTER:
+                        simStartButtonActionPerformed(null);
+                        return false;
+                    case KeyEvent.VK_SHIFT:
+                        bodyEditButtonActionPerformed(null);
+                        return false;
+                    default:
+                        return false;
+                }
+            }
         });
-        //Edit Body with shift
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 16) bodyEditButtonActionPerformed(null);
-            return false;
-        });
-        
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -423,12 +459,16 @@ public class MainWindow extends BodyWindow {
 
     private void simStartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simStartButtonActionPerformed
         if(!body.outline.isEmpty()){
+            MouseListener[] listeners = simPanel.getMouseListeners();
+            if(listeners.length == 1){
+                simPanel.removeMouseListener(listeners[0]);
+            }
             Sender sender = new Sender(new Ray( new Point(Double.parseDouble(senderXField.getText()), Double.parseDouble(senderYField.getText())), new Vector(Double.parseDouble(rayXField.getText()), Double.parseDouble(rayYField.getText()))), Double.parseDouble(rangeField.getText()));
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
             //simPanel.simulate(scan.reflections());
             //scanPanel.setScores(scan.scan_A());
-            simPanel.simulate(senderPositions);
-            //simPanel.simulate(scan.MultiReflections(11 , 2));
+            //simPanel.simulate(senderPositions);
+            simPanel.simulate(scan.MultiReflections(11 , 2));
             //scanPanel.setScores(scan.MultiScan_A(1001, 20));
             scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(3, 2), 0.5));
         }
@@ -446,8 +486,7 @@ public class MainWindow extends BodyWindow {
                 body = (Body) in.readObject();
                 in.close();
                 getSenderPositions();
-                simPanel.paintDragPoints = true;
-                simPanel.drawBody();
+                simPanel.drawBody(senderPositions[index]);
          fileIn.close();
             } catch (IOException i) {
                 i.printStackTrace();
@@ -463,7 +502,7 @@ public class MainWindow extends BodyWindow {
         MouseListener[] listeners = simPanel.getMouseListeners();
         if(listeners.length == 1){
             simPanel.removeMouseListener(listeners[0]);
-            simPanel.drawBody();
+            simPanel.drawBody(senderPositions[index]);
         }
         else{
             simPanel.addMouseListener(new DragDropListener(simPanel, this));
@@ -482,7 +521,7 @@ public class MainWindow extends BodyWindow {
         MouseListener[] listeners = simPanel.getMouseListeners();
         if(listeners.length == 1){
             simPanel.removeMouseListener(listeners[0]);
-            simPanel.drawBody();
+            simPanel.drawBody(senderPositions[index]);
         }
         else{
             simPanel.addMouseListener(new DragDropListener(simPanel, this));
@@ -635,8 +674,21 @@ public class MainWindow extends BodyWindow {
         }
         else{
             index = 0;
-            senderXField.setText(Double.toString(senderPositions[0][0]));
-            senderYField.setText(Double.toString(senderPositions[0][1]));
+            senderXField.setText(Double.toString(senderPositions[index][0]));
+            senderYField.setText(Double.toString(senderPositions[index][1]));
+        }
+    }
+    
+    public void prevIndex(){
+        if(index > 0){
+            index--;
+            senderXField.setText(Double.toString(senderPositions[index][0]));
+            senderYField.setText(Double.toString(senderPositions[index][1]));
+        }
+        else{
+            index = senderPositions.length-1;
+            senderXField.setText(Double.toString(senderPositions[index][0]));
+            senderYField.setText(Double.toString(senderPositions[index][1]));
         }
     }
     

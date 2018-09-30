@@ -16,11 +16,13 @@ public class DrawPanel extends javax.swing.JPanel{
     
     public BodyWindow main;
     public ArrayList<ShapeBase> tempShapes;
+    public double[] sender;
     public double[][] raytracer;
     public double[][][] multitracer;
     
     public boolean paintBody;
     public boolean paintTemp;
+    public boolean paintSender;
     public boolean paintRaytracer;
     public boolean paintMultiTracer;
     public boolean paintDragPoints;
@@ -31,6 +33,7 @@ public class DrawPanel extends javax.swing.JPanel{
     public DrawPanel(){
         paintBody = false;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = false;
         paintMultiTracer = false;
         paintDragPoints = false;
@@ -44,6 +47,7 @@ public class DrawPanel extends javax.swing.JPanel{
         
         paintBody = true;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = true;
         paintMultiTracer = false;
         paintDragPoints = false;
@@ -57,6 +61,7 @@ public class DrawPanel extends javax.swing.JPanel{
         
         paintBody = true;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = false;
         paintMultiTracer = true;
         paintDragPoints = false;
@@ -64,10 +69,13 @@ public class DrawPanel extends javax.swing.JPanel{
         repaint();
     }
     
-    public void drawBody(){
+    public void drawBody(double [] sender){
+        this.sender = sender;
         main.setLit(null);
+        
         paintBody = true;
         paintTemp = false;
+        paintSender = true;
         paintRaytracer = false;
         paintMultiTracer = false;
         paintDragPoints = false;
@@ -78,6 +86,7 @@ public class DrawPanel extends javax.swing.JPanel{
     public void drawBody_Edit(){
         paintBody = true;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = false;
         paintMultiTracer = false;
         paintDragPoints = true;
@@ -90,6 +99,7 @@ public class DrawPanel extends javax.swing.JPanel{
         
         paintBody = true;
         paintTemp = true;
+        paintSender = false;
         paintRaytracer = false;
         paintMultiTracer = false;
         paintDragPoints = true;
@@ -101,6 +111,7 @@ public class DrawPanel extends javax.swing.JPanel{
         main.setLit(null);
         paintBody = false;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = false;
         paintMultiTracer = false;
         paintDragPoints = false;
@@ -128,6 +139,10 @@ public class DrawPanel extends javax.swing.JPanel{
             for(ShapeBase shape : tempShapes){
                 paintShape(g2d, shape);
             }
+        }
+        
+        if(paintSender){
+            paintNode(g2d, sender[0], sender[1], 3, Color.RED);
         }
         
         if(paintRaytracer){
