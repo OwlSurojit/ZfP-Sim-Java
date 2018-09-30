@@ -467,7 +467,6 @@ public class MainWindow extends BodyWindow {
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
             //simPanel.simulate(scan.reflections());
             //scanPanel.setScores(scan.scan_A());
-            //simPanel.simulate(senderPositions);
             simPanel.simulate(scan.MultiReflections(11 , 2));
             //scanPanel.setScores(scan.MultiScan_A(1001, 20));
             scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(3, 2), 0.5));
