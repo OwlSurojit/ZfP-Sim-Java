@@ -43,47 +43,50 @@ public class MainWindow extends BodyWindow {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent evt) {
-                int keyCode = evt.getKeyCode();
-                switch(keyCode){
-                    case KeyEvent.VK_RIGHT:
-                        MouseListener[] listenersR = simPanel.getMouseListeners();
-                        if(listenersR.length == 1 && lit != null){
-                            lit.rotate(10);
-                            body.refreshDragPoints();
-                            if( body.outline.contains(lit) ){
-                                outlineChanged();
+                if(simPanel.main.isFocused()){
+                    int keyCode = evt.getKeyCode();
+                    switch(keyCode){
+                        case KeyEvent.VK_RIGHT:
+                            MouseListener[] listenersR = simPanel.getMouseListeners();
+                            if(listenersR.length == 1 && lit != null){
+                                lit.rotate(10);
+                                body.refreshDragPoints();
+                                if( body.outline.contains(lit) ){
+                                    outlineChanged();
+                                }
+                                simPanel.drawBody_Edit();
                             }
-                            simPanel.drawBody_Edit();
-                        }
-                        else if(listenersR.length == 0){
-                            prevIndex();
-                            simPanel.drawBody(senderPositions[index]);
-                        }
-                        return false;
-                    case KeyEvent.VK_LEFT:
-                        MouseListener[] listenersL = simPanel.getMouseListeners();
-                        if(listenersL.length == 1 && lit != null){
-                            lit.rotate(-10);
-                            body.refreshDragPoints();
-                            if( body.outline.contains(lit) ){
-                                outlineChanged();
+                            else if(listenersR.length == 0){
+                                prevIndex();
+                                simPanel.drawBody(senderPositions[index]);
                             }
-                            simPanel.drawBody_Edit();
-                        }
-                        else if(listenersL.length == 0){
-                            nextIndex();
-                            simPanel.drawBody(senderPositions[index]);
-                        }
-                        return false;
-                    case KeyEvent.VK_ENTER:
-                        simStartButtonActionPerformed(null);
-                        return false;
-                    case KeyEvent.VK_SHIFT:
-                        bodyEditButtonActionPerformed(null);
-                        return false;
-                    default:
-                        return false;
+                            return false;
+                        case KeyEvent.VK_LEFT:
+                            MouseListener[] listenersL = simPanel.getMouseListeners();
+                            if(listenersL.length == 1 && lit != null){
+                                lit.rotate(-10);
+                                body.refreshDragPoints();
+                                if( body.outline.contains(lit) ){
+                                    outlineChanged();
+                                }
+                                simPanel.drawBody_Edit();
+                            }
+                            else if(listenersL.length == 0){
+                                nextIndex();
+                                simPanel.drawBody(senderPositions[index]);
+                            }
+                            return false;
+                        case KeyEvent.VK_ENTER:
+                            simStartButtonActionPerformed(null);
+                            return false;
+                        case KeyEvent.VK_SHIFT:
+                            bodyEditButtonActionPerformed(null);
+                            return false;
+                        default:
+                            return false;
+                    }
                 }
+                else{return false;}
             }
         });
     }
@@ -119,7 +122,6 @@ public class MainWindow extends BodyWindow {
         fileMenu = new javax.swing.JMenu();
         newMenu = new javax.swing.JMenu();
         new2DMenuItem = new javax.swing.JMenuItem();
-        new3DMenuItem = new javax.swing.JMenuItem();
         newPregenMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         openMenuItem = new javax.swing.JMenuItem();
@@ -303,9 +305,6 @@ public class MainWindow extends BodyWindow {
         });
         newMenu.add(new2DMenuItem);
 
-        new3DMenuItem.setText("3D (T.B.D.)");
-        newMenu.add(new3DMenuItem);
-
         newPregenMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         newPregenMenuItem.setText("Beispiele");
         newPregenMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -376,6 +375,7 @@ public class MainWindow extends BodyWindow {
         fileMenu.add(propertiesMenuItem);
         fileMenu.add(jSeparator4);
 
+        exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         exitMenuItem.setText("Verlassen");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -609,7 +609,6 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem new2DMenuItem;
-    private javax.swing.JMenuItem new3DMenuItem;
     private javax.swing.JMenu newMenu;
     private javax.swing.JMenuItem newPregenMenuItem;
     private javax.swing.JMenuItem openMenuItem;

@@ -5,7 +5,8 @@
         <group>
             <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/zfP_Sim/MainWindow.java</file>
             <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/control/Body.java</file>
-            <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/control/SenderPositions.java</file>
+            <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/zfP_Sim/EditorWindow.java</file>
+            <file>file:/C:/Users/Joris/Documents/GitHub/ZfP-Sim-Java/src/properties/PropertiesWindow.java</file>
         </group>
     </open-files>
 </project-private>

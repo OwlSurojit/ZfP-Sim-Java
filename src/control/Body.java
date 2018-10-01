@@ -45,10 +45,13 @@ public class Body implements Serializable {
         refreshDragPoints();
     }
     
-    public void removeOutline(ShapeBase segment){
-        outline.remove(segment);
-        shapes.removeElement(segment);
-        refreshDragPoints();
+    public boolean removeOutline(ShapeBase segment){
+        if(outline.remove(segment)){
+            shapes.removeElement(segment);
+            refreshDragPoints();
+            return true;
+        }
+        else{return false;}
     }
     
     public void addDefect(ShapeBase defect){
@@ -65,10 +68,13 @@ public class Body implements Serializable {
         refreshDragPoints();
     }
     
-    public void removeDefect(ShapeBase defect){
-        defects.remove(defect);
-        shapes.removeElement(defect);
-        refreshDragPoints();
+    public boolean removeDefect(ShapeBase defect){
+        if(defects.remove(defect)){
+            shapes.removeElement(defect);
+            refreshDragPoints();
+            return true;
+        }
+        else{return false;}
     }
     
     public void exampleOne(){

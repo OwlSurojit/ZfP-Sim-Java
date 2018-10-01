@@ -4,6 +4,7 @@ import control.Body;
 import drawing.DragPoint;
 import static enums.VerificationType.*;
 import eventListeners.*;
+import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
 import java.awt.event.KeyEvent;
@@ -33,56 +34,83 @@ public class EditorWindow extends BodyWindow {
         listSelectionModel.addListSelectionListener(new ListSelectionHandler(this, shapesList));
         drawPanel.main = this;
         drawPanel.drawBody_Edit();
-        cursorToggleButton.doClick();
+        cursorToggleButton.setSelected(true);
         
         //KeyEventListeners
-        //Cursor with F1
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 112){
-                cursorToggleButton.setSelected(true);
-                cursorToggleButtonStateChanged(null);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent evt) {
+                if(drawPanel.main.isFocused()){ 
+                    int keyCode = evt.getKeyCode();
+                    switch(keyCode){
+                        case KeyEvent.VK_RIGHT:
+                            MouseListener[] listenersR = drawPanel.getMouseListeners();
+                            if(listenersR.length == 1 && listenersR[0] instanceof DragDropListener && lit != null){
+                                lit.rotate(10);
+                                body.refreshDragPoints();
+                                if( body.outline.contains(lit) ){
+                                    outlineChanged();
+                                }
+                                drawPanel.drawBody_Edit();
+                            }
+                            return false;
+                        case KeyEvent.VK_LEFT:
+                            MouseListener[] listenersL = drawPanel.getMouseListeners();
+                            if(listenersL.length == 1 && listenersL[0] instanceof DragDropListener && lit != null){
+                                lit.rotate(-10);
+                                body.refreshDragPoints();
+                                if( body.outline.contains(lit) ){
+                                    outlineChanged();
+                                }
+                                drawPanel.drawBody_Edit();
+                            }
+                            return false;
+                        case KeyEvent.VK_DELETE:
+                            MouseListener[] listenersD = drawPanel.getMouseListeners();
+                            if(listenersD.length == 1 && listenersD[0] instanceof DragDropListener && lit != null){
+                                if(body.removeOutline(lit)){
+                                    outlineChanged();
+                                }
+                                else{
+                                    body.removeDefect(lit);
+                                }
+                                setLit(null);
+                                body.refreshDragPoints();
+                                drawPanel.drawBody_Edit();
+                            }
+                            return false;
+                        case KeyEvent.VK_P:
+                            if(lit != null){
+                                PropertiesWindow pw = new PropertiesWindow(lit, (EditorWindow) drawPanel.main);
+                                pw.setVisible(true);
+                                body.refreshDragPoints();
+                                drawPanel.drawBody_Edit();
+                            }
+                            return false;
+                        case KeyEvent.VK_F1:
+                            cursorToggleButton.setSelected(true);
+                            return false;
+                        case KeyEvent.VK_F2:
+                            polygonToggleButton.setSelected(true);
+                            return false;
+                        case KeyEvent.VK_F3:
+                            rectangleToggleButton.setSelected(true);
+                            return false;
+                        case KeyEvent.VK_F4:
+                            circleToggleButton.setSelected(true);
+                            return false;
+                        case KeyEvent.VK_F5:
+                            carcToggleButton.setSelected(true);
+                            return false;
+                        case KeyEvent.VK_F6:
+                            ovalToggleButton.setSelected(true);
+                            return false;
+                        default:
+                            return false;
+                    }
+                }
+                else{return false;}
             }
-            return false;
-        });
-        //Polygon with F2
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==113){
-                polygonToggleButton.setSelected(true);
-                polygonToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Rectangle with F3
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==114){
-                rectangleToggleButton.setSelected(true);
-                rectangleToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Circle with F4
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==115){
-                circleToggleButton.setSelected(true);
-                circleToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Arc with F5
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==116){
-                carcToggleButton.setSelected(true);
-                carcToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Oval with F6
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() ==117){
-                ovalToggleButton.setSelected(true);
-                ovalToggleButtonStateChanged(null);
-            }
-            return false;
         });
     }
 
@@ -285,7 +313,7 @@ public class EditorWindow extends BodyWindow {
         fileMenu.setText("Datei");
 
         returnMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
-        returnMenuItem.setText("Return");
+        returnMenuItem.setText("Übernehmen");
         returnMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 returnMenuItemActionPerformed(evt);

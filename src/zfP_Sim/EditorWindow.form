@@ -16,7 +16,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+ENTER"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Return"/>
+                <Property name="text" type="java.lang.String" value="&#xdc;bernehmen"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="returnMenuItemActionPerformed"/>
