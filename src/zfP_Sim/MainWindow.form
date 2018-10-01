@@ -25,11 +25,6 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="new2DMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="new3DMenuItem">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="3D (T.B.D.)"/>
-                  </Properties>
-                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="newPregenMenuItem">
                   <Properties>
                     <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
@@ -124,6 +119,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exitMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+Q"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Verlassen"/>
               </Properties>
               <Events>

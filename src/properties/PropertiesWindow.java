@@ -2,7 +2,10 @@ package properties;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -52,6 +55,17 @@ public class PropertiesWindow extends javax.swing.JFrame{
         
         add(tabs);
         add(lowerPanel);
+        
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent evt) {
+                int keyCode = evt.getKeyCode();
+                if(keyCode == KeyEvent.VK_ENTER && saveButton.isEnabled()){
+                    saveButtonActionPerformed(null);
+                }
+                return false;
+            }
+        });
     }
 
     private void saveButtonActionPerformed(ActionEvent evt) {

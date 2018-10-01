@@ -119,7 +119,6 @@ public class MainWindow extends BodyWindow {
         fileMenu = new javax.swing.JMenu();
         newMenu = new javax.swing.JMenu();
         new2DMenuItem = new javax.swing.JMenuItem();
-        new3DMenuItem = new javax.swing.JMenuItem();
         newPregenMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         openMenuItem = new javax.swing.JMenuItem();
@@ -303,9 +302,6 @@ public class MainWindow extends BodyWindow {
         });
         newMenu.add(new2DMenuItem);
 
-        new3DMenuItem.setText("3D (T.B.D.)");
-        newMenu.add(new3DMenuItem);
-
         newPregenMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         newPregenMenuItem.setText("Beispiele");
         newPregenMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -376,6 +372,7 @@ public class MainWindow extends BodyWindow {
         fileMenu.add(propertiesMenuItem);
         fileMenu.add(jSeparator4);
 
+        exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         exitMenuItem.setText("Verlassen");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -609,7 +606,6 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem new2DMenuItem;
-    private javax.swing.JMenuItem new3DMenuItem;
     private javax.swing.JMenu newMenu;
     private javax.swing.JMenuItem newPregenMenuItem;
     private javax.swing.JMenuItem openMenuItem;
