@@ -25,6 +25,7 @@ public class PropertiesWindow extends javax.swing.JFrame{
     public PropertiesWindow(ShapeBase shape, EditorWindow main){
         this.shape = shape;
         this.main = main;
+        PropertiesWindow refToThis = this;
         
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setTitle("Eigenschaften");
@@ -59,9 +60,11 @@ public class PropertiesWindow extends javax.swing.JFrame{
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent evt) {
-                int keyCode = evt.getKeyCode();
-                if(keyCode == KeyEvent.VK_ENTER && saveButton.isEnabled()){
-                    saveButtonActionPerformed(null);
+                if(refToThis.isFocused()){
+                    int keyCode = evt.getKeyCode();
+                    if(keyCode == KeyEvent.VK_ENTER && saveButton.isEnabled()){
+                        saveButtonActionPerformed(null);
+                    }
                 }
                 return false;
             }

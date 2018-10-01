@@ -43,47 +43,50 @@ public class MainWindow extends BodyWindow {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent evt) {
-                int keyCode = evt.getKeyCode();
-                switch(keyCode){
-                    case KeyEvent.VK_RIGHT:
-                        MouseListener[] listenersR = simPanel.getMouseListeners();
-                        if(listenersR.length == 1 && lit != null){
-                            lit.rotate(10);
-                            body.refreshDragPoints();
-                            if( body.outline.contains(lit) ){
-                                outlineChanged();
+                if(simPanel.main.isFocused()){
+                    int keyCode = evt.getKeyCode();
+                    switch(keyCode){
+                        case KeyEvent.VK_RIGHT:
+                            MouseListener[] listenersR = simPanel.getMouseListeners();
+                            if(listenersR.length == 1 && lit != null){
+                                lit.rotate(10);
+                                body.refreshDragPoints();
+                                if( body.outline.contains(lit) ){
+                                    outlineChanged();
+                                }
+                                simPanel.drawBody_Edit();
                             }
-                            simPanel.drawBody_Edit();
-                        }
-                        else if(listenersR.length == 0){
-                            prevIndex();
-                            simPanel.drawBody(senderPositions[index]);
-                        }
-                        return false;
-                    case KeyEvent.VK_LEFT:
-                        MouseListener[] listenersL = simPanel.getMouseListeners();
-                        if(listenersL.length == 1 && lit != null){
-                            lit.rotate(-10);
-                            body.refreshDragPoints();
-                            if( body.outline.contains(lit) ){
-                                outlineChanged();
+                            else if(listenersR.length == 0){
+                                prevIndex();
+                                simPanel.drawBody(senderPositions[index]);
                             }
-                            simPanel.drawBody_Edit();
-                        }
-                        else if(listenersL.length == 0){
-                            nextIndex();
-                            simPanel.drawBody(senderPositions[index]);
-                        }
-                        return false;
-                    case KeyEvent.VK_ENTER:
-                        simStartButtonActionPerformed(null);
-                        return false;
-                    case KeyEvent.VK_SHIFT:
-                        bodyEditButtonActionPerformed(null);
-                        return false;
-                    default:
-                        return false;
+                            return false;
+                        case KeyEvent.VK_LEFT:
+                            MouseListener[] listenersL = simPanel.getMouseListeners();
+                            if(listenersL.length == 1 && lit != null){
+                                lit.rotate(-10);
+                                body.refreshDragPoints();
+                                if( body.outline.contains(lit) ){
+                                    outlineChanged();
+                                }
+                                simPanel.drawBody_Edit();
+                            }
+                            else if(listenersL.length == 0){
+                                nextIndex();
+                                simPanel.drawBody(senderPositions[index]);
+                            }
+                            return false;
+                        case KeyEvent.VK_ENTER:
+                            simStartButtonActionPerformed(null);
+                            return false;
+                        case KeyEvent.VK_SHIFT:
+                            bodyEditButtonActionPerformed(null);
+                            return false;
+                        default:
+                            return false;
+                    }
                 }
+                else{return false;}
             }
         });
     }
