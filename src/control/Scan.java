@@ -224,10 +224,14 @@ public class Scan {
             }
             else if (Circle.class.isInstance(object)){
                 Circle circle = (Circle) object;
-                if (this.sender.ray.o.equals(circle.center)) return circle.radius;
-                Ray r = new Ray(this.sender.ray.o, (new Line(this.sender.ray.o, circle.center)).toVector());
-                Double[] factors = getCircleIntersection(r, circle);
-                double length = (new Line(this.sender.ray.o, r.getPoint(Math.min(factors[0], factors[1])))).length();
+                double length;
+                double distance = this.ray.o.dist(circle.center);
+                if(distance <= circle.radius){
+                    length = circle.radius - distance;
+                }
+                else{
+                    length = distance - circle.radius;
+                }
                 if (length < mindistance){
                     mindistance = length;
                     closest = circle;
