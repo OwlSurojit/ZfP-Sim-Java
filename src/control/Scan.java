@@ -1,12 +1,19 @@
 package control;
 
+import static control.Raytracer.*;
+import geometry.Point;
 import structures.StructRayObj;
 import shapesBase.Line;
 import geometry.Ray;
+import geometry.Vector;
 import java.util.ArrayList;
 import java.util.Arrays;
 import misc.Tools;
+import shapesBase.Circle;
+import shapesBase.CircleArc;
+import shapesBase.Oval;
 import shapesBase.ShapeBase;
+import structures.StructPointBool;
 
 public class Scan {
 
@@ -192,6 +199,65 @@ public class Scan {
     }
 
     private Object closest() {
+        
+        double mindistance = 1;
+        Object closest = null;
+        for(Object object : this.objects){
+            if (Line.class.isInstance(object)){
+                Line line = (Line) object;
+                StructPointBool intersec = getLineIntersection(new Ray(this.sender.ray.o, line.toVector().toNormal()), line);
+                if (intersec.bool){
+                    // wenn dieser Fall eintritt ist der Abstand zu den Endpznkten der Linie zwingend größer
+                    double length = (new Line(this.sender.ray.o, intersec.point)).length();
+                    if (length < mindistance){
+                        mindistance = length;
+                        closest = line;
+                    }
+                }else{
+                    //Abstand zu beiden Endpunkten
+                    double length = Math.min((new Line(this.sender.ray.o, line.start)).length(), (new Line(this.sender.ray.o, line.end)).length());
+                    if (length < mindistance){
+                        mindistance = length;
+                        closest = line;
+                    }
+                }
+            }
+            else if (Circle.class.isInstance(object)){
+                Circle circle = (Circle) object;
+                if (this.sender.ray.o.equals(circle.center)) return circle.radius;
+                Ray r = new Ray(this.sender.ray.o, (new Line(this.sender.ray.o, circle.center)).toVector());
+                Double[] factors = getCircleIntersection(r, circle);
+                double length = (new Line(this.sender.ray.o, r.getPoint(Math.min(factors[0], factors[1])))).length();
+                if (length < mindistance){
+                    mindistance = length;
+                    closest = circle;
+                }
+            }
+            else if(CircleArc.class.isInstance(object)){
+                CircleArc arc = (CircleArc) object;
+                // Abstand zu Kreisbogen durch Mittelpunkt
+                Ray r = new Ray(this.sender.ray.o, (new Line(this.sender.ray.o, arc.center)).toVector());
+                Double[] factors = getCircleArcIntersection(r, arc);
+                double len1; 
+                if (factors[0] != null && factors[1] != null) len1 = (new Line(this.sender.ray.o, r.getPoint(Math.min(factors[0], factors[1])))).length();
+                else if (factors[0] != null) len1 = (new Line(this.sender.ray.o, r.getPoint(factors[0]))).length();
+                else if (factors[1] != null) len1 = (new Line(this.sender.ray.o, r.getPoint(factors[1]))).length();
+                else len1 = Double.MAX_VALUE;
+                //Abstand zu Endpunkten
+                double len2 = (new Line(this.sender.ray.o, arc.P1())).length();
+                double len3 = (new Line(this.sender.ray.o, arc.P2())).length();
+                double length = Math.min(len1, len2);
+                length = Math.min(length, len3);
+                if (length < mindistance){
+                    mindistance = length;
+                    closest = arc;
+                }
+            }
+            else if (Oval.class.isInstance(object)){
+                
+            }
+        }
+        
         return objects[0];
         // TODO: nächstes Element ermitteln; prüfen, ob Abstand < 1, sonst null ausgeben.
     }

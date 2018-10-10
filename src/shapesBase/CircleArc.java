@@ -47,6 +47,14 @@ public class CircleArc extends ShapeBase implements Serializable {
         return new Circle(this.center, this.radius);
     }
     
+    public Point P1(){
+        return this.center.toVector().add((new Vector(1, 0)).rotate(this.offsetangle).mul(this.radius)).toPoint();
+    }
+    
+    public Point P2(){
+        return this.center.toVector().add((new Vector(1, 0)).rotate(this.offsetangle + this.arcangle).mul(this.radius)).toPoint();
+    }
+    
     @Override
     public ArrayList<ShapeBase> getComponents() {
         ArrayList<ShapeBase> list = new ArrayList<ShapeBase>();
