@@ -240,18 +240,21 @@ public class Scan {
             else if(CircleArc.class.isInstance(object)){
                 CircleArc arc = (CircleArc) object;
                 // Abstand zu Kreisbogen durch Mittelpunkt
-                Ray r = new Ray(this.sender.ray.o, (new Line(this.sender.ray.o, arc.center)).toVector());
-                Double[] factors = getCircleArcIntersection(r, arc);
-                double len1; 
-                if (factors[0] != null && factors[1] != null) len1 = (new Line(this.sender.ray.o, r.getPoint(Math.min(factors[0], factors[1])))).length();
-                else if (factors[0] != null) len1 = (new Line(this.sender.ray.o, r.getPoint(factors[0]))).length();
-                else if (factors[1] != null) len1 = (new Line(this.sender.ray.o, r.getPoint(factors[1]))).length();
-                else len1 = Double.MAX_VALUE;
-                //Abstand zu Endpunkten
-                double len2 = (new Line(this.sender.ray.o, arc.P1())).length();
-                double len3 = (new Line(this.sender.ray.o, arc.P2())).length();
-                double length = Math.min(len1, len2);
-                length = Math.min(length, len3);
+                double length;
+                Vector toPoint = new Vector(arc.center, this.ray.o);
+                Vector toEnd = new Vector(arc.center, arc.P1());
+                if(toEnd.getDirAngle(toPoint) <= arc.arcangle){
+                    double distance = this.ray.o.dist(arc.center);
+                    if(distance <= arc.radius){
+                        length = arc.radius - distance;
+                    }
+                    else{
+                        length = distance - arc.radius;
+                    }
+                }
+                else{
+                    length = Math.min(arc.P1().dist(this.ray.o), arc.P2().dist(this.ray.o));
+                }
                 if (length < mindistance){
                     mindistance = length;
                     closest = arc;
