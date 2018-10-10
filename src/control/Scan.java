@@ -1,11 +1,15 @@
 package control;
 
 import static control.Raytracer.*;
+import drawing.DrawPanel;
+import static drawing.DrawPanel.getOval2D;
 import geometry.Point;
 import structures.StructRayObj;
 import shapesBase.Line;
 import geometry.Ray;
 import geometry.Vector;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import misc.Tools;
@@ -203,28 +207,20 @@ public class Scan {
         double mindistance = 1;
         Object closest = null;
         for(Object object : this.objects){
+            double length = Double.MIN_VALUE;
             if (Line.class.isInstance(object)){
                 Line line = (Line) object;
                 StructPointBool intersec = getLineIntersection(new Ray(this.sender.ray.o, line.toVector().toNormal()), line);
                 if (intersec.bool){
                     // wenn dieser Fall eintritt ist der Abstand zu den Endpznkten der Linie zwingend größer
-                    double length = (new Line(this.sender.ray.o, intersec.point)).length();
-                    if (length < mindistance){
-                        mindistance = length;
-                        closest = line;
-                    }
+                    length = (new Line(this.sender.ray.o, intersec.point)).length();
                 }else{
                     //Abstand zu beiden Endpunkten
-                    double length = Math.min((new Line(this.sender.ray.o, line.start)).length(), (new Line(this.sender.ray.o, line.end)).length());
-                    if (length < mindistance){
-                        mindistance = length;
-                        closest = line;
-                    }
+                    length = Math.min((new Line(this.sender.ray.o, line.start)).length(), (new Line(this.sender.ray.o, line.end)).length());
                 }
             }
             else if (Circle.class.isInstance(object)){
                 Circle circle = (Circle) object;
-                double length;
                 double distance = this.ray.o.dist(circle.center);
                 if(distance <= circle.radius){
                     length = circle.radius - distance;
@@ -232,15 +228,10 @@ public class Scan {
                 else{
                     length = distance - circle.radius;
                 }
-                if (length < mindistance){
-                    mindistance = length;
-                    closest = circle;
-                }
             }
             else if(CircleArc.class.isInstance(object)){
                 CircleArc arc = (CircleArc) object;
                 // Abstand zu Kreisbogen durch Mittelpunkt
-                double length;
                 Vector toPoint = new Vector(arc.center, this.ray.o);
                 Vector toEnd = new Vector(arc.center, arc.P1());
                 if(toEnd.getDirAngle(toPoint) <= arc.arcangle){
@@ -255,13 +246,27 @@ public class Scan {
                 else{
                     length = Math.min(arc.P1().dist(this.ray.o), arc.P2().dist(this.ray.o));
                 }
-                if (length < mindistance){
-                    mindistance = length;
-                    closest = arc;
-                }
             }
             else if (Oval.class.isInstance(object)){
-                
+                // pass
+                Oval oval1 = (Oval) object;
+                Oval[] ovals = new Oval[]{new Oval(oval1.p1, oval1.p2, oval1.e + 1), new Oval(oval1.p1, oval1.p2, oval1.e - 1)};
+                Ellipse2D.Double[] ovals2d = new Ellipse2D.Double[2];
+                for(int i = 0; i < 2; i++){
+                    Oval oval = ovals[i];
+                    AffineTransform at = new AffineTransform();
+                    at.setToRotation(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(oval.p1, oval.p2).toVector()))), (oval.p1.x + oval.p2.x)/2, (oval.p1.y + oval.p2.y)/2);
+                    Ellipse2D.Double oval2d = DrawPanel.getOval2D(oval);
+                    oval2d = (Ellipse2D.Double) at.createTransformedShape(oval2d);
+                    ovals2d[i] = oval2d;
+                }
+                if(ovals2d[0].contains(this.ray.o.x, this.ray.o.y) && !ovals2d[1].contains(this.ray.o.x, this.ray.o.y)){
+                    length = 0;
+                }
+            }
+            if (length < mindistance){
+                mindistance = length;
+                closest = object;
             }
         }
         
