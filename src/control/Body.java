@@ -179,6 +179,7 @@ public class Body implements Serializable {
         defects = new ArrayList();
         // Ein r=150-Kreis, r=50-Kreis-Defekt
         outline.add( new Circle( new Point(890.0, 330.0), 300.0) );
+        outline.add(  new Oval( new Point(10.0, 10.0), new Point(20.0, 20.0), 20));
         defects.add( new Circle( new Point(890.0, 330.0), 250.0) );
         defects.add( new Polygon( new Point[]{ new Point(600,315.0), new Point(630.0,315.0), new Point(630.0,345.0), new Point(600.0,345.0), new Point(600.0,315.0) } ) );
         shapes.clear();

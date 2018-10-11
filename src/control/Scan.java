@@ -10,6 +10,7 @@ import geometry.Ray;
 import geometry.Vector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import misc.Tools;
@@ -207,7 +208,7 @@ public class Scan {
         double mindistance = 1;
         Object closest = null;
         for(Object object : this.objects){
-            double length = Double.MIN_VALUE;
+            double length = Double.MAX_VALUE;
             if (Line.class.isInstance(object)){
                 Line line = (Line) object;
                 StructPointBool intersec = getLineIntersection(new Ray(this.sender.ray.o, line.toVector().toNormal()), line);
@@ -251,14 +252,13 @@ public class Scan {
                 // pass
                 Oval oval1 = (Oval) object;
                 Oval[] ovals = new Oval[]{new Oval(oval1.p1, oval1.p2, oval1.e + 1), new Oval(oval1.p1, oval1.p2, oval1.e - 1)};
-                Ellipse2D.Double[] ovals2d = new Ellipse2D.Double[2];
+                java.awt.Shape[] ovals2d = new java.awt.Shape[2];
                 for(int i = 0; i < 2; i++){
                     Oval oval = ovals[i];
                     AffineTransform at = new AffineTransform();
                     at.setToRotation(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(oval.p1, oval.p2).toVector()))), (oval.p1.x + oval.p2.x)/2, (oval.p1.y + oval.p2.y)/2);
                     Ellipse2D.Double oval2d = DrawPanel.getOval2D(oval);
-                    oval2d = (Ellipse2D.Double) at.createTransformedShape(oval2d);
-                    ovals2d[i] = oval2d;
+                    ovals2d[i] = at.createTransformedShape(oval2d);
                 }
                 if(ovals2d[0].contains(this.ray.o.x, this.ray.o.y) && !ovals2d[1].contains(this.ray.o.x, this.ray.o.y)){
                     length = 0;
