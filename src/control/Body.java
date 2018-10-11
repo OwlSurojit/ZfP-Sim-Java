@@ -277,7 +277,7 @@ public class Body implements Serializable {
             for(Binding b : binds){
                 boolean merged = false;
                 for(DragPoint dp : dragPoints){
-                    if(dp.dist(b) <= 10){
+                    if(dp.dist(b) <= 3){
                         if(! dp.contains(shape)){
                             dp.addBinding(b);
                         }

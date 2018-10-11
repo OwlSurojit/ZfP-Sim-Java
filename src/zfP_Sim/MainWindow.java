@@ -30,6 +30,7 @@ public class MainWindow extends BodyWindow {
     
     public double[][] senderPositions;
     public int index;
+    public int rotationSpeed;
         
     public MainWindow() {
         initComponents();
@@ -38,55 +39,64 @@ public class MainWindow extends BodyWindow {
         simPanel.main = this;
         scanPanel.main = this;
         simPanel.drawBody(senderPositions[index]);
+        rotationSpeed = 1;
         
         //KeyEventListener
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            
             @Override
             public boolean dispatchKeyEvent(KeyEvent evt) {
                 if(simPanel.main.isFocused()){
-                    int keyCode = evt.getKeyCode();
-                    switch(keyCode){
-                        case KeyEvent.VK_RIGHT:
-                            MouseListener[] listenersR = simPanel.getMouseListeners();
-                            if(listenersR.length == 1 && lit != null){
-                                lit.rotate(10);
-                                body.refreshDragPoints();
-                                if( body.outline.contains(lit) ){
-                                    outlineChanged();
+                    int type = evt.getID();
+                    if(type == KeyEvent.KEY_PRESSED){
+                        int keyCode = evt.getKeyCode();
+                        switch(keyCode){
+                            case KeyEvent.VK_RIGHT:
+                                MouseListener[] listenersR = simPanel.getMouseListeners();
+                                if(listenersR.length == 1 && lit != null){
+                                    lit.rotate(getRotationSpeed());
+                                    body.refreshDragPoints();
+                                    if( body.outline.contains(lit) ){
+                                        outlineChanged();
+                                    }
+                                    simPanel.drawBody_Edit();
                                 }
-                                simPanel.drawBody_Edit();
-                            }
-                            else if(listenersR.length == 0){
-                                prevIndex();
-                                simPanel.drawBody(senderPositions[index]);
-                            }
-                            return false;
-                        case KeyEvent.VK_LEFT:
-                            MouseListener[] listenersL = simPanel.getMouseListeners();
-                            if(listenersL.length == 1 && lit != null){
-                                lit.rotate(-10);
-                                body.refreshDragPoints();
-                                if( body.outline.contains(lit) ){
-                                    outlineChanged();
+                                else if(listenersR.length == 0){
+                                    prevIndex();
+                                    simPanel.drawBody(senderPositions[index]);
                                 }
-                                simPanel.drawBody_Edit();
-                            }
-                            else if(listenersL.length == 0){
-                                nextIndex();
-                                simPanel.drawBody(senderPositions[index]);
-                            }
-                            return false;
-                        case KeyEvent.VK_ENTER:
-                            simStartButtonActionPerformed(null);
-                            return false;
-                        case KeyEvent.VK_SHIFT:
-                            bodyEditButtonActionPerformed(null);
-                            return false;
-                        default:
-                            return false;
+                                return false;
+                            case KeyEvent.VK_LEFT:
+                                MouseListener[] listenersL = simPanel.getMouseListeners();
+                                if(listenersL.length == 1 && lit != null){
+                                    lit.rotate(-getRotationSpeed());
+                                    body.refreshDragPoints();
+                                    if( body.outline.contains(lit) ){
+                                        outlineChanged();
+                                    }
+                                    simPanel.drawBody_Edit();
+                                }
+                                else if(listenersL.length == 0){
+                                    nextIndex();
+                                    simPanel.drawBody(senderPositions[index]);
+                                }
+                                return false;
+                            case KeyEvent.VK_ENTER:
+                                simStartButtonActionPerformed(null);
+                                return false;
+                            case KeyEvent.VK_SHIFT:
+                                bodyEditButtonActionPerformed(null);
+                                return false;
+                            default:
+                                return false;
+                        }
+                    }
+                    else if(type == KeyEvent.KEY_RELEASED){
+                        rotationSpeed = 1;
+                        return false;
                     }
                 }
-                else{return false;}
+                return false;
             }
         });
     }
@@ -688,6 +698,13 @@ public class MainWindow extends BodyWindow {
             senderXField.setText(Double.toString(senderPositions[index][0]));
             senderYField.setText(Double.toString(senderPositions[index][1]));
         }
+    }
+
+    public int getRotationSpeed() {
+        if(rotationSpeed < 15){
+            return ++rotationSpeed;
+        }
+        else{return rotationSpeed;}
     }
     
     @Override
