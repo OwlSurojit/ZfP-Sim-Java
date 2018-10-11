@@ -31,6 +31,8 @@ public class SenderPositions {
             segments.add(new double[]{coords[0], coords[1]});
             iter.next();
         }
+        segments.get(segments.size()-1)[0] = segments.get(0)[0];
+        segments.get(segments.size()-1)[1] = segments.get(0)[1];
         ArrayList<double[]> points = new ArrayList<>();
         for(int i = 0; i<segments.size()-1; i++){
             points.add(segments.get(i));
