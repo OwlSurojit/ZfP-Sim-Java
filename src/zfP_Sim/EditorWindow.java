@@ -38,8 +38,8 @@ public class EditorWindow extends BodyWindow {
         cursorToggleButton.setSelected(true);
         rotationSpeed = 1;
         
-        //KeyEventListeners
-       KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        // KeyEventListeners
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent evt) {
                 if(drawPanel.main.isFocused()){
@@ -524,6 +524,7 @@ public class EditorWindow extends BodyWindow {
     private void exactInputField2KeyPressed(java.awt.event.KeyEvent evt) {                                            
         if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ReadInputButton;
