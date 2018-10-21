@@ -4,6 +4,7 @@ import control.Body;
 import drawing.DragPoint;
 import static enums.VerificationType.*;
 import eventListeners.*;
+import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
 import java.awt.event.KeyEvent;
@@ -23,6 +24,7 @@ import structures.StructFieldType;
 public class EditorWindow extends BodyWindow {
     
     MainWindow mainWindow;
+    public int rotationSpeed;
 
     public EditorWindow(MainWindow mw) {
         mainWindow = mw;
@@ -33,9 +35,11 @@ public class EditorWindow extends BodyWindow {
         listSelectionModel.addListSelectionListener(new ListSelectionHandler(this, shapesList));
         drawPanel.main = this;
         drawPanel.drawBody_Edit();
-        cursorToggleButton.doClick();
+        cursorToggleButton.setSelected(true);
+        rotationSpeed = 1;
         
         //KeyEventListeners
+<<<<<<< HEAD
         //Cursor with F1
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
             if (evt.getKeyCode() == 112){
@@ -81,8 +85,89 @@ public class EditorWindow extends BodyWindow {
             if (evt.getKeyCode() == 117){
                 ovalToggleButton.setSelected(true);
                 ovalToggleButtonStateChanged(null);
+=======
+       KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent evt) {
+                if(drawPanel.main.isFocused()){
+                    int type = evt.getID();
+                    if(type == KeyEvent.KEY_PRESSED){
+                        int keyCode = evt.getKeyCode();
+                        switch(keyCode){
+                            case KeyEvent.VK_RIGHT:
+                                MouseListener[] listenersR = drawPanel.getMouseListeners();
+                                if(listenersR.length == 1 && listenersR[0] instanceof DragDropListener && lit != null){
+                                    lit.rotate(getRotationSpeed());
+                                    body.refreshDragPoints();
+                                    if( body.outline.contains(lit) ){
+                                        outlineChanged();
+                                    }
+                                    drawPanel.drawBody_Edit();
+                                }
+                                return false;
+                            case KeyEvent.VK_LEFT:
+                                MouseListener[] listenersL = drawPanel.getMouseListeners();
+                                if(listenersL.length == 1 && listenersL[0] instanceof DragDropListener && lit != null){
+                                    lit.rotate(-getRotationSpeed());
+                                    body.refreshDragPoints();
+                                    if( body.outline.contains(lit) ){
+                                        outlineChanged();
+                                    }
+                                    drawPanel.drawBody_Edit();
+                                }
+                                return false;
+                            case KeyEvent.VK_DELETE:
+                                MouseListener[] listenersD = drawPanel.getMouseListeners();
+                                if(listenersD.length == 1 && listenersD[0] instanceof DragDropListener && lit != null){
+                                    if(body.removeOutline(lit)){
+                                        outlineChanged();
+                                    }
+                                    else{
+                                        body.removeDefect(lit);
+                                    }
+                                    setLit(null);
+                                    body.refreshDragPoints();
+                                    drawPanel.drawBody_Edit();
+                                }
+                                return false;
+                            case KeyEvent.VK_P:
+                                if(lit != null){
+                                    PropertiesWindow pw = new PropertiesWindow(lit, (EditorWindow) drawPanel.main);
+                                    pw.setVisible(true);
+                                    body.refreshDragPoints();
+                                    drawPanel.drawBody_Edit();
+                                }
+                                return false;
+                            case KeyEvent.VK_F1:
+                                cursorToggleButton.setSelected(true);
+                                return false;
+                            case KeyEvent.VK_F2:
+                                polygonToggleButton.setSelected(true);
+                                return false;
+                            case KeyEvent.VK_F3:
+                                rectangleToggleButton.setSelected(true);
+                                return false;
+                            case KeyEvent.VK_F4:
+                                circleToggleButton.setSelected(true);
+                                return false;
+                            case KeyEvent.VK_F5:
+                                carcToggleButton.setSelected(true);
+                                return false;
+                            case KeyEvent.VK_F6:
+                                ovalToggleButton.setSelected(true);
+                                return false;
+                            default:
+                                return false;
+                        }
+                    }
+                    else if(type == KeyEvent.KEY_RELEASED){
+                        rotationSpeed = 1;
+                        return false;
+                    }
+                }
+                return false;
+>>>>>>> master
             }
-            return false;
         });
     }
 
@@ -285,7 +370,7 @@ public class EditorWindow extends BodyWindow {
         fileMenu.setText("Datei");
 
         returnMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
-        returnMenuItem.setText("Return");
+        returnMenuItem.setText("Übernehmen");
         returnMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 returnMenuItemActionPerformed(evt);
@@ -417,6 +502,7 @@ public class EditorWindow extends BodyWindow {
     private void returnMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnMenuItemActionPerformed
         this.setVisible(false);
         mainWindow.body = this.body;
+        mainWindow.getSenderPositions();
         mainWindow.setVisible(true);
     }//GEN-LAST:event_returnMenuItemActionPerformed
 
@@ -486,7 +572,10 @@ public class EditorWindow extends BodyWindow {
     private void exactInputField2KeyPressed(java.awt.event.KeyEvent evt) {                                            
         if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ReadInputButton;
@@ -567,9 +656,18 @@ public class EditorWindow extends BodyWindow {
             }
             
             cursorToggleButton.doClick();
-            
-            
         }
+    }
+    
+    public int getRotationSpeed() {
+        if(rotationSpeed < 15){
+            return ++rotationSpeed;
+        }
+        else{return rotationSpeed;}
+    }
+    
+    @Override
+    public void outlineChanged(){
         
     }
 }

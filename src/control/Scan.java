@@ -1,11 +1,24 @@
 package control;
 
+import static control.Raytracer.*;
+import drawing.DrawPanel;
+import static drawing.DrawPanel.getOval2D;
+import geometry.Point;
 import structures.StructRayObj;
 import shapesBase.Line;
 import geometry.Ray;
+import geometry.Vector;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import misc.Tools;
+import shapesBase.Circle;
+import shapesBase.CircleArc;
+import shapesBase.Oval;
 import shapesBase.ShapeBase;
+import structures.StructPointBool;
 
 public class Scan {
 
@@ -26,7 +39,7 @@ public class Scan {
         this.objects = shape_Arr;
         
         this.sender = sender;
-        sender.obj = objects[0];
+        sender.obj = closest();
         this. numref = numref;
         this.velocity = velocity;
         this.delay = delay;
@@ -52,6 +65,7 @@ public class Scan {
     // jeder Strahl wird numref mal reflektiert 
     // -> durch unterschieldiche verlaeufe werden unterschiedlice Strecken zurueckgelegt
     // -> verschiedene Zeiten im Diagramm
+    // Array: {{time, intensity}, ...}
     public Double[][] MultiScan_A(int numray, double angle){
         if (numray < 2 || Tools.equal(angle, 0)) return scan_A();
         int pos = 0;
@@ -111,7 +125,34 @@ public class Scan {
         java.util.Arrays.sort(hits, (Double[] a, Double[] b) -> Double.compare(a[0], b[0]));
         return hits;
     }
-
+    
+    public Double[][] processScan_A(Double[][] scan, double decaytime){
+        
+        Double[][] pScan = new Double[scan.length][2];
+        for(int i = 0; i < scan.length; i++){
+            pScan[i] = Arrays.copyOf(scan[i], 2);
+        }
+        //Double[][] pScan = Arrays.copyOf(scan, scan.length);\
+        //System.arraycopy(scan, 0, pScan, 0, scan.length);
+        double maxvalue = pScan[0][1];
+        for (int i = 1; i < scan.length; i++){
+            int j = i-1;
+            double timedif = scan[i][0] - scan[j][0];
+            while (j >= 0 && timedif < decaytime){
+                timedif = scan[i][0] - scan[j][0];
+                // f(x) = 1/(x^2+1)  -> < 10^-8 for x > 3*sqrt(11111111)
+                double offset = scan[j][1]/(Math.pow((timedif/decaytime), 2)*9+1);
+                pScan[i][1] += offset;
+                if (pScan[i][1] > maxvalue) maxvalue = pScan[i][1];
+                j--;
+            }
+        }
+        for (int i = 1; i < scan.length; i++){
+            pScan[i][1] = pScan[i][1]/maxvalue;
+        }
+        return pScan;
+    }
+            
     public double[][] reflections(){
         StructRayObj[] history = (new Raytracer(this.ray, this.sender.obj, this.objects, this.numref)).trace();
         double[][] points = new double[history.length][2];
@@ -160,6 +201,77 @@ public class Scan {
             }
         }
         return points;
+    }
+
+    private Object closest() {
+        
+        double mindistance = 1;
+        Object closest = null;
+        for(Object object : this.objects){
+            double length = Double.MAX_VALUE;
+            if (Line.class.isInstance(object)){
+                Line line = (Line) object;
+                StructPointBool intersec = getLineIntersection(new Ray(this.sender.ray.o, line.toVector().toNormal()), line);
+                if (intersec.bool){
+                    // wenn dieser Fall eintritt ist der Abstand zu den Endpznkten der Linie zwingend größer
+                    length = (new Line(this.sender.ray.o, intersec.point)).length();
+                }else{
+                    //Abstand zu beiden Endpunkten
+                    length = Math.min((new Line(this.sender.ray.o, line.start)).length(), (new Line(this.sender.ray.o, line.end)).length());
+                }
+            }
+            else if (Circle.class.isInstance(object)){
+                Circle circle = (Circle) object;
+                double distance = this.ray.o.dist(circle.center);
+                if(distance <= circle.radius){
+                    length = circle.radius - distance;
+                }
+                else{
+                    length = distance - circle.radius;
+                }
+            }
+            else if(CircleArc.class.isInstance(object)){
+                CircleArc arc = (CircleArc) object;
+                // Abstand zu Kreisbogen durch Mittelpunkt
+                Vector toPoint = new Vector(arc.center, this.ray.o);
+                Vector toEnd = new Vector(arc.center, arc.P1());
+                if(toEnd.getDirAngle(toPoint) <= arc.arcangle){
+                    double distance = this.ray.o.dist(arc.center);
+                    if(distance <= arc.radius){
+                        length = arc.radius - distance;
+                    }
+                    else{
+                        length = distance - arc.radius;
+                    }
+                }
+                else{
+                    length = Math.min(arc.P1().dist(this.ray.o), arc.P2().dist(this.ray.o));
+                }
+            }
+            else if (Oval.class.isInstance(object)){
+                // pass
+                Oval oval1 = (Oval) object;
+                Oval[] ovals = new Oval[]{new Oval(oval1.p1, oval1.p2, oval1.e + 1), new Oval(oval1.p1, oval1.p2, oval1.e - 1)};
+                java.awt.Shape[] ovals2d = new java.awt.Shape[2];
+                for(int i = 0; i < 2; i++){
+                    Oval oval = ovals[i];
+                    AffineTransform at = new AffineTransform();
+                    at.setToRotation(-Math.toRadians((new Vector(1, 0)).getDirAngle((new Line(oval.p1, oval.p2).toVector()))), (oval.p1.x + oval.p2.x)/2, (oval.p1.y + oval.p2.y)/2);
+                    Ellipse2D.Double oval2d = DrawPanel.getOval2D(oval);
+                    ovals2d[i] = at.createTransformedShape(oval2d);
+                }
+                if(ovals2d[0].contains(this.ray.o.x, this.ray.o.y) && !ovals2d[1].contains(this.ray.o.x, this.ray.o.y)){
+                    length = 0;
+                }
+            }
+            if (length < mindistance){
+                mindistance = length;
+                closest = object;
+            }
+        }
+        
+        return objects[0];
+        // TODO: nächstes Element ermitteln; prüfen, ob Abstand < 1, sonst null ausgeben.
     }
     
 }

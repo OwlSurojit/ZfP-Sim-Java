@@ -45,10 +45,13 @@ public class Body implements Serializable {
         refreshDragPoints();
     }
     
-    public void removeOutline(ShapeBase segment){
-        outline.remove(segment);
-        shapes.removeElement(segment);
-        refreshDragPoints();
+    public boolean removeOutline(ShapeBase segment){
+        if(outline.remove(segment)){
+            shapes.removeElement(segment);
+            refreshDragPoints();
+            return true;
+        }
+        else{return false;}
     }
     
     public void addDefect(ShapeBase defect){
@@ -65,10 +68,13 @@ public class Body implements Serializable {
         refreshDragPoints();
     }
     
-    public void removeDefect(ShapeBase defect){
-        defects.remove(defect);
-        shapes.removeElement(defect);
-        refreshDragPoints();
+    public boolean removeDefect(ShapeBase defect){
+        if(defects.remove(defect)){
+            shapes.removeElement(defect);
+            refreshDragPoints();
+            return true;
+        }
+        else{return false;}
     }
     
     public void exampleOne(){
@@ -173,6 +179,7 @@ public class Body implements Serializable {
         defects = new ArrayList();
         // Ein r=150-Kreis, r=50-Kreis-Defekt
         outline.add( new Circle( new Point(890.0, 330.0), 300.0) );
+        outline.add(  new Oval( new Point(10.0, 10.0), new Point(20.0, 20.0), 20));
         defects.add( new Circle( new Point(890.0, 330.0), 250.0) );
         defects.add( new Polygon( new Point[]{ new Point(600,315.0), new Point(630.0,315.0), new Point(630.0,345.0), new Point(600.0,345.0), new Point(600.0,315.0) } ) );
         shapes.clear();
@@ -271,7 +278,7 @@ public class Body implements Serializable {
             for(Binding b : binds){
                 boolean merged = false;
                 for(DragPoint dp : dragPoints){
-                    if(dp.dist(b) <= 10){
+                    if(dp.dist(b) <= 3){
                         if(! dp.contains(shape)){
                             dp.addBinding(b);
                         }

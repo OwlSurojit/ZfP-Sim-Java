@@ -2,7 +2,10 @@ package properties;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,6 +25,7 @@ public class PropertiesWindow extends javax.swing.JFrame{
     public PropertiesWindow(ShapeBase shape, EditorWindow main){
         this.shape = shape;
         this.main = main;
+        PropertiesWindow refToThis = this;
         
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setTitle("Eigenschaften");
@@ -52,6 +56,19 @@ public class PropertiesWindow extends javax.swing.JFrame{
         
         add(tabs);
         add(lowerPanel);
+        
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent evt) {
+                if(refToThis.isFocused()){
+                    int keyCode = evt.getKeyCode();
+                    if(keyCode == KeyEvent.VK_ENTER && saveButton.isEnabled()){
+                        saveButtonActionPerformed(null);
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     private void saveButtonActionPerformed(ActionEvent evt) {
@@ -59,6 +76,9 @@ public class PropertiesWindow extends javax.swing.JFrame{
         tabs.drawingTab.commit();
         
         main.body.refreshDragPoints();
+        if(main.body.outline.contains(shape)){
+            main.outlineChanged();
+        }
         main.drawPanel.drawBody_Edit();
         main.shapesList.updateUI();
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));

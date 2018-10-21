@@ -25,11 +25,6 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="new2DMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="new3DMenuItem">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="3D (T.B.D.)"/>
-                  </Properties>
-                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="newPregenMenuItem">
                   <Properties>
                     <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
@@ -75,6 +70,19 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Exportieren"/>
               </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+                  <Properties>
+                    <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                      <KeyStroke key="Ctrl+P"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="als PDF"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
+                  </Events>
+                </MenuItem>
+              </SubComponents>
             </Menu>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator3">
             </MenuItem>
@@ -111,6 +119,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="exitMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+Q"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Verlassen"/>
               </Properties>
               <Events>
@@ -225,7 +236,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="senderXField">
               <Properties>
-                <Property name="text" type="java.lang.String" value="200"/>
+                <Property name="text" type="java.lang.String" value="825"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[48, 26]"/>
                 </Property>
@@ -241,7 +252,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="senderYField">
               <Properties>
-                <Property name="text" type="java.lang.String" value="100"/>
+                <Property name="text" type="java.lang.String" value="30"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[48, 26]"/>
                 </Property>
@@ -259,7 +270,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="rayXField">
               <Properties>
-                <Property name="text" type="java.lang.String" value="-1"/>
+                <Property name="text" type="java.lang.String" value="-2"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[48, 26]"/>
                 </Property>
@@ -275,7 +286,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="rayYField">
               <Properties>
-                <Property name="text" type="java.lang.String" value="4"/>
+                <Property name="text" type="java.lang.String" value="5"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[48, 26]"/>
                 </Property>
@@ -293,7 +304,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="refField">
               <Properties>
-                <Property name="text" type="java.lang.String" value="20"/>
+                <Property name="text" type="java.lang.String" value="5"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[48, 26]"/>
                 </Property>

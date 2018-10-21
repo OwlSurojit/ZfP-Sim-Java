@@ -12,6 +12,11 @@ public class Point implements Serializable {
         this.y = y;
     }
     
+    public Point(double[] coords){
+        this.x = coords[0];
+        this.y = coords[1];
+    }
+    
     public boolean equals(Point other){
         return misc.Tools.equal(x, other.x) && misc.Tools.equal(y, other.y);
     }

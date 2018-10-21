@@ -9,4 +9,5 @@ public abstract class BodyWindow extends javax.swing.JFrame {
     public ShapeBase lit;
     
     public abstract void setLit(ShapeBase shape);
+    public abstract void outlineChanged();
 }

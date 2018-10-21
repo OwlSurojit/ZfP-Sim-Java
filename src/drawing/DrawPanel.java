@@ -16,11 +16,15 @@ public class DrawPanel extends javax.swing.JPanel{
     
     public BodyWindow main;
     public ArrayList<ShapeBase> tempShapes;
+    public double[] sender;
     public double[][] raytracer;
+    public double[][][] multitracer;
     
     public boolean paintBody;
     public boolean paintTemp;
+    public boolean paintSender;
     public boolean paintRaytracer;
+    public boolean paintMultiTracer;
     public boolean paintDragPoints;
     
     public int delay;
@@ -29,7 +33,9 @@ public class DrawPanel extends javax.swing.JPanel{
     public DrawPanel(){
         paintBody = false;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = false;
         
         delay = 0;
@@ -41,17 +47,37 @@ public class DrawPanel extends javax.swing.JPanel{
         
         paintBody = true;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = true;
+        paintMultiTracer = false;
         paintDragPoints = false;
         
         repaint();
     }
     
-    public void drawBody(){
+    public void simulate(double[][][] tracer){
         main.setLit(null);
+        multitracer = tracer;
+        
         paintBody = true;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = false;
+        paintMultiTracer = true;
+        paintDragPoints = false;
+        
+        repaint();
+    }
+    
+    public void drawBody(double [] sender){
+        this.sender = sender;
+        main.setLit(null);
+        
+        paintBody = true;
+        paintTemp = false;
+        paintSender = true;
+        paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = false;
         
         repaint();
@@ -60,7 +86,9 @@ public class DrawPanel extends javax.swing.JPanel{
     public void drawBody_Edit(){
         paintBody = true;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = true;
         
         repaint();
@@ -71,7 +99,9 @@ public class DrawPanel extends javax.swing.JPanel{
         
         paintBody = true;
         paintTemp = true;
+        paintSender = false;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = true;
         
         repaint();
@@ -81,7 +111,9 @@ public class DrawPanel extends javax.swing.JPanel{
         main.setLit(null);
         paintBody = false;
         paintTemp = false;
+        paintSender = false;
         paintRaytracer = false;
+        paintMultiTracer = false;
         paintDragPoints = false;
         
         repaint();
@@ -109,6 +141,10 @@ public class DrawPanel extends javax.swing.JPanel{
             }
         }
         
+        if(paintSender){
+            paintNode(g2d, sender[0], sender[1], 3, Color.RED);
+        }
+        
         if(paintRaytracer){
             g2d.setColor(Color.BLACK);
             for(int i=0; i<raytracer.length-1; i++){
@@ -118,6 +154,46 @@ public class DrawPanel extends javax.swing.JPanel{
             for(int i=1; i<raytracer.length; i++){
                 paintNode(g2d, raytracer[i][0], raytracer[i][1], 2, Color.BLACK);
             }
+        }
+        
+        if(paintMultiTracer){
+            // Strahl n+1 bedeckt Strahl n
+            /*for(int j = 0; j < multitracer.length; j++){
+                // red to blue 
+                //g2d.setColor(new Color(j*255/(multitracer.length-1),0,(multitracer.length-1-j)*255/(multitracer.length-1)));
+                // full rgb 
+                int vr = Math.max(0, (int)(510*j/(multitracer.length-1) - 255));
+                int vb = Math.max(0, (int)(255 - 510*j/(multitracer.length-1)));
+                int vg = 255 - vr - vb;
+                g2d.setColor(new Color(vr, vg, vb));
+                for(int i=0; i<multitracer[j].length-1; i++){
+                    g2d.draw(new Line2D.Double(multitracer[j][i][0], multitracer[j][i][1], multitracer[j][i+1][0], multitracer[j][i+1][1]));
+                }
+                paintNode(g2d, multitracer[j][0][0], multitracer[j][0][1], 3, Color.RED);
+                for(int i=1; i<multitracer[j].length; i++){
+                    paintNode(g2d, multitracer[j][i][0], multitracer[j][i][1], 2, Color.BLACK);
+                }
+            }*/
+            
+            // Ref n+1 bedeckt Ref n
+            Color[] colors = new Color[multitracer.length];
+            for(int j=0; j<multitracer.length; j++){
+                    int vr = Math.max(0, (int)(510*j/(multitracer.length-1) - 255));
+                    int vb = Math.max(0, (int)(255 - 510*j/(multitracer.length-1)));
+                    int vg = 255 - vr - vb;
+                    colors[j] = new Color(vr, vg, vb);
+            }
+            
+            for(int i = 0; i < multitracer[0].length-1; i++){
+                for(int j=0; j<multitracer.length; j++){
+                    g2d.setColor(colors[j]);
+                    g2d.draw(new Line2D.Double(multitracer[j][i][0], multitracer[j][i][1], multitracer[j][i+1][0], multitracer[j][i+1][1]));
+                }
+                for(int j=0; j<multitracer.length; j++){
+                    paintNode(g2d, multitracer[j][i][0], multitracer[j][i][1], 2, Color.BLACK);
+                }
+            }
+            paintNode(g2d, multitracer[0][0][0], multitracer[0][0][1], 3, Color.RED);
         }
         
         if(paintDragPoints){
@@ -253,7 +329,7 @@ public class DrawPanel extends javax.swing.JPanel{
         g2d.fill(node);
     }
     
-    public Line2D.Double getLine2D(Line line){
+    public static Line2D.Double getLine2D(Line line){
         Line2D.Double line2D = new Line2D.Double();
         line2D.x1 = line.start.x;
         line2D.y1 = line.start.y;
@@ -263,7 +339,7 @@ public class DrawPanel extends javax.swing.JPanel{
         return line2D;
     }
     
-    public java.awt.Polygon getPolygon2D(Polygon polygon){
+    public static java.awt.Polygon getPolygon2D(Polygon polygon){
         java.awt.Polygon polygon2D = new java.awt.Polygon();
         for(Point point : polygon.points){
             polygon2D.addPoint((int)point.x, (int)point.y);
@@ -272,7 +348,7 @@ public class DrawPanel extends javax.swing.JPanel{
         return polygon2D;
     }
     
-    public Ellipse2D.Double getCircle2D(Circle circle){
+    public static Ellipse2D.Double getCircle2D(Circle circle){
         Ellipse2D.Double circle2D = new Ellipse2D.Double();
         circle2D.x = circle.center.x -circle.radius;
         circle2D.y = circle.center.y -circle.radius;
@@ -282,7 +358,7 @@ public class DrawPanel extends javax.swing.JPanel{
         return circle2D;
     }
     
-    public Arc2D.Double getCircleArc2D(CircleArc circleArc){
+    public static Arc2D.Double getCircleArc2D(CircleArc circleArc){
         Arc2D.Double circleArc2D = new Arc2D.Double();
         circleArc2D.x = circleArc.center.x -circleArc.radius;
         circleArc2D.y = circleArc.center.y -circleArc.radius;
@@ -294,7 +370,7 @@ public class DrawPanel extends javax.swing.JPanel{
         return circleArc2D;
     }
     
-    public Ellipse2D.Double getOval2D(Oval oval){
+    public static Ellipse2D.Double getOval2D(Oval oval){
         Ellipse2D.Double oval2d = new Ellipse2D.Double();
         oval2d.width = oval.e;
         oval2d.height = 2*Math.sqrt(Math.pow(oval.e/2, 2)-Math.pow((new Line(oval.p1, oval.p2)).length()/2, 2));
