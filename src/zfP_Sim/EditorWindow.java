@@ -38,55 +38,7 @@ public class EditorWindow extends BodyWindow {
         cursorToggleButton.setSelected(true);
         rotationSpeed = 1;
         
-        //KeyEventListeners
-<<<<<<< HEAD
-        //Cursor with F1
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 112){
-                cursorToggleButton.setSelected(true);
-                cursorToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Polygon with F2
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 113){
-                polygonToggleButton.setSelected(true);
-                polygonToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Rectangle with F3
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 114){
-                rectangleToggleButton.setSelected(true);
-                rectangleToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Circle with F4
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 115){
-                circleToggleButton.setSelected(true);
-                circleToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Arc with F5
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 116){
-                carcToggleButton.setSelected(true);
-                carcToggleButtonStateChanged(null);
-            }
-            return false;
-        });
-        //Oval with F6
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((KeyEvent evt) -> {
-            if (evt.getKeyCode() == 117){
-                ovalToggleButton.setSelected(true);
-                ovalToggleButtonStateChanged(null);
-=======
-       KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent evt) {
                 if(drawPanel.main.isFocused()){
@@ -166,7 +118,6 @@ public class EditorWindow extends BodyWindow {
                     }
                 }
                 return false;
->>>>>>> master
             }
         });
     }
@@ -572,10 +523,7 @@ public class EditorWindow extends BodyWindow {
     private void exactInputField2KeyPressed(java.awt.event.KeyEvent evt) {                                            
         if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ReadInputButton;
