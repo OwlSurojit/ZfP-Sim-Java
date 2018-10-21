@@ -38,6 +38,7 @@ public class EditorWindow extends BodyWindow {
         cursorToggleButton.setSelected(true);
         rotationSpeed = 1;
         
+        // KeyEventListeners
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent evt) {
