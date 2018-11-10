@@ -212,7 +212,7 @@ public class Raytracer {
                     if (cornerObjs.isEmpty()) cornerObjs.add(closestObj);
                     cornerObjs.add(obj);
                     hitCorner = true;
-                } else if (this.ray.r.x * direction.x >= 0 && this.ray.r.y * direction.y >= 0 && distance < mindistance) { //TODO: hit in corner
+                } else if (this.ray.r.x * direction.x >= 0 && this.ray.r.y * direction.y >= 0 && distance < mindistance) {
                     mindistance = distance;
                     closestObj = obj;
                     hitCorner = false;
@@ -252,7 +252,11 @@ public class Raytracer {
             if (Line.class.isInstance(obj)) {
                 Line line = (Line)obj;
                 if (S.equals(line.start)) vectors.add(line.toVector());
-                else vectors.add(line.toVector().mul(-1));
+                else if(S.equals(line.end)) vectors.add(line.toVector().mul(-1));
+                else{ 
+                    vectors.add(line.toVector().mul(-1)); 
+                    vectors.add(line.toVector());
+                }
             } else if (CircleArc.class.isInstance(obj)) {
                 CircleArc arc = (CircleArc) obj;
                 Point c1 = new Point(Math.cos(Math.toRadians(arc.offsetangle)), -Math.sin(Math.toRadians(arc.offsetangle)));
@@ -340,13 +344,15 @@ public class Raytracer {
 
     public Ray getLineReflection(Ray ray, Line line, Point S){
         // vertical to line
-        Ray h = new Ray(ray.o, new Vector(line.end.y - line.start.y, line.start.x - line.end.x));
+        //Ray h = new Ray(ray.o, new Vector(line.end.y - line.start.y, line.start.x - line.end.x));
+        Ray h = new Ray(ray.o, line.toVector().toNormal());
         // dropped perpendicular foot (Lotfußpunkt) of ray.o on the line
         Point R = getLineIntersection(h, line).point;
         // ray.o mirrored on the line
         Point P = (ray.o.toVector().add((new Line(ray.o, R)).toVector().mul(2))).toPoint();
         // intersection ray, line and Vector P -> S
-        return new Ray(S, new Vector(S.x - P.x, S.y - P.y));
+        //return new Ray(S, new Vector(S.x - P.x, S.y - P.y));
+        return new Ray(S, (new Line(P, S)).toVector());
     }
 
     public Ray getCircleReflection(Ray ray, Circle circle, Point S){
