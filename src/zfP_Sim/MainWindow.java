@@ -39,7 +39,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.examplePartial();//body.exampleWheelDefect();
+        body = new Body(); body.exampleWheelDefect();
         getSenderPositions();
         simPanel.main = this;
         scanPanel.main = this;
