@@ -34,7 +34,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleWheelDefect();
+        body = new Body(); body.exampleLongBar();
         getSenderPositions();
         simPanel.main = this;
         scanPanel.main = this;
@@ -477,9 +477,10 @@ public class MainWindow extends BodyWindow {
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
             //simPanel.simulate(scan.reflections());
             //scanPanel.setScores(scan.scan_A());
-            simPanel.simulate(scan.MultiReflections(11 , 2));
-            //scanPanel.setScores(scan.MultiScan_A(1001, 20));
-            scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(3, 2), 0.5));
+            simPanel.simulate(scan.MultiReflections(11 , 20));
+            //scanPanel.setScores(scan.MultiScan_A(1001, 2));
+            //scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(11, 20), 0.5));
+            scanPanel.setScores(scan.processScan_A3(scan.MultiScan_A(11, 20)));
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 
