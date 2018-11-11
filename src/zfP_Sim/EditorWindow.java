@@ -29,7 +29,7 @@ public class EditorWindow extends BodyWindow {
     public EditorWindow(MainWindow mw) {
         mainWindow = mw;
         body = new Body(); body.exampleLongBar();
-        
+
         initComponents();
         ListSelectionModel listSelectionModel = shapesList.getSelectionModel();
         listSelectionModel.addListSelectionListener(new ListSelectionHandler(this, shapesList));
@@ -38,7 +38,7 @@ public class EditorWindow extends BodyWindow {
         cursorToggleButton.setSelected(true);
         rotationSpeed = 1;
         
-        // KeyEventListeners
+        //KeyEventListeners
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
             public boolean dispatchKeyEvent(KeyEvent evt) {
@@ -128,6 +128,7 @@ public class EditorWindow extends BodyWindow {
     private void initComponents() {
 
         toolButtonGroup = new javax.swing.ButtonGroup();
+        addButtonGroup = new javax.swing.ButtonGroup();
         jSplitPane1 = new javax.swing.JSplitPane();
         geomToolBar = new javax.swing.JToolBar();
         cursorToggleButton = new javax.swing.JToggleButton();
@@ -141,6 +142,9 @@ public class EditorWindow extends BodyWindow {
         carcToggleButton = new javax.swing.JToggleButton();
         jSeparator5 = new javax.swing.JToolBar.Separator();
         ovalToggleButton = new javax.swing.JToggleButton();
+        jSeparator6 = new javax.swing.JToolBar.Separator();
+        outlineAddRadioButton = new javax.swing.JRadioButton();
+        defectAddRadioButton = new javax.swing.JRadioButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(30, 0), new java.awt.Dimension(30, 0), new java.awt.Dimension(30, 32767));
         exactInputField1 = new javax.swing.JTextField();
         exactInputField2 = new javax.swing.JTextField();
@@ -249,6 +253,22 @@ public class EditorWindow extends BodyWindow {
             }
         });
         geomToolBar.add(ovalToggleButton);
+        geomToolBar.add(jSeparator6);
+
+        addButtonGroup.add(outlineAddRadioButton);
+        outlineAddRadioButton.setSelected(true);
+        outlineAddRadioButton.setText("Outline");
+        outlineAddRadioButton.setFocusable(false);
+        outlineAddRadioButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        outlineAddRadioButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        geomToolBar.add(outlineAddRadioButton);
+
+        addButtonGroup.add(defectAddRadioButton);
+        defectAddRadioButton.setText("Defekte");
+        defectAddRadioButton.setFocusable(false);
+        defectAddRadioButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        defectAddRadioButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        geomToolBar.add(defectAddRadioButton);
         geomToolBar.add(filler1);
 
         exactInputField1.setPreferredSize(new java.awt.Dimension(150, 30));
@@ -528,9 +548,11 @@ public class EditorWindow extends BodyWindow {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ReadInputButton;
+    private javax.swing.ButtonGroup addButtonGroup;
     private javax.swing.JToggleButton carcToggleButton;
     private javax.swing.JToggleButton circleToggleButton;
     private javax.swing.JToggleButton cursorToggleButton;
+    public javax.swing.JRadioButton defectAddRadioButton;
     public drawing.DrawPanel drawPanel;
     private javax.swing.JTextField exactInputField1;
     private javax.swing.JTextField exactInputField2;
@@ -546,9 +568,11 @@ public class EditorWindow extends BodyWindow {
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar.Separator jSeparator5;
+    private javax.swing.JToolBar.Separator jSeparator6;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JMenuBar menuBar;
+    public javax.swing.JRadioButton outlineAddRadioButton;
     private javax.swing.JToggleButton ovalToggleButton;
     private javax.swing.JToggleButton polygonToggleButton;
     private javax.swing.JToggleButton rectangleToggleButton;

@@ -9,6 +9,7 @@ import javax.swing.JToggleButton;
 import shapesBase.*;
 import drawing.DrawPanel;
 import control.Raytracer;
+import zfP_Sim.EditorWindow;
 
 public class RectangleCreateListener implements MouseListener{
 
@@ -41,7 +42,12 @@ public class RectangleCreateListener implements MouseListener{
             corner2 = (new Ray(start, (new Line(sp, p)).toVector())).getPoint(1);
             Point corner3 = (new Ray(corner1, (new Line(sp, p)).toVector())).getPoint(1);
             Point[] points = {start, corner1, corner3, corner2, start};
-            drawPanel.main.body.addDefect(new Polygon(points));
+            if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                drawPanel.main.body.addOutline(new Polygon(points));
+            }
+            else{
+                drawPanel.main.body.addDefect(new Polygon(points));
+            }
             this.start = null;
             this.corner1 = null;
             this.corner2 = null;
@@ -70,7 +76,12 @@ public class RectangleCreateListener implements MouseListener{
                 corner2 = (new Ray(start, (new Line(sp, p)).toVector())).getPoint(1);
                 Point corner3 = (new Ray(corner1, (new Line(sp, p)).toVector())).getPoint(1);
                 Point[] points = {start, corner1, corner3, corner2, start};
-                drawPanel.main.body.addDefect(new Polygon(points));
+                if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                    drawPanel.main.body.addOutline(new Polygon(points));
+                }
+                else{
+                    drawPanel.main.body.addDefect(new Polygon(points));
+                }
                 this.start = null;
                 this.corner1 = null;
                 this.corner2 = null;
@@ -90,7 +101,12 @@ public class RectangleCreateListener implements MouseListener{
                 Point p1 = new Point(this.start.x, diagonal.y);
                 Point p2 = new Point(diagonal.x, this.start.y);
                 Point[] points = {this.start, p1, diagonal, p2, this.start};
-                drawPanel.main.body.addDefect(new Polygon(points));
+                if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                    drawPanel.main.body.addOutline(new Polygon(points));
+                }
+                else{
+                    drawPanel.main.body.addDefect(new Polygon(points));
+                }
                 this.start = null;
                 this.corner1 = null;
                 this.corner2 = null;

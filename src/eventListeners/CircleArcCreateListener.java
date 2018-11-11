@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JToggleButton;
 import shapesBase.*;
 import drawing.DrawPanel;
+import zfP_Sim.EditorWindow;
 
 /**
  *
@@ -43,7 +44,12 @@ public class CircleArcCreateListener implements MouseListener{
         }else if(end == null){
             end = new Point(x, y);
             CircleArc arc = new CircleArc(center, start, end);
-            drawPanel.main.body.addDefect(arc);
+            if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                drawPanel.main.body.addOutline(arc);
+            }
+            else{
+                drawPanel.main.body.addDefect(arc);
+            }
             center = null;
             start = null;
             end = null;
@@ -65,7 +71,12 @@ public class CircleArcCreateListener implements MouseListener{
             }else if(end == null){
                 end = new Point(me.getX(), me.getY());
                 CircleArc arc = new CircleArc(center, start, end);
-                drawPanel.main.body.addDefect(arc);
+                if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                    drawPanel.main.body.addOutline(arc);
+                }
+                else{
+                    drawPanel.main.body.addDefect(arc);
+                }
                 center = null;
                 start = null;
                 end = null;
