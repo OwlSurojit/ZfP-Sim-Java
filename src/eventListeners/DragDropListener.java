@@ -2,6 +2,7 @@ package eventListeners;
 
 import drawing.DragPoint;
 import drawing.DrawPanel;
+import geometry.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import zfP_Sim.BodyWindow;
@@ -61,7 +62,17 @@ public class DragDropListener implements MouseListener{
         if(dragging){
             dragging = false;
             if(!lit.cont(me.getX(), me.getY(), 10)){
-                lit.bindings.get(lit.highlight_index).shape.refactor(lit.bindings.get(lit.highlight_index), me.getX(), me.getY());
+                DragPoint closest = drawPanel.main.body.dragPoints.get(0);
+                double distance = closest.dist(me.getX(), me.getY());
+                for (DragPoint dp : drawPanel.main.body.dragPoints) {
+                    if (dp.dist(me.getX(), me.getY()) < distance) {
+                        closest = dp;
+                        distance = dp.dist(me.getX(), me.getY());
+                    }
+                }
+                double x = distance <= 10 ? closest.x : me.getX();
+                double y = distance <= 10 ? closest.y : me.getY();
+                lit.bindings.get(lit.highlight_index).shape.refactor(lit.bindings.get(lit.highlight_index), x, y);
                 drawPanel.main.body.refreshDragPoints();
                 if( main.body.outline.contains(lit.bindings.get(lit.highlight_index).shape) ){
                     main.outlineChanged();

@@ -39,7 +39,7 @@ public class MainWindow extends BodyWindow {
         
     public MainWindow() {
         initComponents();
-        body = new Body(); body.exampleWheelDefect();
+        body = new Body(); body.exampleLongBar();
         getSenderPositions();
         simPanel.main = this;
         scanPanel.main = this;
@@ -535,11 +535,10 @@ public class MainWindow extends BodyWindow {
             }
             else{
                 simPanel.simulate(scan.MultiReflections(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())));
-                scanPanel.setScores(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())));
+                //scanPanel.setScores(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())));
                 //scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())), 0.5));
+                scanPanel.setScores(scan.processScan_A3(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText()))));
             }
-            
-            
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 

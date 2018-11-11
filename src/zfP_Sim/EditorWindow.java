@@ -545,6 +545,7 @@ public class EditorWindow extends BodyWindow {
         if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ReadInputButton;
     private javax.swing.ButtonGroup addButtonGroup;

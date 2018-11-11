@@ -68,14 +68,22 @@ public class Scan {
     // Array: {{time, intensity}, ...}
     public Double[][] MultiScan_A(int numray, double angle){
         if (numray < 2 || Tools.equal(angle, 0)) return scan_A();
+        
+        //old int pos = 0;
         int pos = 0;
-        Double[][] hits = new Double[numray*(this.numref+1)][2];
+        
+        //old Double[][] hits = new Double[numray*(this.numref+1)][2];
+        Double[][] hits = new Double[numray*(this.numref)+1][2];
+        hits[0] = new Double[]{0.0, 1.0};
+        
         for (int i = 0; i < numray; i++){
             // Rays gleich verteilt ueber Winkel
             Ray currentray = new Ray(this.ray.o, this.ray.r.rotate(-angle/2+(i*angle/(numray-1))));
             StructRayObj[] history = (new Raytracer(currentray, this.sender.obj, this.objects, this.numref)).trace();
             double time = 0;
-            hits[pos] = new Double[]{0.0, 1.0};
+            
+            //old hits[pos] = new Double[]{0.0, 1.0};
+            
             for (int j = 1; j < history.length; j++){
                 time += (new Line(history[j].ray.o, history[j-1].ray.o)).length() / this.velocity;
                 if (this.sender.get_hit(history[j].ray.o, history[j].obj)){
@@ -85,7 +93,10 @@ public class Scan {
                 }
                 hits[pos+j][0] = time;
             }
-            pos += numref+1;
+            
+            //old pos += numref+1;
+            pos += numref;
+            
         }
         java.util.Arrays.sort(hits, (Double[] a, Double[] b) -> Double.compare(a[0], b[0]));
         return hits;
@@ -140,8 +151,8 @@ public class Scan {
             double timedif = scan[i][0] - scan[j][0];
             while (j >= 0 && timedif < decaytime){
                 timedif = scan[i][0] - scan[j][0];
-                // f(x) = 1/(x^2+1)  -> < 10^-8 for x > 3*sqrt(11111111)
-                double offset = scan[j][1]/(Math.pow((timedif/decaytime), 2)*9+1);
+                // f(x) = 1/(x^2)  -> < 0.01 for x > 10
+                double offset = scan[j][1]/(Math.pow((timedif/decaytime)*10, 2)+1);
                 pScan[i][1] += offset;
                 if (pScan[i][1] > maxvalue) maxvalue = pScan[i][1];
                 j--;
@@ -151,6 +162,87 @@ public class Scan {
             pScan[i][1] = pScan[i][1]/maxvalue;
         }
         return pScan;
+    }
+    
+    // Nur eine Idee
+    public Double[][] processScan_A2(Double[][] scan, int numray){
+        ArrayList<Double[]> pScan = new ArrayList();
+        for(int i = 0; i < scan.length; i++){
+            pScan.add(scan[i]);
+        }
+        double maxvalue = pScan.get(0)[1];
+        double avgtimedif = 0;
+        for (int i = 1; i < scan.length; i++){
+            avgtimedif += scan[i][0] - scan[i-1][0];
+        }
+        avgtimedif= avgtimedif/(scan.length-1);
+        int lower = 0, higher = 0;
+        for (int i = 1; i < scan.length; i++){
+            if (scan[i][0] - scan[i-1][0] < avgtimedif) lower ++;
+            else higher++;
+        }
+        //avg * relativer abstand der Differenz der beiden Werte
+        double areatime = avgtimedif  * (lower + higher) / 2*Math.abs(lower-higher);
+        
+        for (int i = 1; i < scan.length; i++){
+            pScan.get(i)[1] = pScan.get(i)[1]/maxvalue;
+        }
+        return (Double[][])pScan.toArray();
+    }
+    
+    // ungetestet
+    public Double[][] processScan_A3(Double[][] scan){
+        ArrayList<Double[]> pScan = new ArrayList();
+        for(int i = 0; i < scan.length; i++){
+            pScan.add(scan[i]);
+        }
+        
+        // alle Zeitunterschiede zwischen Treffern
+        Double[] timedifs = new Double[scan.length - 1];
+        for (int i = 1; i < scan.length; i++){
+            timedifs[i-1] = scan[i][0] - scan[i-1][0];
+        }
+        // Relativ gößter Sprung zwischen zwei Zeitunterschieden
+        // -> kleinerer Wert = größter zwischen zusammengehörenden Treffern
+        Arrays.sort(timedifs);
+        int pos = 0;
+        double maxdif = Double.MIN_VALUE;
+        for (int i = 1; i < timedifs.length; i++){
+            if (timedifs[i] != 0 && timedifs[i-1] != 0){
+               double dif = timedifs[i]/timedifs[i-1];
+                if (dif > maxdif){
+                    maxdif = dif;
+                    pos = i-1;
+                } 
+            }
+        }
+        double areatime = timedifs[pos];
+        
+        
+        ArrayList<Double[]> hits = new ArrayList();
+        while (pScan.size() > 0){
+            ArrayList<Double[]> group = new ArrayList();
+            group.add(pScan.get(0));
+            pScan.remove(0);
+            while (pScan.size() > 0 && pScan.get(0)[0] - group.get(group.size()-1)[0] < areatime){
+                group.add(pScan.get(0));
+                pScan.remove(0);
+            }
+            double avgtime = 0;
+            double intensity = 0;
+            for (int i = 0; i < group.size(); i++){
+                avgtime += group.get(i)[0];
+                intensity += group.get(i)[1];
+            }
+            avgtime = avgtime / group.size();
+            intensity = intensity / group.size();
+            hits.add(new Double[]{avgtime, intensity});
+        }
+        Double[][] result = new Double[hits.size()][2];
+        for (int i = 0; i < hits.size(); i++){
+            result[i] = hits.get(i);
+        }
+        return result;
     }
             
     public double[][] reflections(){
@@ -213,8 +305,9 @@ public class Scan {
                 Line line = (Line) object;
                 StructPointBool intersec = getLineIntersection(new Ray(this.sender.ray.o, line.toVector().toNormal()), line);
                 if (intersec.bool){
-                    // wenn dieser Fall eintritt ist der Abstand zu den Endpznkten der Linie zwingend größer
-                    length = this.sender.ray.o.dist(intersec.point);
+                    if (intersec.point.equals(this.sender.ray.o)) length = 0;
+                    // wenn dieser Fall eintritt ist der Abstand zu den Endpunkten der Linie zwingend größer
+                    else length = (new Line(this.sender.ray.o, intersec.point)).length();
                 }else{
                     //Abstand zu beiden Endpunkten
                     length = Math.min(this.sender.ray.o.dist(line.start), this.sender.ray.o.dist(line.end));

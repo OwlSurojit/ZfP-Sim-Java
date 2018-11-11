@@ -1,13 +1,15 @@
 package eventListeners;
 
+import drawing.DragPoint;
 import geometry.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import javax.swing.JToggleButton;
 import shapesBase.*;
 import drawing.DrawPanel;
 import zfP_Sim.EditorWindow;
+import misc.Tools;
+
 
 public class PolygonCreateListener implements MouseListener{
 
@@ -60,7 +62,7 @@ public class PolygonCreateListener implements MouseListener{
     public void mouseClicked(MouseEvent me) {
         if(me.getButton() == 1){
             Point p1 = new Point(me.getX(), me.getY());
-            if (currentPolygon.size() > 1 && Math.abs(p1.x - currentPolygon.get(0).x) <= 6 && Math.abs(p1.y - currentPolygon.get(0).y) <= 6) {
+            if (currentPolygon.size() > 1 && p1.dist(currentPolygon.get(0)) <= 10) {
                 currentPolygon.add(new Point(currentPolygon.get(0).x, currentPolygon.get(0).y));
                 Point[] points = new Point[currentPolygon.size()];
                 if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
@@ -71,8 +73,18 @@ public class PolygonCreateListener implements MouseListener{
                 }
                 currentPolygon = new ArrayList<Point>();
                 drawPanel.drawBody_Edit();
-            }
-            else{
+            } else {
+                DragPoint closest = drawPanel.main.body.dragPoints.get(0);
+                double distance = closest.dist(p1.x, p1.y);
+                for (DragPoint dp : drawPanel.main.body.dragPoints) {
+                    if (dp.dist(p1.x, p1.y) < distance) {
+                        closest = dp;
+                        distance = dp.dist(p1.x, p1.y);
+                    }
+                }
+                if (distance <= 10) {
+                    p1 = new Point(closest.x, closest.y);
+                }
                 currentPolygon.add(p1);
                 Point[] points = new Point[currentPolygon.size()];
                 ArrayList<ShapeBase> temp = new ArrayList<ShapeBase>();
