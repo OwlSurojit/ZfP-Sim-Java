@@ -90,6 +90,14 @@ public class FieldVerifier {
                 catch(Exception e){
                     return false;
                 }
+            case DOUBLE:
+                try{
+                    double d = Double.parseDouble(field.field.getText());
+                    return true;
+                }
+                catch(Exception e){
+                    return false;
+                }
             case NON_NEG_INTEGER:
                 try{
                     int i = Integer.parseInt(field.field.getText());

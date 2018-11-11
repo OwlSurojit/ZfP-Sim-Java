@@ -3,6 +3,8 @@ package zfP_Sim;
 import control.Body;
 import control.Scan;
 import control.Sender;
+import enums.VerificationType;
+import eventListeners.DocumentVerificationListener;
 import eventListeners.DragDropListener;
 import geometry.*;
 import java.awt.Graphics;
@@ -24,13 +26,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import properties.FieldVerifier;
 import shapesBase.ShapeBase;
+import structures.StructFieldType;
 
 public class MainWindow extends BodyWindow {
     
     public double[][] senderPositions;
     public int index;
     public int rotationSpeed;
+    public FieldVerifier fv;
         
     public MainWindow() {
         initComponents();
@@ -40,6 +45,35 @@ public class MainWindow extends BodyWindow {
         scanPanel.main = this;
         simPanel.drawBody(senderPositions[index]);
         rotationSpeed = 1;
+        fv = new FieldVerifier(simStartButton);
+        
+        StructFieldType sx = new StructFieldType(senderXField, VerificationType.NON_NEG_DOUBLE);
+        StructFieldType sy = new StructFieldType(senderYField, VerificationType.NON_NEG_DOUBLE);
+        StructFieldType rx = new StructFieldType(rayXField, VerificationType.DOUBLE);
+        StructFieldType ry = new StructFieldType(rayYField, VerificationType.DOUBLE);
+        StructFieldType nr = new StructFieldType(numRayField, VerificationType.POS_INTEGER);
+        StructFieldType a = new StructFieldType(angleField, VerificationType.POS_DOUBLE);
+        StructFieldType rf = new StructFieldType(refField, VerificationType.POS_INTEGER);
+        StructFieldType vl = new StructFieldType(velocityField, VerificationType.POS_DOUBLE);
+        StructFieldType rn = new StructFieldType(rangeField, VerificationType.POS_DOUBLE);
+        fv.addField(sx);
+        fv.addField(sy);
+        fv.addField(rx);
+        fv.addField(ry);
+        fv.addField(nr);
+        fv.addField(a);
+        fv.addField(rf);
+        fv.addField(vl);
+        fv.addField(rn);
+        senderXField.getDocument().addDocumentListener(new DocumentVerificationListener(sx, fv) );
+        senderYField.getDocument().addDocumentListener(new DocumentVerificationListener(sy, fv) );
+        rayXField.getDocument().addDocumentListener(new DocumentVerificationListener(rx, fv) );
+        rayYField.getDocument().addDocumentListener(new DocumentVerificationListener(ry, fv) );
+        numRayField.getDocument().addDocumentListener(new DocumentVerificationListener(nr, fv) );
+        angleField.getDocument().addDocumentListener(new DocumentVerificationListener(a, fv) );
+        refField.getDocument().addDocumentListener(new DocumentVerificationListener(rf, fv) );
+        velocityField.getDocument().addDocumentListener(new DocumentVerificationListener(vl, fv) );
+        rangeField.getDocument().addDocumentListener(new DocumentVerificationListener(rn, fv) );
         
         //KeyEventListener
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
@@ -116,6 +150,10 @@ public class MainWindow extends BodyWindow {
         rayXField = new javax.swing.JTextField();
         rayYLabel = new javax.swing.JLabel();
         rayYField = new javax.swing.JTextField();
+        numRayLabel = new javax.swing.JLabel();
+        numRayField = new javax.swing.JTextField();
+        angleLabel = new javax.swing.JLabel();
+        angleField = new javax.swing.JTextField();
         jSeparator7 = new javax.swing.JToolBar.Separator();
         refLabel = new javax.swing.JLabel();
         refField = new javax.swing.JTextField();
@@ -197,6 +235,22 @@ public class MainWindow extends BodyWindow {
         rayYField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayYField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayYField);
+
+        numRayLabel.setText("Anzahl der Strahlen");
+        simToolBar.add(numRayLabel);
+
+        numRayField.setText("1");
+        numRayField.setMinimumSize(new java.awt.Dimension(48, 26));
+        numRayField.setPreferredSize(new java.awt.Dimension(48, 26));
+        simToolBar.add(numRayField);
+
+        angleLabel.setText("Streuungswinkel in °");
+        simToolBar.add(angleLabel);
+
+        angleField.setText("5");
+        angleField.setMinimumSize(new java.awt.Dimension(48, 26));
+        angleField.setPreferredSize(new java.awt.Dimension(48, 26));
+        simToolBar.add(angleField);
         simToolBar.add(jSeparator7);
 
         refLabel.setText("Reflexionen");
@@ -475,11 +529,17 @@ public class MainWindow extends BodyWindow {
             }
             Sender sender = new Sender(new Ray( new Point(Double.parseDouble(senderXField.getText()), Double.parseDouble(senderYField.getText())), new Vector(Double.parseDouble(rayXField.getText()), Double.parseDouble(rayYField.getText()))), Double.parseDouble(rangeField.getText()));
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
-            //simPanel.simulate(scan.reflections());
-            //scanPanel.setScores(scan.scan_A());
-            simPanel.simulate(scan.MultiReflections(11 , 2));
-            //scanPanel.setScores(scan.MultiScan_A(1001, 20));
-            scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(3, 2), 0.5));
+            if(Integer.parseInt(numRayField.getText()) == 1){
+                simPanel.simulate(scan.reflections());
+                scanPanel.setScores(scan.scan_A());
+            }
+            else{
+                simPanel.simulate(scan.MultiReflections(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())));
+                scanPanel.setScores(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())));
+                //scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())), 0.5));
+            }
+            
+            
         }
     }//GEN-LAST:event_simStartButtonActionPerformed
 
@@ -562,9 +622,7 @@ public class MainWindow extends BodyWindow {
         
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-    
-    
-    
+        
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -598,6 +656,8 @@ public class MainWindow extends BodyWindow {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField angleField;
+    private javax.swing.JLabel angleLabel;
     private javax.swing.JButton bodyEditButton;
     private javax.swing.JMenuItem closeMenuItem;
     private javax.swing.JMenuItem editMenuItem;
@@ -621,6 +681,8 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JMenuItem new2DMenuItem;
     private javax.swing.JMenu newMenu;
     private javax.swing.JMenuItem newPregenMenuItem;
+    private javax.swing.JTextField numRayField;
+    private javax.swing.JLabel numRayLabel;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem propertiesMenuItem;
     private javax.swing.JTextField rangeField;
@@ -664,39 +726,39 @@ public class MainWindow extends BodyWindow {
     public void setIndex(int newIndex){
         if(newIndex < senderPositions.length){
             index = newIndex;
-            senderXField.setText(Double.toString(senderPositions[index][0]));
-            senderYField.setText(Double.toString(senderPositions[index][1]));
+            senderXField.setText(Double.toString(Math.rint(senderPositions[index][0]*10.0)/10.0));
+            senderYField.setText(Double.toString(Math.rint(senderPositions[index][1]*10.0)/10.0));
         }
         else{
             index = 0;
-            senderXField.setText(Double.toString(senderPositions[0][0]));
-            senderYField.setText(Double.toString(senderPositions[0][1]));
+            senderXField.setText(Double.toString(Math.rint(senderPositions[index][0]*10.0)/10.0));
+            senderYField.setText(Double.toString(Math.rint(senderPositions[index][1]*10.0)/10.0));
         }
     }
     
     public void nextIndex(){
         if(index < senderPositions.length-1){
             index++;
-            senderXField.setText(Double.toString(senderPositions[index][0]));
-            senderYField.setText(Double.toString(senderPositions[index][1]));
+            senderXField.setText(Double.toString(Math.rint(senderPositions[index][0]*10.0)/10.0));
+            senderYField.setText(Double.toString(Math.rint(senderPositions[index][1]*10.0)/10.0));
         }
         else{
             index = 0;
-            senderXField.setText(Double.toString(senderPositions[index][0]));
-            senderYField.setText(Double.toString(senderPositions[index][1]));
+            senderXField.setText(Double.toString(Math.rint(senderPositions[index][0]*10.0)/10.0));
+            senderYField.setText(Double.toString(Math.rint(senderPositions[index][1]*10.0)/10.0));
         }
     }
     
     public void prevIndex(){
         if(index > 0){
             index--;
-            senderXField.setText(Double.toString(senderPositions[index][0]));
-            senderYField.setText(Double.toString(senderPositions[index][1]));
+            senderXField.setText(Double.toString(Math.rint(senderPositions[index][0]*10.0)/10.0));
+            senderYField.setText(Double.toString(Math.rint(senderPositions[index][1]*10.0)/10.0));
         }
         else{
             index = senderPositions.length-1;
-            senderXField.setText(Double.toString(senderPositions[index][0]));
-            senderYField.setText(Double.toString(senderPositions[index][1]));
+            senderXField.setText(Double.toString(Math.rint(senderPositions[index][0]*10.0)/10.0));
+            senderYField.setText(Double.toString(Math.rint(senderPositions[index][1]*10.0)/10.0));
         }
     }
 

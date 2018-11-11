@@ -214,10 +214,10 @@ public class Scan {
                 StructPointBool intersec = getLineIntersection(new Ray(this.sender.ray.o, line.toVector().toNormal()), line);
                 if (intersec.bool){
                     // wenn dieser Fall eintritt ist der Abstand zu den Endpznkten der Linie zwingend größer
-                    length = (new Line(this.sender.ray.o, intersec.point)).length();
+                    length = this.sender.ray.o.dist(intersec.point);
                 }else{
                     //Abstand zu beiden Endpunkten
-                    length = Math.min((new Line(this.sender.ray.o, line.start)).length(), (new Line(this.sender.ray.o, line.end)).length());
+                    length = Math.min(this.sender.ray.o.dist(line.start), this.sender.ray.o.dist(line.end));
                 }
             }
             else if (Circle.class.isInstance(object)){

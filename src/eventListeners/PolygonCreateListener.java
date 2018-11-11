@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JToggleButton;
 import shapesBase.*;
 import drawing.DrawPanel;
+import zfP_Sim.EditorWindow;
 
 public class PolygonCreateListener implements MouseListener{
 
@@ -23,7 +24,12 @@ public class PolygonCreateListener implements MouseListener{
         if (currentPolygon.size() > 1 && Math.abs(p1.x - currentPolygon.get(0).x) <= 6 && Math.abs(p1.y - currentPolygon.get(0).y) <= 6) {
             currentPolygon.add(new Point(currentPolygon.get(0).x, currentPolygon.get(0).y));
             Point[] points = new Point[currentPolygon.size()];
-            drawPanel.main.body.addDefect(new Polygon( currentPolygon.toArray(points)));
+            if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                drawPanel.main.body.addOutline(new Polygon( currentPolygon.toArray(points)));
+            }
+            else{
+                drawPanel.main.body.addDefect(new Polygon( currentPolygon.toArray(points)));
+            }
             currentPolygon = new ArrayList<Point>();
             drawPanel.drawBody_Edit();
         }
@@ -39,7 +45,12 @@ public class PolygonCreateListener implements MouseListener{
     public void finish() {
         if(currentPolygon.size() > 1){
             Point[] points = new Point[currentPolygon.size()];
-            drawPanel.main.body.addDefect(new Polygon( currentPolygon.toArray(points)));
+            if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                drawPanel.main.body.addOutline(new Polygon( currentPolygon.toArray(points)));
+            }
+            else{
+                drawPanel.main.body.addDefect(new Polygon( currentPolygon.toArray(points)));
+            }
         }
         currentPolygon = new ArrayList<Point>();
         drawPanel.drawBody_Edit();
@@ -52,7 +63,12 @@ public class PolygonCreateListener implements MouseListener{
             if (currentPolygon.size() > 1 && Math.abs(p1.x - currentPolygon.get(0).x) <= 6 && Math.abs(p1.y - currentPolygon.get(0).y) <= 6) {
                 currentPolygon.add(new Point(currentPolygon.get(0).x, currentPolygon.get(0).y));
                 Point[] points = new Point[currentPolygon.size()];
-                drawPanel.main.body.addDefect(new Polygon( currentPolygon.toArray(points)));
+                if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                    drawPanel.main.body.addOutline(new Polygon( currentPolygon.toArray(points)));
+                }
+                else{
+                    drawPanel.main.body.addDefect(new Polygon( currentPolygon.toArray(points)));
+                }
                 currentPolygon = new ArrayList<Point>();
                 drawPanel.drawBody_Edit();
             }

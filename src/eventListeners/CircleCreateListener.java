@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JToggleButton;
 import shapesBase.*;
 import drawing.DrawPanel;
+import zfP_Sim.EditorWindow;
 
 public class CircleCreateListener implements MouseListener{
 
@@ -26,10 +27,15 @@ public class CircleCreateListener implements MouseListener{
     
     public void exactInput(double r) {
         Circle circle = new Circle(center, r);
-                drawPanel.main.body.addDefect(circle);
-                center = null;
-                peripher = null;
-                drawPanel.drawBody_Edit();
+        if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+            drawPanel.main.body.addOutline(circle);
+        }
+        else{
+            drawPanel.main.body.addDefect(circle);
+        }
+        center = null;
+        peripher = null;
+        drawPanel.drawBody_Edit();
     }
 
     @Override
@@ -44,7 +50,12 @@ public class CircleCreateListener implements MouseListener{
             } else if (peripher == null) {
                 peripher = new Point(me.getX(), me.getY());
                 Circle circle = new Circle(center, new Line(center, peripher).length());
-                drawPanel.main.body.addDefect(circle);
+                if(((EditorWindow)drawPanel.main).outlineAddRadioButton.isSelected()){
+                    drawPanel.main.body.addOutline(circle);
+                }
+                else{
+                    drawPanel.main.body.addDefect(circle);
+                }
                 center = null;
                 peripher = null;
                 drawPanel.drawBody_Edit();
