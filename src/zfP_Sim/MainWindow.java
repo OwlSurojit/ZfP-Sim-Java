@@ -157,6 +157,8 @@ public class MainWindow extends BodyWindow {
         jSeparator7 = new javax.swing.JToolBar.Separator();
         refLabel = new javax.swing.JLabel();
         refField = new javax.swing.JTextField();
+        refIndexLabel = new javax.swing.JLabel();
+        refIndexField = new javax.swing.JTextField();
         velocityLabel = new javax.swing.JLabel();
         velocityField = new javax.swing.JTextField();
         rangeLabel = new javax.swing.JLabel();
@@ -258,6 +260,13 @@ public class MainWindow extends BodyWindow {
         refField.setMinimumSize(new java.awt.Dimension(48, 26));
         refField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(refField);
+
+        refIndexLabel.setText("Angezeigte (optional)");
+        simToolBar.add(refIndexLabel);
+
+        refIndexField.setMinimumSize(new java.awt.Dimension(48, 26));
+        refIndexField.setPreferredSize(new java.awt.Dimension(48, 26));
+        simToolBar.add(refIndexField);
 
         velocityLabel.setText("Geschwindigkeit");
         simToolBar.add(velocityLabel);
@@ -521,11 +530,21 @@ public class MainWindow extends BodyWindow {
             Sender sender = new Sender(new Ray( new Point(Double.parseDouble(senderXField.getText()), Double.parseDouble(senderYField.getText())), new Vector(Double.parseDouble(rayXField.getText()), Double.parseDouble(rayYField.getText()))), Double.parseDouble(rangeField.getText()));
             Scan scan = new Scan(body, sender, Integer.parseInt(refField.getText()), Double.parseDouble(velocityField.getText()), 0);
             if(Integer.parseInt(numRayField.getText()) == 1){
-                simPanel.simulate(scan.reflections());
+                int index = -1;
+                try{
+                    index = Integer.parseInt(refIndexField.getText());
+                }
+                catch(Exception e){}
+                simPanel.simulate(scan.reflections(), index-1);
                 scanPanel.setScores(scan.scan_A());
             }
             else{
-                simPanel.simulate(scan.MultiReflections(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())));
+                int index = -1;
+                try{
+                    index = Integer.parseInt(refIndexField.getText());
+                }
+                catch(Exception e){}
+                simPanel.simulate(scan.MultiReflections(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())), index-1);
                 //scanPanel.setScores(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())));
                 //scanPanel.setScores(scan.processScan_A(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText())), 0.5));
                 scanPanel.setScores(scan.processScan_A3(scan.MultiScan_A(Integer.parseInt(numRayField.getText()) , Double.parseDouble(angleField.getText()))));
@@ -675,6 +694,8 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JTextField rayYField;
     private javax.swing.JLabel rayYLabel;
     private javax.swing.JTextField refField;
+    private javax.swing.JTextField refIndexField;
+    private javax.swing.JLabel refIndexLabel;
     private javax.swing.JLabel refLabel;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
