@@ -19,6 +19,7 @@ public class DrawPanel extends javax.swing.JPanel{
     public double[] sender;
     public double[][] raytracer;
     public double[][][] multitracer;
+    public int tracerRefIndex;
     
     public boolean paintBody;
     public boolean paintTemp;
@@ -41,9 +42,10 @@ public class DrawPanel extends javax.swing.JPanel{
         delay = 0;
     }
     
-    public void simulate(double[][] tracer){
+    public void simulate(double[][] tracer, int index){
         main.setLit(null);
         raytracer = tracer;
+        tracerRefIndex = index;
         
         paintBody = true;
         paintTemp = false;
@@ -55,9 +57,10 @@ public class DrawPanel extends javax.swing.JPanel{
         repaint();
     }
     
-    public void simulate(double[][][] tracer){
+    public void simulate(double[][][] tracer, int index){
         main.setLit(null);
         multitracer = tracer;
+        tracerRefIndex = index;
         
         paintBody = true;
         paintTemp = false;
@@ -147,13 +150,20 @@ public class DrawPanel extends javax.swing.JPanel{
         
         if(paintRaytracer){
             g2d.setColor(Color.BLACK);
-            for(int i=0; i<raytracer.length-1; i++){
+            if(tracerRefIndex < 0 || tracerRefIndex >= raytracer.length-1){
+                for(int i=0; i<raytracer.length-1; i++){
                 g2d.draw(new Line2D.Double(raytracer[i][0], raytracer[i][1], raytracer[i+1][0], raytracer[i+1][1]));
+                }
+                for(int i=1; i<raytracer.length; i++){
+                    paintNode(g2d, raytracer[i][0], raytracer[i][1], 2, Color.BLACK);
+                }
+            }
+            else{
+                g2d.draw(new Line2D.Double(raytracer[tracerRefIndex][0], raytracer[tracerRefIndex][1], raytracer[tracerRefIndex+1][0], raytracer[tracerRefIndex+1][1]));
+                paintNode(g2d, raytracer[tracerRefIndex][0], raytracer[tracerRefIndex][1], 2, Color.BLACK);
+                paintNode(g2d, raytracer[tracerRefIndex+1][0], raytracer[tracerRefIndex+1][1], 2, Color.BLACK);
             }
             paintNode(g2d, raytracer[0][0], raytracer[0][1], 3, Color.RED);
-            for(int i=1; i<raytracer.length; i++){
-                paintNode(g2d, raytracer[i][0], raytracer[i][1], 2, Color.BLACK);
-            }
         }
         
         if(paintMultiTracer){
@@ -184,13 +194,27 @@ public class DrawPanel extends javax.swing.JPanel{
                     colors[j] = new Color(vr, vg, vb);
             }
             
-            for(int i = 0; i < multitracer[0].length-1; i++){
+            if(tracerRefIndex < 0 || tracerRefIndex >= multitracer[0].length-1){
+                for(int i = 0; i < multitracer[0].length-1; i++){
+                    for(int j=0; j<multitracer.length; j++){
+                        g2d.setColor(colors[j]);
+                        g2d.draw(new Line2D.Double(multitracer[j][i][0], multitracer[j][i][1], multitracer[j][i+1][0], multitracer[j][i+1][1]));
+                    }
+                }
+                for(int i = 0; i < multitracer[0].length; i++){
+                    for(int j=0; j<multitracer.length; j++){
+                            paintNode(g2d, multitracer[j][i][0], multitracer[j][i][1], 2, Color.BLACK);
+                    }
+                }
+            }
+            else{
                 for(int j=0; j<multitracer.length; j++){
                     g2d.setColor(colors[j]);
-                    g2d.draw(new Line2D.Double(multitracer[j][i][0], multitracer[j][i][1], multitracer[j][i+1][0], multitracer[j][i+1][1]));
+                    g2d.draw(new Line2D.Double(multitracer[j][tracerRefIndex][0], multitracer[j][tracerRefIndex][1], multitracer[j][tracerRefIndex+1][0], multitracer[j][tracerRefIndex+1][1]));
                 }
                 for(int j=0; j<multitracer.length; j++){
-                    paintNode(g2d, multitracer[j][i][0], multitracer[j][i][1], 2, Color.BLACK);
+                    paintNode(g2d, multitracer[j][tracerRefIndex][0], multitracer[j][tracerRefIndex][1], 2, Color.BLACK);
+                    paintNode(g2d, multitracer[j][tracerRefIndex+1][0], multitracer[j][tracerRefIndex+1][1], 2, Color.BLACK);
                 }
             }
             paintNode(g2d, multitracer[0][0][0], multitracer[0][0][1], 3, Color.RED);
