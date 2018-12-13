@@ -13,6 +13,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import misc.Tools;
 import shapesBase.Circle;
 import shapesBase.CircleArc;
@@ -209,10 +210,12 @@ public class Scan {
         double maxdif = Double.MIN_VALUE;
         for (int i = 1; i < timedifs.length; i++){
             if (timedifs[i] != 0 && timedifs[i-1] != 0){
+            //try to prevent to small -> cut few
+            //if(timedifs[i-1] > 1/this.velocity){
                double dif = timedifs[i]/timedifs[i-1];
                 if (dif > maxdif){
                     maxdif = dif;
-                    pos = i-1;
+                    pos = i;
                 } 
             }
         }
@@ -225,7 +228,8 @@ public class Scan {
             group.add(pScan.get(0));
             pScan.remove(0);
             while (pScan.size() > 0 && pScan.get(0)[0] - group.get(group.size()-1)[0] < areatime){
-                group.add(pScan.get(0));
+                //old group.add(pScan.get(0));
+                if(pScan.get(0)[1] != 0) group.add(pScan.get(0));
                 pScan.remove(0);
             }
             double avgtime = 0;
