@@ -171,13 +171,13 @@ public class MainWindow extends BodyWindow {
         newMenu = new javax.swing.JMenu();
         new2DMenuItem = new javax.swing.JMenuItem();
         newPregenMenuItem = new javax.swing.JMenuItem();
+        editMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         openMenuItem = new javax.swing.JMenuItem();
         closeMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        importMenu = new javax.swing.JMenu();
         exportMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        exportPDFMenuItem = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
         saveMenuItem = new javax.swing.JMenuItem();
         saveAsMenuItem = new javax.swing.JMenuItem();
@@ -185,14 +185,12 @@ public class MainWindow extends BodyWindow {
         propertiesMenuItem = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
-        viewMenu = new javax.swing.JMenu();
-        editMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jSplitPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder(0));
+        jSplitPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         jSplitPane1.setDividerLocation(140);
         jSplitPane1.setDividerSize(0);
         jSplitPane1.setMinimumSize(new java.awt.Dimension(0, 0));
@@ -278,7 +276,7 @@ public class MainWindow extends BodyWindow {
         simToolBar.add(rangeField);
 
         simStartButton.setText("Simulation starten");
-        simStartButton.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
+        simStartButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         simStartButton.setFocusable(false);
         simStartButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         simStartButton.setMaximumSize(new java.awt.Dimension(120, 26));
@@ -293,7 +291,7 @@ public class MainWindow extends BodyWindow {
         simToolBar.add(simStartButton);
 
         bodyEditButton.setText("Prüfkörper editieren");
-        bodyEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
+        bodyEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         bodyEditButton.setFocusable(false);
         bodyEditButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bodyEditButton.setMaximumSize(new java.awt.Dimension(120, 26));
@@ -319,7 +317,7 @@ public class MainWindow extends BodyWindow {
         jSplitPane2.setPreferredSize(new java.awt.Dimension(1780, 1040));
         jSplitPane2.setRequestFocusEnabled(false);
 
-        simPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
+        simPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         simPanel.setMinimumSize(new java.awt.Dimension(0, 0));
         simPanel.setPreferredSize(new java.awt.Dimension(1780, 660));
 
@@ -336,7 +334,7 @@ public class MainWindow extends BodyWindow {
 
         jSplitPane2.setLeftComponent(simPanel);
 
-        scanPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
+        scanPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         scanPanel.setMaximumSize(new java.awt.Dimension(1780, 380));
         scanPanel.setMinimumSize(new java.awt.Dimension(1780, 300));
         scanPanel.setPreferredSize(new java.awt.Dimension(1780, 380));
@@ -379,6 +377,14 @@ public class MainWindow extends BodyWindow {
         newMenu.add(newPregenMenuItem);
 
         fileMenu.add(newMenu);
+
+        editMenuItem.setText("Bearbeiten");
+        editMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(editMenuItem);
         fileMenu.add(jSeparator1);
 
         openMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
@@ -399,19 +405,16 @@ public class MainWindow extends BodyWindow {
         fileMenu.add(closeMenuItem);
         fileMenu.add(jSeparator2);
 
-        importMenu.setText("Importieren");
-        fileMenu.add(importMenu);
-
         exportMenu.setText("Exportieren");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("als PDF");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        exportPDFMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        exportPDFMenuItem.setText("als PDF");
+        exportPDFMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                exportPDFMenuItemActionPerformed(evt);
             }
         });
-        exportMenu.add(jMenuItem1);
+        exportMenu.add(exportPDFMenuItem);
 
         fileMenu.add(exportMenu);
         fileMenu.add(jSeparator3);
@@ -449,18 +452,6 @@ public class MainWindow extends BodyWindow {
         fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
-
-        viewMenu.setText("Ansicht");
-
-        editMenuItem.setText("T.B.D.");
-        editMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editMenuItemActionPerformed(evt);
-            }
-        });
-        viewMenu.add(editMenuItem);
-
-        menuBar.add(viewMenu);
 
         helpMenu.setText("Hilfe");
 
@@ -585,20 +576,7 @@ public class MainWindow extends BodyWindow {
         ew.setVisible(true);
     }//GEN-LAST:event_new2DMenuItemActionPerformed
 
-    private void editMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuItemActionPerformed
-        MouseListener[] listeners = simPanel.getMouseListeners();
-        if(listeners.length == 1){
-            simPanel.removeMouseListener(listeners[0]);
-            simPanel.drawBody(senderPositions[index]);
-        }
-        else{
-            simPanel.addMouseListener(new DragDropListener(simPanel, this));
-            body.refreshDragPoints();
-            simPanel.drawBody_Edit();
-        }
-    }//GEN-LAST:event_editMenuItemActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void exportPDFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPDFMenuItemActionPerformed
         PrinterJob j = PrinterJob.getPrinterJob();
         //j.setJobName("Out"); 
         j.setPrintable(new Printable(){
@@ -620,7 +598,14 @@ public class MainWindow extends BodyWindow {
         }
         
         
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_exportPDFMenuItemActionPerformed
+
+    private void editMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuItemActionPerformed
+        this.setVisible(false);
+        EditorWindow ew = new EditorWindow(this);
+        ew.body = body;
+        ew.setVisible(true);
+    }//GEN-LAST:event_editMenuItemActionPerformed
         
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -662,10 +647,9 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JMenuItem editMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu exportMenu;
+    private javax.swing.JMenuItem exportPDFMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenu importMenu;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
@@ -704,7 +688,6 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JToolBar simToolBar;
     private javax.swing.JTextField velocityField;
     private javax.swing.JLabel velocityLabel;
-    private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 
     public void getSenderPositions(){

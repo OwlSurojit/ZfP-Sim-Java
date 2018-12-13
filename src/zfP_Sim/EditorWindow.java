@@ -157,8 +157,6 @@ public class EditorWindow extends BodyWindow {
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         returnMenuItem = new javax.swing.JMenuItem();
-        viewMenu = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
@@ -351,13 +349,6 @@ public class EditorWindow extends BodyWindow {
         fileMenu.add(returnMenuItem);
 
         menuBar.add(fileMenu);
-
-        viewMenu.setText("Ansicht");
-
-        jMenuItem2.setText("T.B.D.");
-        viewMenu.add(jMenuItem2);
-
-        menuBar.add(viewMenu);
 
         helpMenu.setText("Hilfe");
 
@@ -562,7 +553,6 @@ public class EditorWindow extends BodyWindow {
     private javax.swing.JToolBar geomToolBar;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
@@ -580,7 +570,6 @@ public class EditorWindow extends BodyWindow {
     public javax.swing.JList<ShapeBase> shapesList;
     private javax.swing.JScrollPane shapesScrollPane;
     private javax.swing.ButtonGroup toolButtonGroup;
-    private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 
     @Override
