@@ -222,7 +222,6 @@ public class Scan {
         }
         double areatime = timedifs[pos];
         
-        
         ArrayList<Double[]> hits = new ArrayList();
         hits.add(new Double[]{0.0, 1.0});
         while (pScan.size() > 0){
