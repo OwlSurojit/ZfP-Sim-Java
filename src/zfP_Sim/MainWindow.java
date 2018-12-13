@@ -7,6 +7,7 @@ import enums.VerificationType;
 import eventListeners.DocumentVerificationListener;
 import eventListeners.DragDropListener;
 import geometry.*;
+import java.awt.Desktop;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.KeyEventDispatcher;
@@ -188,7 +189,7 @@ public class MainWindow extends BodyWindow {
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        helpPDFMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -464,8 +465,13 @@ public class MainWindow extends BodyWindow {
 
         helpMenu.setText("Hilfe");
 
-        jMenuItem3.setText("T.B.D.");
-        helpMenu.add(jMenuItem3);
+        helpPDFMenuItem.setText("PDF");
+        helpPDFMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpPDFMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(helpPDFMenuItem);
 
         menuBar.add(helpMenu);
 
@@ -625,6 +631,17 @@ public class MainWindow extends BodyWindow {
         ew.body = body;
         ew.setVisible(true);
     }//GEN-LAST:event_editMenuItemActionPerformed
+
+    private void helpPDFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpPDFMenuItemActionPerformed
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File myFile = new File("resources/help.pdf");
+                Desktop.getDesktop().open(myFile);
+            } catch (IOException ex) {
+                int d = 0;
+            }
+        } 
+    }//GEN-LAST:event_helpPDFMenuItemActionPerformed
         
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -669,7 +686,7 @@ public class MainWindow extends BodyWindow {
     private javax.swing.JMenuItem exportPDFMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem helpPDFMenuItem;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;

@@ -31,10 +31,13 @@
             <Property name="text" type="java.lang.String" value="Hilfe"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="helpPDFMenuItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="T.B.D."/>
+                <Property name="text" type="java.lang.String" value="PDF"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="helpPDFMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

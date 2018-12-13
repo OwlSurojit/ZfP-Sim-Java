@@ -4,11 +4,14 @@ import control.Body;
 import drawing.DragPoint;
 import static enums.VerificationType.*;
 import eventListeners.*;
+import java.awt.Desktop;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -158,7 +161,7 @@ public class EditorWindow extends BodyWindow {
         fileMenu = new javax.swing.JMenu();
         returnMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        helpPDFMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Körpereditor");
@@ -352,8 +355,13 @@ public class EditorWindow extends BodyWindow {
 
         helpMenu.setText("Hilfe");
 
-        jMenuItem1.setText("T.B.D.");
-        helpMenu.add(jMenuItem1);
+        helpPDFMenuItem.setText("PDF");
+        helpPDFMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpPDFMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(helpPDFMenuItem);
 
         menuBar.add(helpMenu);
 
@@ -528,6 +536,17 @@ public class EditorWindow extends BodyWindow {
         exactInputField1.requestFocus();
     }//GEN-LAST:event_ReadInputButtonMouseClicked
 
+    private void helpPDFMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpPDFMenuItemActionPerformed
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File myFile = new File("resources/help.pdf");
+                Desktop.getDesktop().open(myFile);
+            } catch (IOException ex) {
+                // no application registered for PDFs
+            }
+        } 
+    }//GEN-LAST:event_helpPDFMenuItemActionPerformed
+
     private void exactInputField1KeyPressed(java.awt.event.KeyEvent evt) {                                            
         if (evt.getKeyCode() == 10) ReadInputButtonMouseClicked(null);
     }
@@ -552,7 +571,7 @@ public class EditorWindow extends BodyWindow {
     private javax.swing.Box.Filler filler2;
     private javax.swing.JToolBar geomToolBar;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem helpPDFMenuItem;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
