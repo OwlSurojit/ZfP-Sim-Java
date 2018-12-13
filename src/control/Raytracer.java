@@ -208,11 +208,11 @@ public class Raytracer {
             if (S != null && !S.equals(this.ray.o)) {
                 Vector direction = (new Line(this.ray.o, S)).toVector();
                 double distance = direction.length();
-                if (this.ray.r.x * direction.x >= 0 && this.ray.r.y * direction.y >= 0 && Tools.equal(distance, mindistance)){
+                if ((this.ray.r.x * direction.x >= 0 || Tools.equal(direction.x, this.ray.r.x)) && (this.ray.r.y * direction.y >= 0 || Tools.equal(direction.y, this.ray.r.y))  && Tools.equal(distance, mindistance)){
                     if (cornerObjs.isEmpty()) cornerObjs.add(closestObj);
                     cornerObjs.add(obj);
                     hitCorner = true;
-                } else if (this.ray.r.x * direction.x >= 0 && this.ray.r.y * direction.y >= 0 && distance < mindistance) {
+                } else if ((this.ray.r.x * direction.x >= 0 || Tools.equal(direction.x, this.ray.r.x)) && (this.ray.r.y * direction.y >= 0 || Tools.equal(direction.y, this.ray.r.y)) && distance < mindistance) {
                     mindistance = distance;
                     closestObj = obj;
                     hitCorner = false;

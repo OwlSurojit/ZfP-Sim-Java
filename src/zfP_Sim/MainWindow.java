@@ -192,7 +192,7 @@ public class MainWindow extends BodyWindow {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jSplitPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        jSplitPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder(0));
         jSplitPane1.setDividerLocation(140);
         jSplitPane1.setDividerSize(0);
         jSplitPane1.setMinimumSize(new java.awt.Dimension(0, 0));
@@ -206,7 +206,7 @@ public class MainWindow extends BodyWindow {
         senderXLabel.setText("Sender x");
         simToolBar.add(senderXLabel);
 
-        senderXField.setText("825");
+        senderXField.setText("360");
         senderXField.setMinimumSize(new java.awt.Dimension(48, 26));
         senderXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(senderXField);
@@ -223,7 +223,7 @@ public class MainWindow extends BodyWindow {
         rayXLabel.setText("Vektor x");
         simToolBar.add(rayXLabel);
 
-        rayXField.setText("-2");
+        rayXField.setText("0");
         rayXField.setMinimumSize(new java.awt.Dimension(48, 26));
         rayXField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(rayXField);
@@ -239,7 +239,7 @@ public class MainWindow extends BodyWindow {
         numRayLabel.setText("Anzahl der Strahlen");
         simToolBar.add(numRayLabel);
 
-        numRayField.setText("1");
+        numRayField.setText("3");
         numRayField.setMinimumSize(new java.awt.Dimension(48, 26));
         numRayField.setPreferredSize(new java.awt.Dimension(48, 26));
         simToolBar.add(numRayField);
@@ -278,7 +278,7 @@ public class MainWindow extends BodyWindow {
         simToolBar.add(rangeField);
 
         simStartButton.setText("Simulation starten");
-        simStartButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        simStartButton.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
         simStartButton.setFocusable(false);
         simStartButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         simStartButton.setMaximumSize(new java.awt.Dimension(120, 26));
@@ -293,7 +293,7 @@ public class MainWindow extends BodyWindow {
         simToolBar.add(simStartButton);
 
         bodyEditButton.setText("Prüfkörper editieren");
-        bodyEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        bodyEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
         bodyEditButton.setFocusable(false);
         bodyEditButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         bodyEditButton.setMaximumSize(new java.awt.Dimension(120, 26));
@@ -319,7 +319,7 @@ public class MainWindow extends BodyWindow {
         jSplitPane2.setPreferredSize(new java.awt.Dimension(1780, 1040));
         jSplitPane2.setRequestFocusEnabled(false);
 
-        simPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        simPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
         simPanel.setMinimumSize(new java.awt.Dimension(0, 0));
         simPanel.setPreferredSize(new java.awt.Dimension(1780, 660));
 
@@ -336,7 +336,7 @@ public class MainWindow extends BodyWindow {
 
         jSplitPane2.setLeftComponent(simPanel);
 
-        scanPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        scanPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(0));
         scanPanel.setMaximumSize(new java.awt.Dimension(1780, 380));
         scanPanel.setMinimumSize(new java.awt.Dimension(1780, 300));
         scanPanel.setPreferredSize(new java.awt.Dimension(1780, 380));
