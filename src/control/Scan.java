@@ -204,14 +204,15 @@ public class Scan {
             timedifs[i-1] = scan[i][0] - scan[i-1][0];
         }
         // Relativ gößter Sprung zwischen zwei Zeitunterschieden
-        // -> kleinerer Wert = größter zwischen zusammengehörenden Treffern
+        // -> kleinster Wert = größter zwischen zusammengehörenden Treffern
         Arrays.sort(timedifs);
         int pos = 0;
         double maxdif = Double.MIN_VALUE;
         for (int i = 1; i < timedifs.length; i++){
-            if (timedifs[i] != 0 && timedifs[i-1] != 0){
-            //try to prevent to small -> cut few
-            //if(timedifs[i-1] > 1/this.velocity){
+            //old if (timedifs[i] != 0 && timedifs[i-1] != 0){
+            //zu kleine rausnehmen -> zeit muss über Zeit für 1LE sein um als 
+            //wert zwischen 2 Seiten zu zählen
+            if(timedifs[i] > 1/this.velocity && timedifs[i-1] != 0){
                double dif = timedifs[i]/timedifs[i-1];
                 if (dif > maxdif){
                     maxdif = dif;
@@ -223,23 +224,30 @@ public class Scan {
         
         
         ArrayList<Double[]> hits = new ArrayList();
+        hits.add(new Double[]{0.0, 1.0});
         while (pScan.size() > 0){
             ArrayList<Double[]> group = new ArrayList();
             group.add(pScan.get(0));
             pScan.remove(0);
-            while (pScan.size() > 0 && pScan.get(0)[0] - group.get(group.size()-1)[0] < areatime){
+            int i = 0;
+            while (pScan.size() > 0 && pScan.get(0)[0] - group.get(0)[0] < areatime){
                 //old group.add(pScan.get(0));
-                if(pScan.get(0)[1] != 0) group.add(pScan.get(0));
+                // problem nimmt blöd liegende nichttreffer mit in die Gruppen
+                // -> Zählvar am Ende verhältnismäßg drauf 
+                // -> nur durch wirklich gegebene Intensitäten teilen
+                group.add(pScan.get(0));
+                if (pScan.get(0)[1] == 0) i++;
                 pScan.remove(0);
             }
             double avgtime = 0;
             double intensity = 0;
-            for (int i = 0; i < group.size(); i++){
-                avgtime += group.get(i)[0];
-                intensity += group.get(i)[1];
+            for (Double[] member : group) {
+                avgtime += member[0];
+                intensity += member[1];
             }
             avgtime = avgtime / group.size();
-            intensity = intensity / group.size();
+            //old intensity = intensity / group.size();
+            intensity = intensity / (group.size()-i);
             hits.add(new Double[]{avgtime, intensity});
         }
         Double[][] result = new Double[hits.size()][2];
