@@ -3,6 +3,7 @@ package drawing;
 import shapesBase.*;
 import geometry.*;
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -231,6 +232,14 @@ public class DrawPanel extends javax.swing.JPanel{
                 }
             }
         }
+        
+        g2d.setColor(Color.RED);
+        g2d.draw(new Line2D.Double(5,5,5,35));
+        g2d.draw(new Line2D.Double(5,5,35,5));
+        g2d.draw(new java.awt.Polygon(new int[]{5,3,7}, new int[]{35,33,33}, 3));
+        g2d.draw(new java.awt.Polygon(new int[]{35,33,33}, new int[]{5,3,7}, 3));
+        g2d.drawString("x, 0°", 38, 13);
+        g2d.drawString("y", 3, 45);
         
         g2d.dispose();
     }
