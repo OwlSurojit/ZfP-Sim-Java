@@ -15,6 +15,7 @@ import java.awt.KeyEventDispatcher;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -26,12 +27,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import properties.FieldVerifier;
 import shapesBase.ShapeBase;
 import structures.StructFieldType;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.text.AbstractDocument;
 
 public class MainWindow extends BodyWindow {
     
@@ -75,173 +82,208 @@ public class MainWindow extends BodyWindow {
         velocityField.getDocument().addDocumentListener(new DocumentVerificationListener(vl, fv) );
         rangeField.getDocument().addDocumentListener(new DocumentVerificationListener(rn, fv) );
         
-        //KeyEventListener
+        // KeyBindings API
+        InputMap im = senderXField.getInputMap(JComponent.WHEN_FOCUSED);
+        ActionMap am = senderXField.getActionMap();
         
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-            
+        ((AbstractDocument)senderXField.getDocument()).setDocumentFilter(new IntegerDocumentFilter());
+        
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "Pressed.+");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "Pressed.-");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Pressed.up");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Pressed.down");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "Pressed.left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Pressed.right");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Pressed.enter");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0, true), "Released.+");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0, true), "Released.-");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), "Released.left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), "Released.right");
+        
+        Action angleUpAction = new AbstractAction() {
             @Override
-            public boolean dispatchKeyEvent(KeyEvent evt) {
-                if(simPanel.main.isFocused()){
-                    int type = evt.getID();
-                    if(type == KeyEvent.KEY_PRESSED){
-                        int keyCode = evt.getKeyCode();
-                        switch(keyCode){
-                            case KeyEvent.VK_RIGHT:
-                                MouseListener[] listenersR = simPanel.getMouseListeners();
-                                if(listenersR.length == 1 && lit != null){
-                                    lit.rotate(getRotationSpeed());
-                                    body.refreshDragPoints();
-                                    if( body.outline.contains(lit) ){
-                                        outlineChanged();
-                                    }
-                                    simPanel.drawBody_Edit();
-                                }
-                                else if(listenersR.length == 0){
-                                    prevIndex();
-                                    simPanel.drawBody(senderPositions[index]);
-                                }
-                                return true;
-                            case KeyEvent.VK_LEFT:
-                                MouseListener[] listenersL = simPanel.getMouseListeners();
-                                if(listenersL.length == 1 && lit != null){
-                                    lit.rotate(-getRotationSpeed());
-                                    body.refreshDragPoints();
-                                    if( body.outline.contains(lit) ){
-                                        outlineChanged();
-                                    }
-                                    simPanel.drawBody_Edit();
-                                }
-                                else if(listenersL.length == 0){
-                                    nextIndex();
-                                    simPanel.drawBody(senderPositions[index]);
-                                }
-                                return true;
-                            case KeyEvent.VK_PLUS:
-                                double deg;
-                                try{
-                                    deg = Double.parseDouble(degreeField.getText());
-                                }
-                                catch(NumberFormatException e){
-                                    degreeField.setText("270");
-                                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
-                                        simStartButton.doClick();
-                                    }
-                                    return true;
-                                }
-                                deg = (deg+getRotationSpeed())%360;
-                                senderXField.setText("rad");
-                                KeyboardFocusManager kf = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-                                degreeField.setText(deg +"");
-                                if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
-                                    simStartButton.doClick();
-                                }
-                                evt.consume();
-                                return true;
-                            case KeyEvent.VK_MINUS:
-                                double deg_;
-                                try{
-                                    deg_ = Double.parseDouble(degreeField.getText());
-                                }
-                                catch(NumberFormatException e){
-                                    degreeField.setText("270");
-                                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
-                                        simStartButton.doClick();
-                                    }
-                                    return true;
-                                }
-                                deg_ = (deg_-getRotationSpeed())%360;
-                                if(deg_ < 0){deg_ = 360+deg_;}
-                                degreeField.setText(deg_ +"");
-                                if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
-                                    simStartButton.doClick();
-                                }
-                                return true;
-                            case KeyEvent.VK_UP:
-                                int numRef;
-                                try{
-                                    numRef = Integer.parseInt(refField.getText());
-                                }
-                                catch(NumberFormatException e){
-                                    refField.setText("1");
-                                    refIndexField.setText("");
-                                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
-                                        simStartButton.doClick();
-                                    }
-                                    return true;
-                                }
-                                
-                                int i = -1;
-                                try{
-                                    i = Integer.parseInt(refIndexField.getText());
-                                }
-                                catch(NumberFormatException e){}
-                                if(1<= i){
-                                    if(i<numRef){
-                                        refIndexField.setText((i+1) + "");
-                                    }
-                                    else{
-                                        refIndexField.setText("");
-                                    }
-                                }
-                                else{
-                                    refIndexField.setText("1");
-                                }
-                                if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
-                                    simStartButton.doClick();
-                                }
-                                return true;
-                            case KeyEvent.VK_DOWN:
-                                int numRef_;
-                                try{
-                                    numRef_ = Integer.parseInt(refField.getText());
-                                }
-                                catch(NumberFormatException e){
-                                    refField.setText("1");
-                                    refIndexField.setText("");
-                                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
-                                        simStartButton.doClick();
-                                    }
-                                    return true;
-                                }
-                                
-                                int j = numRef_+1;
-                                try{
-                                    j = Integer.parseInt(refIndexField.getText());
-                                }
-                                catch(NumberFormatException e){}
-                                if(1<= numRef_){
-                                    if(j>1){
-                                        refIndexField.setText((j-1) + "");
-                                    }
-                                    else{
-                                        refIndexField.setText("");
-                                    }
-                                }
-                                else{
-                                    refIndexField.setText(numRef_ + "");
-                                }
-                                if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
-                                    simStartButton.doClick();
-                                }
-                                return true;
-                            case KeyEvent.VK_ENTER:
-                                simStartButton.doClick();
-                                return true;
-                            case KeyEvent.VK_SHIFT:
-                                bodyEditButtonActionPerformed(null);
-                                return false;
-                            default:
-                                return false;
-                        }
+            public void actionPerformed(ActionEvent ae) {
+                double deg;
+                try{
+                    deg = Double.parseDouble(degreeField.getText());
+                }
+                catch(NumberFormatException e){
+                    degreeField.setText("270");
+                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                        simStartButton.doClick();
                     }
-                    else if(type == KeyEvent.KEY_RELEASED){
-                        rotationSpeed = 0;
-                        return false;
+                    return;
+                }
+                deg = (deg+getRotationSpeed())%360;
+                degreeField.setText(deg +"");
+                if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                    simStartButton.doClick();
+                }
+            }
+        };
+        
+        Action angleDownAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                double deg_;
+                try{
+                    deg_ = Double.parseDouble(degreeField.getText());
+                }
+                catch(NumberFormatException e){
+                    degreeField.setText("270");
+                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                        simStartButton.doClick();
+                    }
+                    return;
+                }
+                deg_ = (deg_-getRotationSpeed())%360;
+                if(deg_ < 0){deg_ = 360+deg_;}
+                degreeField.setText(deg_ +"");
+                if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                    simStartButton.doClick();
+                }
+            }
+        };
+        
+        Action indexUpAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                int numRef;
+                try{
+                    numRef = Integer.parseInt(refField.getText());
+                }
+                catch(NumberFormatException e){
+                    refField.setText("1");
+                    refIndexField.setText("");
+                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                        simStartButton.doClick();
+                    }
+                    return;
+                }
+
+                int i = -1;
+                try{
+                    i = Integer.parseInt(refIndexField.getText());
+                }
+                catch(NumberFormatException e){}
+                if(1<= i){
+                    if(i<numRef){
+                        refIndexField.setText((i+1) + "");
+                    }
+                    else{
+                        refIndexField.setText("");
                     }
                 }
-                return false;
+                else{
+                    refIndexField.setText("1");
+                }
+                if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                    simStartButton.doClick();
+                }
             }
-        });
+        };
+        
+        Action indexDownAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                int numRef_;
+                try{
+                    numRef_ = Integer.parseInt(refField.getText());
+                }
+                catch(NumberFormatException e){
+                    refField.setText("1");
+                    refIndexField.setText("");
+                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                        simStartButton.doClick();
+                    }
+                    return;
+                }
+
+                int j = numRef_+1;
+                try{
+                    j = Integer.parseInt(refIndexField.getText());
+                }
+                catch(NumberFormatException e){}
+                if(1<= numRef_){
+                    if(j>1){
+                        refIndexField.setText((j-1) + "");
+                    }
+                    else{
+                        refIndexField.setText("");
+                    }
+                }
+                else{
+                    refIndexField.setText(numRef_ + "");
+                }
+                if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                    simStartButton.doClick();
+                }
+            }
+        };
+        
+        Action rotateRightAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                MouseListener[] listenersR = simPanel.getMouseListeners();
+                if(listenersR.length == 1 && lit != null){
+                    lit.rotate(getRotationSpeed());
+                    body.refreshDragPoints();
+                    if( body.outline.contains(lit) ){
+                        outlineChanged();
+                    }
+                    simPanel.drawBody_Edit();
+                }
+                else if(listenersR.length == 0){
+                    prevIndex();
+                    simPanel.drawBody(senderPositions[index]);
+                }
+            }
+        };
+        
+        Action rotateLeftAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                MouseListener[] listenersL = simPanel.getMouseListeners();
+                if(listenersL.length == 1 && lit != null){
+                    lit.rotate(-getRotationSpeed());
+                    body.refreshDragPoints();
+                    if( body.outline.contains(lit) ){
+                        outlineChanged();
+                    }
+                    simPanel.drawBody_Edit();
+                }
+                else if(listenersL.length == 0){
+                    nextIndex();
+                    simPanel.drawBody(senderPositions[index]);
+                }
+            }
+        };
+        
+        Action startSimAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                simStartButton.doClick();
+            }
+        };
+        
+        Action resetRotationSpeedAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                rotationSpeed = 0;
+            }
+        };
+        
+        am.put("Pressed.+", angleUpAction);
+        am.put("Pressed.-", angleDownAction);
+        am.put("Pressed.up", indexUpAction);
+        am.put("Pressed.down", indexDownAction);
+        am.put("Pressed.left", rotateLeftAction);
+        am.put("Pressed.right", rotateRightAction);
+        am.put("Pressed.enter", startSimAction);
+        am.put("Released.+", resetRotationSpeedAction);
+        am.put("Released.-", resetRotationSpeedAction);
+        am.put("Released.left", resetRotationSpeedAction);
+        am.put("Released.right", resetRotationSpeedAction);
     }
     
     @SuppressWarnings("unchecked")
