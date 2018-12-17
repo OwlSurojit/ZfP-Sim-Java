@@ -86,7 +86,6 @@ public class MainWindow extends BodyWindow {
         InputMap im = senderXField.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = senderXField.getActionMap();
         
-        //((AbstractDocument)senderXField.getDocument()).setDocumentFilter(new IntegerDocumentFilter());
         
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.ALT_DOWN_MASK), "Pressed.+");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.ALT_DOWN_MASK), "Pressed.-");
