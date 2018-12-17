@@ -59,7 +59,7 @@ public class MainWindow extends BodyWindow {
         
         StructFieldType sx = new StructFieldType(senderXField, VerificationType.NON_NEG_DOUBLE);
         StructFieldType sy = new StructFieldType(senderYField, VerificationType.NON_NEG_DOUBLE);
-        StructFieldType dg = new StructFieldType(degreeField, VerificationType.NON_NEG_DOUBLE);
+        StructFieldType dg = new StructFieldType(degreeField, VerificationType.DOUBLE);
         StructFieldType nr = new StructFieldType(numRayField, VerificationType.POS_INTEGER);
         StructFieldType a = new StructFieldType(angleField, VerificationType.POS_DOUBLE);
         StructFieldType rf = new StructFieldType(refField, VerificationType.POS_INTEGER);
@@ -83,22 +83,22 @@ public class MainWindow extends BodyWindow {
         rangeField.getDocument().addDocumentListener(new DocumentVerificationListener(rn, fv) );
         
         // KeyBindings API
-        InputMap im = senderXField.getInputMap(JComponent.WHEN_FOCUSED);
+        InputMap im = senderXField.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = senderXField.getActionMap();
         
-        ((AbstractDocument)senderXField.getDocument()).setDocumentFilter(new IntegerDocumentFilter());
+        //((AbstractDocument)senderXField.getDocument()).setDocumentFilter(new IntegerDocumentFilter());
         
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0), "Pressed.+");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0), "Pressed.-");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Pressed.up");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Pressed.down");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "Pressed.left");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "Pressed.right");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.ALT_DOWN_MASK), "Pressed.+");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.ALT_DOWN_MASK), "Pressed.-");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "Pressed.up");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "Pressed.down");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "Pressed.left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "Pressed.right");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Pressed.enter");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0, true), "Released.+");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0, true), "Released.-");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true), "Released.left");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true), "Released.right");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.ALT_DOWN_MASK, true), "Released.+");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.ALT_DOWN_MASK, true), "Released.-");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK, true), "Released.left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK, true), "Released.right");
         
         Action angleUpAction = new AbstractAction() {
             @Override
