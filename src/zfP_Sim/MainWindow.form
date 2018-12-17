@@ -40,6 +40,9 @@
             </Menu>
             <MenuItem class="javax.swing.JMenuItem" name="editMenuItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+E"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Bearbeiten"/>
               </Properties>
               <Events>
@@ -254,30 +257,14 @@
             </Component>
             <Component class="javax.swing.JToolBar$Separator" name="jSeparator6">
             </Component>
-            <Component class="javax.swing.JLabel" name="rayXLabel">
+            <Component class="javax.swing.JLabel" name="degreeLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Vektor x"/>
+                <Property name="text" type="java.lang.String" value="Eingangswinkel in &#xb0;"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="rayXField">
+            <Component class="javax.swing.JTextField" name="degreeField">
               <Properties>
-                <Property name="text" type="java.lang.String" value="0"/>
-                <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[48, 26]"/>
-                </Property>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[48, 26]"/>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="rayYLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Vektor y"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="rayYField">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="5"/>
+                <Property name="text" type="java.lang.String" value="270"/>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[48, 26]"/>
                 </Property>

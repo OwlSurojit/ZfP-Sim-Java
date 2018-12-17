@@ -27,6 +27,8 @@ public class DocumentVerificationListener implements DocumentListener{
 
     @Override
     public void changedUpdate(DocumentEvent de) {
+        field.field.setText(field.field.getText().replaceAll("+", ""));
+        field.field.setText(field.field.getText().replaceAll("-", ""));
         fv.partialVerification(field);
     }
     

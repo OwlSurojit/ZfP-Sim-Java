@@ -8,6 +8,7 @@ import java.awt.Desktop;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.MouseInfo;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -16,6 +17,12 @@ import java.io.PrintStream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import properties.FieldVerifier;
@@ -39,91 +46,296 @@ public class EditorWindow extends BodyWindow {
         drawPanel.main = this;
         drawPanel.drawBody_Edit();
         cursorToggleButton.setSelected(true);
-        rotationSpeed = 1;
+        rotationSpeed = 0;
         
-        //KeyEventListeners
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = drawPanel.getActionMap();
+        
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "Pressed.left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "Pressed.right");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "Pressed.delete");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0), "Pressed.p");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "Pressed.f1");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "Pressed.f2");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "Pressed.f3");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "Pressed.f4");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "Pressed.f5");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "Pressed.f6");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK, true), "Released.left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK, true), "Released.right");
+        
+        Action rotateRightAction = new AbstractAction() {
             @Override
-            public boolean dispatchKeyEvent(KeyEvent evt) {
-                if(drawPanel.main.isFocused()){
-                    int type = evt.getID();
-                    if(type == KeyEvent.KEY_PRESSED){
-                        int keyCode = evt.getKeyCode();
-                        switch(keyCode){
-                            case KeyEvent.VK_RIGHT:
-                                MouseListener[] listenersR = drawPanel.getMouseListeners();
-                                if(listenersR.length == 1 && listenersR[0] instanceof DragDropListener && lit != null){
-                                    lit.rotate(getRotationSpeed());
-                                    body.refreshDragPoints();
-                                    if( body.outline.contains(lit) ){
-                                        outlineChanged();
-                                    }
-                                    drawPanel.drawBody_Edit();
-                                }
-                                return false;
-                            case KeyEvent.VK_LEFT:
-                                MouseListener[] listenersL = drawPanel.getMouseListeners();
-                                if(listenersL.length == 1 && listenersL[0] instanceof DragDropListener && lit != null){
-                                    lit.rotate(-getRotationSpeed());
-                                    body.refreshDragPoints();
-                                    if( body.outline.contains(lit) ){
-                                        outlineChanged();
-                                    }
-                                    drawPanel.drawBody_Edit();
-                                }
-                                return false;
-                            case KeyEvent.VK_DELETE:
-                                MouseListener[] listenersD = drawPanel.getMouseListeners();
-                                if(listenersD.length == 1 && listenersD[0] instanceof DragDropListener && lit != null){
-                                    if(body.removeOutline(lit)){
-                                        outlineChanged();
-                                    }
-                                    else{
-                                        body.removeDefect(lit);
-                                    }
-                                    setLit(null);
-                                    body.refreshDragPoints();
-                                    drawPanel.drawBody_Edit();
-                                }
-                                return false;
-                            case KeyEvent.VK_P:
-                                if(lit != null){
-                                    PropertiesWindow pw = new PropertiesWindow(lit, (EditorWindow) drawPanel.main);
-                                    pw.setVisible(true);
-                                    body.refreshDragPoints();
-                                    drawPanel.drawBody_Edit();
-                                }
-                                return false;
-                            case KeyEvent.VK_F1:
-                                cursorToggleButton.setSelected(true);
-                                return false;
-                            case KeyEvent.VK_F2:
-                                polygonToggleButton.setSelected(true);
-                                return false;
-                            case KeyEvent.VK_F3:
-                                rectangleToggleButton.setSelected(true);
-                                return false;
-                            case KeyEvent.VK_F4:
-                                circleToggleButton.setSelected(true);
-                                return false;
-                            case KeyEvent.VK_F5:
-                                carcToggleButton.setSelected(true);
-                                return false;
-                            case KeyEvent.VK_F6:
-                                ovalToggleButton.setSelected(true);
-                                return false;
-                            default:
-                                return false;
-                        }
+            public void actionPerformed(ActionEvent ae) {
+                MouseListener[] listenersR = drawPanel.getMouseListeners();
+                if(listenersR.length == 1 && listenersR[0] instanceof DragDropListener && lit != null){
+                    lit.rotate(getRotationSpeed());
+                    body.refreshDragPoints();
+                    if( body.outline.contains(lit) ){
+                        outlineChanged();
                     }
-                    else if(type == KeyEvent.KEY_RELEASED){
-                        rotationSpeed = 1;
-                        return false;
-                    }
+                    drawPanel.drawBody_Edit();
                 }
-                return false;
             }
-        });
+        };
+        
+        Action rotateLeftAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                MouseListener[] listenersL = drawPanel.getMouseListeners();
+                if(listenersL.length == 1 && listenersL[0] instanceof DragDropListener && lit != null){
+                    lit.rotate(-getRotationSpeed());
+                    body.refreshDragPoints();
+                    if( body.outline.contains(lit) ){
+                        outlineChanged();
+                    }
+                    drawPanel.drawBody_Edit();
+                }
+            }
+        };
+        
+        Action deleteAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                MouseListener[] listenersD = drawPanel.getMouseListeners();
+                if(listenersD.length == 1 && listenersD[0] instanceof DragDropListener && lit != null){
+                    if(body.removeOutline(lit)){
+                        outlineChanged();
+                    }
+                    else{
+                        body.removeDefect(lit);
+                    }
+                    setLit(null);
+                    body.refreshDragPoints();
+                    drawPanel.drawBody_Edit();
+                }
+            }
+        };
+        
+        Action propertiesAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(lit != null){
+                    PropertiesWindow pw = new PropertiesWindow(lit, (EditorWindow) drawPanel.main);
+                    pw.setVisible(true);
+                    body.refreshDragPoints();
+                    drawPanel.drawBody_Edit();
+                }
+            }
+        };
+        
+        Action freeCursorAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cursorToggleButton.setSelected(true);
+            }
+        };
+        
+        Action polygonAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                polygonToggleButton.setSelected(true);
+            }
+        };
+        
+        Action rectangleAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                rectangleToggleButton.setSelected(true);
+            }
+        };
+        
+        Action circleAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                circleToggleButton.setSelected(true);
+            }
+        };
+        
+        Action circleArcAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                carcToggleButton.setSelected(true);
+            }
+        };
+        
+        Action ovalAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                ovalToggleButton.setSelected(true);
+            }
+        };
+        
+        Action resetRotationSpeedAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                rotationSpeed = 0;
+            }
+        };
+        
+        am.put("Pressed.left", rotateLeftAction);
+        am.put("Pressed.right", rotateRightAction);
+        am.put("Pressed.delete", deleteAction);
+        am.put("Pressed.p", propertiesAction);
+        am.put("Pressed.f1", freeCursorAction);
+        am.put("Pressed.f2", polygonAction);
+        am.put("Pressed.f3", rectangleAction);
+        am.put("Pressed.f4", circleAction);
+        am.put("Pressed.f5", circleArcAction);
+        am.put("Pressed.f6", ovalAction);
+        am.put("Released.left", resetRotationSpeedAction);
+        am.put("Released.right", resetRotationSpeedAction);
+    }
+    
+    public EditorWindow(MainWindow mw, Body _body) {
+        mainWindow = mw;
+        body = _body;
+
+        initComponents();
+        ListSelectionModel listSelectionModel = shapesList.getSelectionModel();
+        listSelectionModel.addListSelectionListener(new ListSelectionHandler(this, shapesList));
+        drawPanel.main = this;
+        drawPanel.drawBody_Edit();
+        cursorToggleButton.setSelected(true);
+        rotationSpeed = 0;
+        
+        InputMap im = drawPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = drawPanel.getActionMap();
+        
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "Pressed.left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "Pressed.right");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "Pressed.delete");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0), "Pressed.p");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "Pressed.f1");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "Pressed.f2");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "Pressed.f3");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "Pressed.f4");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "Pressed.f5");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "Pressed.f6");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK, true), "Released.left");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK, true), "Released.right");
+        
+        Action rotateRightAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                MouseListener[] listenersR = drawPanel.getMouseListeners();
+                if(listenersR.length == 1 && listenersR[0] instanceof DragDropListener && lit != null){
+                    lit.rotate(getRotationSpeed());
+                    body.refreshDragPoints();
+                    if( body.outline.contains(lit) ){
+                        outlineChanged();
+                    }
+                    drawPanel.drawBody_Edit();
+                }
+            }
+        };
+        
+        Action rotateLeftAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                MouseListener[] listenersL = drawPanel.getMouseListeners();
+                if(listenersL.length == 1 && listenersL[0] instanceof DragDropListener && lit != null){
+                    lit.rotate(-getRotationSpeed());
+                    body.refreshDragPoints();
+                    if( body.outline.contains(lit) ){
+                        outlineChanged();
+                    }
+                    drawPanel.drawBody_Edit();
+                }
+            }
+        };
+        
+        Action deleteAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                MouseListener[] listenersD = drawPanel.getMouseListeners();
+                if(listenersD.length == 1 && listenersD[0] instanceof DragDropListener && lit != null){
+                    if(body.removeOutline(lit)){
+                        outlineChanged();
+                    }
+                    else{
+                        body.removeDefect(lit);
+                    }
+                    setLit(null);
+                    body.refreshDragPoints();
+                    drawPanel.drawBody_Edit();
+                }
+            }
+        };
+        
+        Action propertiesAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if(lit != null){
+                    PropertiesWindow pw = new PropertiesWindow(lit, (EditorWindow) drawPanel.main);
+                    pw.setVisible(true);
+                    body.refreshDragPoints();
+                    drawPanel.drawBody_Edit();
+                }
+            }
+        };
+        
+        Action freeCursorAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cursorToggleButton.setSelected(true);
+            }
+        };
+        
+        Action polygonAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                polygonToggleButton.setSelected(true);
+            }
+        };
+        
+        Action rectangleAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                rectangleToggleButton.setSelected(true);
+            }
+        };
+        
+        Action circleAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                circleToggleButton.setSelected(true);
+            }
+        };
+        
+        Action circleArcAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                carcToggleButton.setSelected(true);
+            }
+        };
+        
+        Action ovalAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                ovalToggleButton.setSelected(true);
+            }
+        };
+        
+        Action resetRotationSpeedAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                rotationSpeed = 0;
+            }
+        };
+        
+        am.put("Pressed.left", rotateLeftAction);
+        am.put("Pressed.right", rotateRightAction);
+        am.put("Pressed.delete", deleteAction);
+        am.put("Pressed.p", propertiesAction);
+        am.put("Pressed.f1", freeCursorAction);
+        am.put("Pressed.f2", polygonAction);
+        am.put("Pressed.f3", rectangleAction);
+        am.put("Pressed.f4", circleAction);
+        am.put("Pressed.f5", circleArcAction);
+        am.put("Pressed.f6", ovalAction);
+        am.put("Released.left", resetRotationSpeedAction);
+        am.put("Released.right", resetRotationSpeedAction);
     }
 
     @SuppressWarnings("unchecked")
@@ -641,7 +853,7 @@ public class EditorWindow extends BodyWindow {
     }
     
     public int getRotationSpeed() {
-        if(rotationSpeed < 15){
+        if(rotationSpeed < 5){
             return ++rotationSpeed;
         }
         else{return rotationSpeed;}

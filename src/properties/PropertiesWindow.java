@@ -7,9 +7,15 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import shapesBase.ShapeBase;
 import zfP_Sim.EditorWindow;
 
@@ -57,18 +63,28 @@ public class PropertiesWindow extends javax.swing.JFrame{
         add(tabs);
         add(lowerPanel);
         
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+        InputMap im = saveButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = saveButton.getActionMap();
+        
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Pressed.enter");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Pressed.esc");
+        
+        Action saveAction = new AbstractAction(){
             @Override
-            public boolean dispatchKeyEvent(KeyEvent evt) {
-                if(refToThis.isFocused()){
-                    int keyCode = evt.getKeyCode();
-                    if(keyCode == KeyEvent.VK_ENTER && saveButton.isEnabled()){
-                        saveButtonActionPerformed(null);
-                    }
-                }
-                return false;
+            public void actionPerformed(ActionEvent ae) {
+                saveButton.doClick();
             }
-        });
+        };
+        
+        Action cancelAction = new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                cancelButtonActionPerformed(null);
+            }
+        };
+        
+        am.put("Pressed.enter", saveAction);
+        am.put("Pressed.esc", cancelAction);
     }
 
     private void saveButtonActionPerformed(ActionEvent evt) {
