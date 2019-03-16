@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
@@ -654,7 +656,27 @@ public class MainWindow extends BodyWindow {
     }//GEN-LAST:event_saveAsMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
-        
+        JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+        FileNameExtensionFilter f = new FileNameExtensionFilter("Serialisierte Java-Objekte", "ser");
+        jfc.setFileFilter(f);
+        if(jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+            File file = jfc.getSelectedFile();
+            try{
+                FileInputStream fileIn = new FileInputStream(file);
+                ObjectInputStream in = new ObjectInputStream(fileIn);
+                body = (Body) in.readObject();
+                in.close();
+                getSenderPositions();
+                simPanel.drawBody(senderPositions[index]);
+         fileIn.close();
+            } catch (IOException i) {
+                i.printStackTrace();
+            } catch (ClassNotFoundException c) {
+                System.out.println("Body class not found");
+                c.printStackTrace();
+                return;
+            }
+        }
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void closeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuItemActionPerformed

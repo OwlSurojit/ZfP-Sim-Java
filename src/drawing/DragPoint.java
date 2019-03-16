@@ -1,9 +1,10 @@
 package drawing;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import shapesBase.*;
 
-public class DragPoint {
+public class DragPoint implements Serializable{
     public double x;
     public double y;
     public boolean highlight;

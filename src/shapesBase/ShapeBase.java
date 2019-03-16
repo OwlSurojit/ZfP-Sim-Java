@@ -1,10 +1,11 @@
 package shapesBase;
 
 import drawing.Binding;
+import java.io.Serializable;
 import structures.StructDrawingInfo;
 import java.util.ArrayList;
 
-public abstract class ShapeBase {
+public abstract class ShapeBase implements Serializable {
     public StructDrawingInfo drawingInfo;
     
     public abstract ArrayList<ShapeBase> getComponents();

@@ -1,8 +1,9 @@
 package structures;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public class StructDrawingInfo {
+public class StructDrawingInfo implements Serializable{
     public String name;
     public Color lineColor;
     public Color lineColorLit;

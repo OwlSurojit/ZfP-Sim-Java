@@ -2,9 +2,10 @@ package drawing;
 
 import enums.BindType;
 import geometry.Point;
+import java.io.Serializable;
 import shapesBase.ShapeBase;
 
-public class Binding {
+public class Binding implements Serializable{
     public double x;
     public double y;
     public ShapeBase shape;
