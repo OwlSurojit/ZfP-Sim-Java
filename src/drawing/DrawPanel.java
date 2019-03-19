@@ -1,5 +1,6 @@
 package drawing;
 
+import static control.SenderPositions.geomShape;
 import shapesBase.*;
 import geometry.*;
 import java.awt.Color;
@@ -250,7 +251,7 @@ public class DrawPanel extends javax.swing.JPanel{
             g2d.draw(getLine2D((Line) shape));
         }
         else if (shape instanceof Polygon){
-            if ( shape.drawingInfo.fill && ((Polygon) shape).closed() ){
+            if ( shape.drawingInfo.fill /*&& ((Polygon) shape).closed()*/ ){
                 g2d.setColor(shape.drawingInfo.fillColor);
                 g2d.fillPolygon(getPolygon2D((Polygon) shape));
             }
@@ -270,6 +271,12 @@ public class DrawPanel extends javax.swing.JPanel{
             g2d.draw(circle);
         }
         else if(shape instanceof CircleArc){
+            Area area = new Area();
+            area.add(new Area(geomShape(shape)));
+            if( shape.drawingInfo.fill ){
+                g2d.setColor(shape.drawingInfo.fillColor);
+                g2d.fill(area);
+            }
             g2d.setColor(shape.drawingInfo.lineColor);
             g2d.draw(getCircleArc2D((CircleArc) shape));
         }
