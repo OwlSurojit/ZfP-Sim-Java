@@ -95,6 +95,7 @@ public class MainWindow extends BodyWindow {
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "Pressed.down");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "Pressed.left");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "Pressed.right");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.ALT_DOWN_MASK), "Pressed.f");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Pressed.enter");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.ALT_DOWN_MASK, true), "Released.+");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.ALT_DOWN_MASK, true), "Released.-");
@@ -115,7 +116,7 @@ public class MainWindow extends BodyWindow {
                     }
                     return;
                 }
-                deg = (deg+getRotationSpeed())%360;
+                deg = (deg+1)%360;
                 degreeField.setText(deg +"");
                 if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
                     simStartButton.doClick();
@@ -137,7 +138,7 @@ public class MainWindow extends BodyWindow {
                     }
                     return;
                 }
-                deg_ = (deg_-getRotationSpeed())%360;
+                deg_ = (deg_-1)%360;
                 if(deg_ < 0){deg_ = 360+deg_;}
                 degreeField.setText(deg_ +"");
                 if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
@@ -236,7 +237,12 @@ public class MainWindow extends BodyWindow {
                 }
                 else if(listenersR.length == 0){
                     prevIndex();
-                    simPanel.drawBody(senderPositions[index]);
+                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                        simStartButton.doClick();
+                    }
+                    else{
+                        simPanel.drawBody(senderPositions[index]);
+                    }
                 }
             }
         };
@@ -255,8 +261,20 @@ public class MainWindow extends BodyWindow {
                 }
                 else if(listenersL.length == 0){
                     nextIndex();
-                    simPanel.drawBody(senderPositions[index]);
+                    if(simPanel.paintMultiTracer || simPanel.paintRaytracer){
+                        simStartButton.doClick();
+                    }
+                    else{
+                        simPanel.drawBody(senderPositions[index]);
+                    }
                 }
+            }
+        };
+        
+        Action removeRaytracerAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                simPanel.drawBody(senderPositions[index]);
             }
         };
         
@@ -280,6 +298,7 @@ public class MainWindow extends BodyWindow {
         am.put("Pressed.down", indexDownAction);
         am.put("Pressed.left", rotateLeftAction);
         am.put("Pressed.right", rotateRightAction);
+        am.put("Pressed.f", removeRaytracerAction);
         am.put("Pressed.enter", startSimAction);
         am.put("Released.+", resetRotationSpeedAction);
         am.put("Released.-", resetRotationSpeedAction);
