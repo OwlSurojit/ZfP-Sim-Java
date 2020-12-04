@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"exportScans","c":"ExportScores","l":"export(File, int, int)","url":"export(java.io.File,int,int)"},{"p":"exportScans","c":"ExportScores","l":"ExportScores()","url":"%3Cinit%3E()"}]
