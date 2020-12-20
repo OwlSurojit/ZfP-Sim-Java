@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URISyntaxException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -51,8 +52,7 @@ public class MainWindow extends BodyWindow {
 	public MainWindow() {
 		initComponents();
 		body = new Body();
-		// TODO body.exampleLongBar();
-		body.exampleThree();
+		body.exampleLongBar();
 		getSenderPositions();
 		simPanel.main = this;
 		scanPanel.main = this;
@@ -329,6 +329,8 @@ public class MainWindow extends BodyWindow {
 		scanPanel = new zfP_Sim.ScanPanel();
 		sampleCountField = new javax.swing.JTextField();
 		sampleCountLabel = new javax.swing.JLabel();
+		maxAmpField = new javax.swing.JTextField();
+		maxAmpLabel = new javax.swing.JLabel();
 		exportDataButton = new javax.swing.JButton();
 		sampleRateField = new javax.swing.JTextField();
 		sampleRateLabel = new javax.swing.JLabel();
@@ -485,6 +487,14 @@ public class MainWindow extends BodyWindow {
 		sampleCountField.setPreferredSize(new java.awt.Dimension(48, 26));
 		simToolBar.add(sampleCountField);
 
+		maxAmpLabel.setText("Einstrahlungsamplitude");
+		simToolBar.add(maxAmpLabel);
+
+		maxAmpField.setText("1020");
+		maxAmpField.setMinimumSize(new java.awt.Dimension(48, 26));
+		maxAmpField.setPreferredSize(new java.awt.Dimension(48, 26));
+		simToolBar.add(maxAmpField);
+
 		exportDataButton.setText("Messdaten Exportieren");
 		exportDataButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 		exportDataButton.setFocusable(false);
@@ -499,8 +509,6 @@ public class MainWindow extends BodyWindow {
 			}
 		});
 		simToolBar.add(exportDataButton);
-
-		//TODO measuring run -> sample rate, endX
 
 		sampleRateLabel.setText("Samplerate");
 		simToolBar.add(sampleRateLabel);
@@ -717,9 +725,7 @@ public class MainWindow extends BodyWindow {
 	}// </editor-fold>//GEN-END:initComponents
 
 	private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-		// I fixed your crappy program ~The Owl
-		JFileChooser jfc = new JFileChooser("../Messdaten/Simuliert");
-		// TODO JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+		JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
 		jfc.setSelectedFile(new File("Messaufbau.ser"));
 		FileNameExtensionFilter f = new FileNameExtensionFilter("Serialisierte Java-Objekte", "ser");
 		jfc.setFileFilter(f);
@@ -743,8 +749,7 @@ public class MainWindow extends BodyWindow {
 	}// GEN-LAST:event_saveAsMenuItemActionPerformed
 
 	private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_openMenuItemActionPerformed
-		JFileChooser jfc = new JFileChooser("../Messdaten/Simuliert");
-		// TODO JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
+		JFileChooser jfc = new JFileChooser(System.getProperty("user.dir"));
 		FileNameExtensionFilter f = new FileNameExtensionFilter("Serialisierte Java-Objekte", "ser");
 		jfc.setFileFilter(f);
 		if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -777,7 +782,6 @@ public class MainWindow extends BodyWindow {
 		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}// GEN-LAST:event_exitMenuItemActionPerformed
 
-	//TODO trying to understand this...
 	private void simStartButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_simStartButtonActionPerformed
 		if (!body.outline.isEmpty()) {
 			MouseListener[] listeners = simPanel.getMouseListeners();
@@ -902,12 +906,11 @@ public class MainWindow extends BodyWindow {
 			String filename = jfc.getSelectedFile().getPath();
 			if (!filename.endsWith(".txt"))
 				filename += ".txt";
-			exportScans.ExportScores.export(new File(filename), Integer.valueOf(sampleCountField.getText()), 1020,
-					false);
+			exportScans.ExportScores.export(new File(filename), Integer.valueOf(sampleCountField.getText()),
+					Integer.valueOf(maxAmpField.getText()), false);
 		}
 	}
 
-	//TODO mrap
 	private void measuringRunActionPerformed(java.awt.event.ActionEvent evt) {
 		JFileChooser jfc = new JFileChooser("../Messdaten/Simuliert");
 		jfc.setDialogTitle("Speicherort für die simulierte Messfahrt wählen");
@@ -920,7 +923,7 @@ public class MainWindow extends BodyWindow {
 					Double.parseDouble(degreeField.getText()), Integer.parseInt(numRayField.getText()),
 					Double.parseDouble(angleField.getText()), Integer.parseInt(refField.getText()),
 					Double.parseDouble(velocityField.getText()), Integer.parseInt(sampleRateField.getText()),
-					Integer.valueOf(sampleCountField.getText()), filename);
+					Integer.valueOf(sampleCountField.getText()), Integer.valueOf(maxAmpField.getText()), filename);
 		}
 	}
 
@@ -994,6 +997,8 @@ public class MainWindow extends BodyWindow {
 	private javax.swing.JMenuItem helpPDFMenuItem;
 	private javax.swing.JTextField sampleCountField;
 	private javax.swing.JLabel sampleCountLabel;
+	private javax.swing.JTextField maxAmpField;
+	private javax.swing.JLabel maxAmpLabel;
 	private javax.swing.JButton exportDataButton;
 	private javax.swing.JTextField sampleRateField;
 	private javax.swing.JLabel sampleRateLabel;

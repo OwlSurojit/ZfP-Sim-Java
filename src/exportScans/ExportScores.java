@@ -4,26 +4,23 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Formatter;
 import java.util.List;
-import java.util.ArrayList;
 
 public class ExportScores {
 
 	private static Formatter form;
-	//private static List<Double[]> scores;
-	private static int spr; // Scans per run
 	private static double runLength; //Length of the run in weird time units 
 
 	/**
-	 * Exports the scan results of the currently visible scan
+	 * Exports the scan results of the scan that is currently visible
 	 * @param file The file to export the data to
 	 * @param samples The count of amplitudes to sample the data into
 	 * @param maxAmp The maximum amplitude (The amplitude of the supplied signal)
-	 * @param emitTrailingZeroes if true, ignore the trailing zeroes in the scores array and write the last positive peak to the end of the file
+	 * @param omitTrailingZeroes if true, ignore the trailing zeroes in the scores array and write the last positive peak to the end of the file
 	 */
-	public static void export(File file, int samples, int maxAmp, boolean emitTrailingZeroes) {
+	public static void export(File file, int samples, int maxAmp, boolean omitTrailingZeroes) {
 		List<Double[]> scores = zfP_Sim.MainWindow.getScanPanel().getScores();
 		int lastIndex = scores.size() - 1;
-		if (emitTrailingZeroes) {
+		if (omitTrailingZeroes) {
 			for (int i = scores.size() - 1; i >= 0; i--) {
 				if (scores.get(i)[1] != 0.0) {
 					lastIndex = i + 1;
@@ -47,17 +44,8 @@ public class ExportScores {
 	 * @param file The file to export the data to
 	 * @param samples The count of amplitudes to sample the data into
 	 * @param maxAmp The maximum amplitude (The amplitude of the supplied signal)
-	 * 
-	 * @author Owl Surojit
-	 * @since 04.02.2020
 	 */
 	public static void export(Double[][] scores, File file, int samples, int maxAmp) {
-		for (Double[] d : scores) {
-			for (double s : d) {
-				System.out.print(s + ", ");
-			}
-			System.out.println();
-		}
 		try {
 			form = new Formatter(file);
 		} catch (FileNotFoundException e) {
@@ -67,7 +55,6 @@ public class ExportScores {
 
 		runLength = scores[scores.length - 1][0];
 		int k = 0;
-		double peakTime = runLength / (scores.length - 1);
 		for (int i = 0; i < samples; i++) {
 			if (i * runLength / (samples - 1) >= scores[k][0]) {
 				form.format("%d\n", Math.round(scores[k][1] * maxAmp));

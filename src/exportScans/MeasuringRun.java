@@ -18,7 +18,7 @@ public class MeasuringRun {
 
 	public static void mr2dNaive(Body body, DrawPanel simPanel, ScanPanel scanPanel, int startX, int endX, int y,
 			double angle, int rayCount, double scatterAngle, int reflectionCount, double velocity, double sampleRate,
-			int sampleCount, String dir) {
+			int sampleCount, int maxAmp, String dir) {
 		(new File(dir)).mkdirs();
 		int samples = (int) ((endX - startX) / sampleRate);
 		for (int i = 0; i < samples; i++) {
@@ -38,14 +38,14 @@ public class MeasuringRun {
 				simPanel.simulate(scan.MultiReflections(rayCount, scatterAngle), -2);
 				scanPanel.setScores(scan.processScan_A3(scan.MultiScan_A(rayCount, scatterAngle)));
 
-				ExportScores.export(new File(dir + "\\" + i + ".txt"), sampleCount, 1020, false); //TODO set sample rate
+				ExportScores.export(new File(dir + "\\" + i + ".txt"), sampleCount, maxAmp, false);
 			}
 		}
 	}
 
 	public static void mr2d(Body body, DrawPanel simPanel, ScanPanel scanPanel, int startX, int endX, int y,
 			double angle, int rayCount, double scatterAngle, int reflectionCount, double velocity, double sampleRate,
-			int sampleCount, String dir) {
+			int sampleCount, int maxAmp, String dir) {
 		(new File(dir)).mkdirs();
 		int samples = (int) ((endX - startX) / sampleRate);
 		ArrayList<Double[][]> scoresList = new ArrayList<Double[][]>();
@@ -87,13 +87,9 @@ public class MeasuringRun {
 			}
 		}
 
-		System.out.println(latestPeakTime);
-
 		for (int i = 0; i < samples; i++) {
-
 			ExportScores.export(scoresList.get(i), latestPeakTime, new File(dir + "\\" + i + ".txt"), sampleCount,
-					1020); //TODO set sample rate
-
+					maxAmp);
 		}
 	}
 
