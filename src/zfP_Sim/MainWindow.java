@@ -17,7 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.URISyntaxException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -294,6 +293,8 @@ public class MainWindow extends BodyWindow {
 		am.put("Released.-", resetRotationSpeedAction);
 		am.put("Released.left", resetRotationSpeedAction);
 		am.put("Released.right", resetRotationSpeedAction);
+
+		setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 	}
 
 	@SuppressWarnings("unchecked")
